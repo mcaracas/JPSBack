@@ -1,0 +1,70 @@
+body{
+    background-image: url('./../img/b3.png');
+}
+
+.login-card{
+    top: 150px;
+    right: 8%;
+    width: 35.5%;
+    height: 50%;
+    padding: 40px 80px 0px 80px;
+    position: absolute;
+    min-width: 400px;
+    min-height: 453px;
+    border-radius: 20px;
+    margin-bottom: 50px;
+    background-color: white;
+    color:black;
+    box-shadow: 0px 3px 16px 0px rgba(154, 152, 152, 0.75);
+    text-align: left;
+}
+
+.btn{
+    color: white;
+    width: fit-content;
+    padding: 10px 50px 10px 50px;
+    font-size: 14px;
+    align-self: center;
+    border-radius: 100px;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+    background-color: #C8283B;
+    border: none;
+}
+
+.lbl{
+    font-size: 16px;
+    margin-top: 20px;
+    font-weight: bolder;
+    padding-bottom: 5px;
+}	
+
+.inp{
+    width: 100%;
+    border: 2px solid #F2F2F2;
+    padding: 10px 12px;
+    position: relative;
+    font-size: 16px;
+    transition: border-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+header{
+    height: 70px;
+    padding: 5px;
+    flex-grow: 1;
+    box-shadow: 0px 3px 6px rgba(154, 152, 152, 0.75);
+    background-color: #FFFFFF;
+    display: flex;
+}
+
+.logo{
+    width: 100px;
+    height: 100%;
+    margin-left: -30px;
+    margin-right: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
