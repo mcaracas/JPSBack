@@ -49,4 +49,15 @@ public class DatosSorteoController : ControllerBase
         DatosSorteoUpdate.IdInterno = datosSorteo.IdInterno;
         context.SaveChanges();
     }
+
+    [HttpDelete("{id}")]
+    public void Delete(int id)
+    {
+        var context = new proyecto_bdContext();
+        var datosSorteo = context.DatosSorteos.FirstOrDefault(x => x.IdInterno == id);
+        context.DatosSorteos.Remove(datosSorteo);
+        context.SaveChanges();
+    }
+
+    
 }
