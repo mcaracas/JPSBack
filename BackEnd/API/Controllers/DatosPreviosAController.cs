@@ -49,4 +49,13 @@ public class DatosPreviosAController : ControllerBase
         DatosPreviosAdministracionUpdate.Id = datosPreviosAdministracion.Id;
         context.SaveChanges();
     }
+
+    [HttpDelete("{id}")]
+    public void Delete(int id)
+    {
+        var context = new proyecto_bdContext();
+        var datosPreviosAdministracion = context.DatosPreviosAdministracions.FirstOrDefault(x => x.Id == id);
+        context.DatosPreviosAdministracions.Remove(datosPreviosAdministracion);
+        context.SaveChanges();
+    }
 }
