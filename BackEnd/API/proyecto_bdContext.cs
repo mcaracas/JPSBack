@@ -33,6 +33,7 @@ namespace API
         public virtual DbSet<ResultadosBitacora> ResultadosBitacoras { get; set; }
         public virtual DbSet<TipoLoterium> TipoLoteria { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
+        public virtual DbSet<Marchamo> Marchamos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -495,6 +496,42 @@ namespace API
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(100)
                     .HasColumnName("nombre");
+            });
+
+            modelBuilder.Entity<Marchamo>(entity =>
+            {
+                entity.HasKey(e => e.IdMarchamo)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("marchamos");
+
+                entity.HasIndex(e => e.IdDatosSorteo, "FK_IdDatosSorteo_idx");
+
+                entity.Property(e => e.IdMarchamo)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_Marchamo");
+
+                entity.Property(e => e.IdDatosSorteo)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_Datos_Sorteo");
+
+                entity.Property(e => e.NumeroMarchamo)
+                    .IsRequired()
+                    .HasMaxLength(45)
+                    .HasColumnName("Numero_Marchamo");
+
+                entity.Property(e => e.Observacion).HasMaxLength(200);
+
+                entity.Property(e => e.Tipo)
+                    .IsRequired()
+                    .HasMaxLength(45);
+
+                entity.Property(e => e.TipoMarchamo)
+                    .IsRequired()
+                    .HasMaxLength(45)
+                    .HasColumnName("Tipo_Marchamo");
+
+                entity.Property(e => e.Valija).HasMaxLength(45);
             });
 
             OnModelCreatingPartial(modelBuilder);
