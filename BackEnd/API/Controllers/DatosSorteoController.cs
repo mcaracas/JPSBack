@@ -4,6 +4,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+#nullable disable
 
 public class DatosSorteoController : ControllerBase
 {

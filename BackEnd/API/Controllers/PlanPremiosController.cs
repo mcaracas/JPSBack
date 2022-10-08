@@ -4,7 +4,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-
+#nullable disable
 public class PlanPremiosController : ControllerBase
 {
     private readonly ILogger<PlanPremiosController> _logger;

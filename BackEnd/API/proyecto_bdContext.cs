@@ -23,25 +23,28 @@ namespace API
         public virtual DbSet<DatosSorteo> DatosSorteos { get; set; }
         public virtual DbSet<ListaChequeoDetalle> ListaChequeoDetalles { get; set; }
         public virtual DbSet<ListaChequeoSorteo> ListaChequeoSorteos { get; set; }
+        public virtual DbSet<Marchamo> Marchamos { get; set; }
         public virtual DbSet<PlanPremio> PlanPremios { get; set; }
         public virtual DbSet<PlanPremiosDetalle> PlanPremiosDetalles { get; set; }
         public virtual DbSet<Prueba> Pruebas { get; set; }
         public virtual DbSet<RepFavorecidosUltimoAnno> RepFavorecidosUltimoAnnos { get; set; }
         public virtual DbSet<RepSorteoPorUsuario> RepSorteoPorUsuarios { get; set; }
         public virtual DbSet<RepVentasPorFecha> RepVentasPorFechas { get; set; }
+        public virtual DbSet<Representate> Representates { get; set; }
         public virtual DbSet<Resultado> Resultados { get; set; }
         public virtual DbSet<ResultadosBitacora> ResultadosBitacoras { get; set; }
         public virtual DbSet<TipoLoterium> TipoLoteria { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
-        public virtual DbSet<Marchamo> Marchamos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySQL(Environment.GetEnvironmentVariable("MESSAGE"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseMySQL("server=proyecto-inge2022.mysql.database.azure.com;userid=saprofa;password=ProyectoInge2022!;database=proyecto_bd");
             }
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Acumulado>(entity =>
@@ -239,6 +242,48 @@ namespace API
                     .HasConstraintName("lista_chequeo_sorteo_ibfk_1");
             });
 
+            modelBuilder.Entity<Marchamo>(entity =>
+            {
+                entity.HasKey(e => e.IdMarchamo)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("marchamos");
+
+                entity.HasIndex(e => e.IdDatosSorteo, "FK_IdDatosSorteo_idx");
+
+                entity.Property(e => e.IdMarchamo)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_Marchamo");
+
+                entity.Property(e => e.IdDatosSorteo)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_Datos_Sorteo");
+
+                entity.Property(e => e.NumeroMarchamo)
+                    .IsRequired()
+                    .HasMaxLength(45)
+                    .HasColumnName("Numero_Marchamo");
+
+                entity.Property(e => e.Observacion).HasMaxLength(200);
+
+                entity.Property(e => e.Tipo)
+                    .IsRequired()
+                    .HasMaxLength(45);
+
+                entity.Property(e => e.TipoMarchamo)
+                    .IsRequired()
+                    .HasMaxLength(45)
+                    .HasColumnName("Tipo_Marchamo");
+
+                entity.Property(e => e.Valija).HasMaxLength(45);
+
+                entity.HasOne(d => d.IdDatosSorteoNavigation)
+                    .WithMany(p => p.Marchamos)
+                    .HasForeignKey(d => d.IdDatosSorteo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_IdDatosSorteo");
+            });
+
             modelBuilder.Entity<PlanPremio>(entity =>
             {
                 entity.HasKey(e => e.IdPlan)
@@ -360,6 +405,40 @@ namespace API
                     .HasColumnName("date(d.fecha_hora)");
 
                 entity.Property(e => e.Ventas).HasColumnName("ventas");
+            });
+
+            modelBuilder.Entity<Representate>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("representates");
+
+                entity.HasIndex(e => e.IdDatosPrevios, "id_Datos_Previos_idx");
+
+                entity.Property(e => e.GOperaciones)
+                    .HasMaxLength(45)
+                    .HasColumnName("G_Operaciones");
+
+                entity.Property(e => e.GProduccion)
+                    .HasMaxLength(45)
+                    .HasColumnName("G_Produccion");
+
+                entity.Property(e => e.Gerencia).HasMaxLength(45);
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id");
+
+                entity.Property(e => e.IdDatosPrevios)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_Datos_Previos");
+
+                entity.Property(e => e.Juez).HasMaxLength(45);
+
+                entity.HasOne(d => d.IdDatosPreviosNavigation)
+                    .WithMany()
+                    .HasForeignKey(d => d.IdDatosPrevios)
+                    .HasConstraintName("id_Datos_Previos");
             });
 
             modelBuilder.Entity<Resultado>(entity =>
@@ -494,42 +573,6 @@ namespace API
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(100)
                     .HasColumnName("nombre");
-            });
-
-            modelBuilder.Entity<Marchamo>(entity =>
-            {
-                entity.HasKey(e => e.IdMarchamo)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("marchamos");
-
-                entity.HasIndex(e => e.IdDatosSorteo, "FK_IdDatosSorteo_idx");
-
-                entity.Property(e => e.IdMarchamo)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("id_Marchamo");
-
-                entity.Property(e => e.IdDatosSorteo)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("id_Datos_Sorteo");
-
-                entity.Property(e => e.NumeroMarchamo)
-                    .IsRequired()
-                    .HasMaxLength(45)
-                    .HasColumnName("Numero_Marchamo");
-
-                entity.Property(e => e.Observacion).HasMaxLength(200);
-
-                entity.Property(e => e.Tipo)
-                    .IsRequired()
-                    .HasMaxLength(45);
-
-                entity.Property(e => e.TipoMarchamo)
-                    .IsRequired()
-                    .HasMaxLength(45)
-                    .HasColumnName("Tipo_Marchamo");
-
-                entity.Property(e => e.Valija).HasMaxLength(45);
             });
 
             OnModelCreatingPartial(modelBuilder);
