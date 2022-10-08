@@ -16,7 +16,8 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7216;http://localhost:5120",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MESSAGE":"Server=127.0.0.1;Port=3306;Database=proyecto_bd;Uid=root;Pwd=root"
       }
     },
     "IIS Express": {
