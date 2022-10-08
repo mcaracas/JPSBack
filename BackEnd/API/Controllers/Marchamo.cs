@@ -25,7 +25,7 @@ public class MarchamoController : ControllerBase
     public Marchamo Get(int id)
     {
         var context = new proyecto_bdContext();
-        var marchamo = context.Marchamos.FirstOrDefault(x => x.IdMarchamo == id);
+        var marchamo = context.Marchamos.FirstOrDefault(x => x.IdDatosSorteo == id);
         return marchamo;
     }
 
