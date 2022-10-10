@@ -22,7 +22,7 @@ const marchamoSchema = Yup.object().shape({
 
 const MarchamoNacional = ({marchamoApertura}) => {
     return (
-        <div>
+        <div className='container'>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}
@@ -35,7 +35,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                     handleChange,
                     handleBlur }) => (
                         <Form>
-                            <table className='table table-bordered'>
+                            <table className='table table-bordered align-middle'>
                                 <thead className='thead-dark'>
                                     <tr>
                                         <th colSpan={4}>Numero de marchamo y valija </th>
@@ -53,7 +53,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                 <tbody>
                                     <tr>
                                         <th rowSpan={4}>Series</th>
-                                        <td>JPS-SLT-S-0000 <Field id='aperturaS1' name='aperturaS1' type='number'/>
+                                        <td>JPS-SLT-S-0000 <Field id='aperturaS1' name='aperturaS1' type='number' className='form-control'/>
                                             {
                                                 errors.aperturaS1 && touched.aperturaS1 && 
                                                 (
@@ -64,7 +64,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             }
                                         </td>
                                         <td rowSpan={4}></td>
-                                        <td rowSpan={4}>JPS-SLT-S-0000 <Field id='cierreS' name='cierreS' type='number'/>
+                                        <td rowSpan={4}>JPS-SLT-S-0000 <Field id='cierreS' name='cierreS' type='number' className='form-control'/>
                                             {
                                                 errors.cierreS && touched.cierreS && 
                                                 (
@@ -76,7 +76,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>JPS-SLT-S-0000 <Field id='aperturaS2' name='aperturaS2' type='number'/>
+                                        <td>JPS-SLT-S-0000 <Field id='aperturaS2' name='aperturaS2' type='number' className='form-control'/>
                                             {
                                                 errors.aperturaS2 && touched.aperturaS2 && 
                                                 (
@@ -88,7 +88,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>JPS-SLT-S-0000 <Field id='aperturaS3' name='aperturaS3' type='number'/>
+                                        <td>JPS-SLT-S-0000 <Field id='aperturaS3' name='aperturaS3' type='number' className='form-control'/>
                                             {
                                                 errors.aperturaS3 && touched.aperturaS3 && 
                                                 (
@@ -100,7 +100,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>JPS-SLT-S-0000 <Field id='aperturaS4' name='aperturaS4' type='number'/>
+                                        <td>JPS-SLT-S-0000 <Field id='aperturaS4' name='aperturaS4' type='number' className='form-control'/>
                                             {
                                                 errors.aperturaS4 && touched.aperturaS4 && 
                                                 (
@@ -113,7 +113,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                     </tr>
                                     <tr>
                                         <th>Numeros</th>
-                                        <td>JPS-SLT-N-0000 <Field id='aperturaN' name='aperturaN' type='number'/>
+                                        <td>JPS-SLT-N-0000 <Field id='aperturaN' name='aperturaN' type='number' className='form-control'/>
                                             {
                                                 errors.aperturaN && touched.aperturaN && 
                                                 (
@@ -124,7 +124,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             }
                                         </td>
                                         <td></td>
-                                        <td>JPS-SLT-N-0000 <Field id='cierreN' name='cierreN' type='number'/>
+                                        <td>JPS-SLT-N-0000 <Field id='cierreN' name='cierreN' type='number' className='form-control'/>
                                             {
                                                 errors.cierreN && touched.cierreN && 
                                                 (
@@ -137,7 +137,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                     </tr>
                                     <tr>
                                         <th>Premios</th>
-                                        <td>JPS-SLT-P-0000 <Field id='aperturaP' name='aperturaP' type='number'/>
+                                        <td>JPS-SLT-P-0000 <Field id='aperturaP' name='aperturaP' type='number' className='form-control'/>
                                             {
                                                 errors.aperturaP && touched.aperturaP && 
                                                 (
@@ -148,7 +148,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             }
                                         </td>
                                         <td></td>
-                                        <td>JPS-SLT-P-0000 <Field id='cierreP' name='cierreP' type='number'/>
+                                        <td>JPS-SLT-P-0000 <Field id='cierreP' name='cierreP' type='number' className='form-control'/>
                                             {
                                                 errors.cierreP && touched.cierreP && 
                                                 (
@@ -162,7 +162,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                     <tr>
                                         <th>Acumulado</th>
                                         <td>
-                                            JPS-OTROS 000 <Field id='aperturaAcumFich' name='aperturaAcumFich' type='number'/> fichero<br/>
+                                            JPS-OTROS 000 <Field id='aperturaAcumFich' name='aperturaAcumFich' type='number' className='form-control'/> fichero<br/>
                                             {
                                                 errors.aperturaAcumFich && touched.aperturaAcumFich && 
                                                 (
@@ -171,7 +171,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                                     </div>
                                                 )
                                             } 
-                                            JPS-OTROS 000 <Field id='aperturaAcumTula' name='aperturaAcumTula' type='number'/> tula
+                                            JPS-OTROS 000 <Field id='aperturaAcumTula' name='aperturaAcumTula' type='number' className='form-control'/> tula
                                             {
                                                 errors.aperturaAcumTula && touched.aperturaAcumTula && 
                                                 (
@@ -182,7 +182,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             } 
                                         </td>
                                         <td colSpan={2}>
-                                        JPS-OTROS 000 <Field id='cierreAcumFich' name='cierreAcumFich' type='number'/> fichero<br/>
+                                        JPS-OTROS 000 <Field id='cierreAcumFich' name='cierreAcumFich' type='number' className='form-control'/> fichero<br/>
                                             {
                                                 errors.cierreAcumFich && touched.cierreAcumFich && 
                                                 (
@@ -191,7 +191,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                                     </div>
                                                 )
                                             } 
-                                            JPS-OTROS 000 <Field id='cierreAcumTula' name='cierreAcumTula' type='number'/> tula
+                                            JPS-OTROS 000 <Field id='cierreAcumTula' name='cierreAcumTula' type='number' className='form-control'/> tula
                                             {
                                                 errors.cierreAcumTula && touched.cierreAcumTula && 
                                                 (
@@ -204,10 +204,6 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                     </tr>
                                 </tbody>
                             </table>
-                            <p>Custodia de la totalidad de las bolitas en el cuarto de ficheros: hora: _______</p>
-                            <p>Hora de finalización: ________</p>
-                            <p>Observaciones:</p>
-                            <Field id='observaciones' type='textarea'/>
                         </Form>
                     )}
             </Formik>

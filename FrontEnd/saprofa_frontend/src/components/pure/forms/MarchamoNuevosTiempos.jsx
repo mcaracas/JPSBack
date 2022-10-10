@@ -15,7 +15,7 @@ const marchamoSchema = Yup.object().shape({
 
 const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
     return (
-        <div>
+        <div className='container'>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}
@@ -52,7 +52,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                     </tr>
                                     <tr>
                                         <td>Apertura</td>
-                                        <td>JPS-SLE-000 <Field id='aperturaNT' name='aperturaNT' type='number'/>
+                                        <td>JPS-SLE-000 <Field id='aperturaNT' name='aperturaNT' type='number' className='form-control'/>
                                             {
                                                 errors.aperturaNT && touched.aperturaNT && 
                                                 (
@@ -62,7 +62,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                                 )
                                             }
                                         </td>
-                                        <td>JPS-SLE-000 <Field id='aperturaNTR' name='aperturaNTR' type='number'/>
+                                        <td>JPS-SLE-000 <Field id='aperturaNTR' name='aperturaNTR' type='number' className='form-control'/>
                                         {
                                                 errors.aperturaNTR && touched.aperturaNTR && 
                                                 (
@@ -75,7 +75,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                     </tr>
                                     <tr>
                                         <td>Cierre</td>
-                                        <td>JPS-SLE-000 <Field id='cierreNT' name='cierreNT' type='number'/>
+                                        <td>JPS-SLE-000 <Field id='cierreNT' name='cierreNT' type='number' className='form-control'/>
                                             {
                                                 errors.cierreNT && touched.cierreNT && 
                                                 (
@@ -84,7 +84,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                                     </div>
                                                 )
                                             }</td>
-                                        <td>JPS-SLE-000 <Field id='cierreNTR' name='cierreNTR' type='number'/>
+                                        <td>JPS-SLE-000 <Field id='cierreNTR' name='cierreNTR' type='number' className='form-control'/>
                                             {
                                                 errors.cierreNTR && touched.cierreNTR && 
                                                 (
@@ -97,7 +97,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                     </tr>
                                     <tr>
                                         <td>Contingencia</td>
-                                        <td style={{fontWeight : 'bold'}}>JPS-SLE-000 <Field id='contingencia1NT' name='contingencia1NT' type='number'/> JPS-SLE-000 <Field id='contingencia2NT' name='contingencia2NT' type='number'/>
+                                        <td style={{fontWeight : 'bold'}}>JPS-SLE-000 <Field id='contingencia1NT' name='contingencia1NT' type='number' className='form-control'/> JPS-SLE-000 <Field id='contingencia2NT' name='contingencia2NT' type='number' className='form-control'/>
                                             {
                                                 errors.contingencia1NT && touched.contingencia1NT && 
                                                 (
@@ -116,7 +116,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                                 )
                                             }
                                         </td>
-                                        <td style={{fontWeight : 'bold'}}>JPS-SLE-000 <Field id='contingenciaNTR' name='contingenciaNTR' type='number'/>
+                                        <td style={{fontWeight : 'bold'}}>JPS-SLE-000 <Field id='contingenciaNTR' name='contingenciaNTR' type='number' className='form-control'/>
                                             {
                                                 errors.contingenciaNTR && touched.contingenciaNTR && 
                                                 (

@@ -13,7 +13,7 @@ const marchamoSchema = Yup.object().shape({
 
 const Marchamo3Monazos = () => {
     return (
-        <div>
+        <div className='container'>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}
@@ -26,7 +26,7 @@ const Marchamo3Monazos = () => {
                     handleChange,
                     handleBlur }) => (
                         <Form>
-                            <table className='table table-bordered'>
+                            <table className='table table-bordered align-middle'>
                                 <thead>
                                     <tr>
                                         <th colSpan={5}>Número de marchamos para los ficheros</th>
@@ -47,7 +47,7 @@ const Marchamo3Monazos = () => {
                                 <tbody>
                                     <tr>
                                         <td>Plástico</td>
-                                        <td>JPS-SLE-000 <Field id='aperturaValjA' name='aperturaValjA' type='number'/>
+                                        <td>JPS-SLE-000 <Field id='aperturaValjA' name='aperturaValjA' type='number' className='form-control'/>
                                             {
                                                 errors.aperturaValjA && touched.aperturaValjA && 
                                                 (
@@ -57,7 +57,7 @@ const Marchamo3Monazos = () => {
                                                 )
                                             }
                                         </td>
-                                        <td>JPS-SLE-000 <Field id='aperturaValjB' name='aperturaValjB' type='number'/>
+                                        <td>JPS-SLE-000 <Field id='aperturaValjB' name='aperturaValjB' type='number' className='form-control'/>
                                             {
                                                 errors.aperturaValjB && touched.aperturaValjB && 
                                                 (
@@ -67,7 +67,7 @@ const Marchamo3Monazos = () => {
                                                 )
                                             }
                                         </td>
-                                        <td>JPS-SLE-000 <Field id='cierrejValjA' name='cierrejValjA' type='number'/>
+                                        <td>JPS-SLE-000 <Field id='cierrejValjA' name='cierrejValjA' type='number' className='form-control'/>
                                             {
                                                 errors.cierrejValjA && touched.cierrejValjA && 
                                                 (
@@ -77,7 +77,7 @@ const Marchamo3Monazos = () => {
                                                 )
                                             }
                                         </td>
-                                        <td>JPS-SLE-000 <Field id='cierrejValjB' name='cierrejValjB' type='number'/>
+                                        <td>JPS-SLE-000 <Field id='cierrejValjB' name='cierrejValjB' type='number' className='form-control'/>
                                             {
                                                 errors.cierrejValjB && touched.cierrejValjB && 
                                                 (
@@ -90,7 +90,7 @@ const Marchamo3Monazos = () => {
                                     </tr>
                                     <tr>
                                         <td>Contingencia</td>
-                                        <td colSpan={2}>JPS-SLE-000 <Field id='contingencia' name='contingencia' type='number'/></td>
+                                        <td colSpan={2}>JPS-SLE-000 <Field id='contingencia' name='contingencia' type='number' className='form-control'/></td>
                                         <td colSpan={2}></td>
                                     </tr>
                                 </tbody>

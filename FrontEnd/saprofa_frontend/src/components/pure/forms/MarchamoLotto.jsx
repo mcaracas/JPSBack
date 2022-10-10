@@ -13,8 +13,8 @@ const marchamoSchema = Yup.object().shape({
 
 const MarchamoLotto = () => {
     return (
-        <div>
-        <Formik
+        <div className='container'>
+            <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}
                 onSubmit={()=>{}}
@@ -26,7 +26,7 @@ const MarchamoLotto = () => {
                     handleChange,
                     handleBlur }) => (
                         <Form>
-                            <table className='table table-bordered'>
+                            <table className='table table-bordered align-middle'>
                                 <thead className='thead-dark'>
                                     <tr>
                                         <th rowSpan={2} colSpan={2}>Número de Acta donde se consigna el resultado oficial del sorteo, suscrita por los fiscalizadores del Sorteo</th>
@@ -41,7 +41,7 @@ const MarchamoLotto = () => {
                                 <tbody>
                                     <tr>
                                         <td>Sorteo anterior</td>
-                                        <td>Tomo <Field id='tomoAnterior' name='tomoAnterior' type='number'/>
+                                        <td>Tomo <Field id='tomoAnterior' name='tomoAnterior' type='number' className='form-control'/>
                                             {
                                                 errors.tomoAnterior && touched.tomoAnterior && 
                                                 (
@@ -52,7 +52,7 @@ const MarchamoLotto = () => {
                                             }
                                         </td>
                                         <td>Apertura</td>
-                                        <td>JPS-SLE-000 <Field id='apertura' name='apertura' type='number'/>
+                                        <td>JPS-SLE-000 <Field id='apertura' name='apertura' type='number' className='form-control'/>
                                             {
                                                 errors.apertura && touched.apertura && 
                                                 (
@@ -62,11 +62,11 @@ const MarchamoLotto = () => {
                                                 )
                                             }
                                         </td>
-                                        <td rowSpan={2}>JPS-SLE-000 <Field id='contingencia' name='contingencia' type='number'/></td>
+                                        <td rowSpan={2}>JPS-SLE-000 <Field id='contingencia' name='contingencia' type='number' className='form-control'/></td>
                                     </tr>
                                     <tr>
                                         <td>Sorteo actual</td>
-                                        <td>Tomo <Field id='tomoActual' name='tomoActual' type='number'/>
+                                        <td>Tomo <Field id='tomoActual' name='tomoActual' type='number' className='form-control'/>
                                             {
                                                 errors.tomoActual && touched.tomoActual && 
                                                 (
@@ -77,7 +77,7 @@ const MarchamoLotto = () => {
                                             }
                                         </td>
                                         <td>Cierre</td>
-                                        <td>JPS-SLE-000 <Field id='cierre' name='cierre' type='number'/>
+                                        <td>JPS-SLE-000 <Field id='cierre' name='cierre' type='number' className='form-control'/>
                                             {
                                                 errors.cierre && touched.cierre && 
                                                 (
