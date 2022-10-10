@@ -49,4 +49,13 @@ public class PlanPremiosController : ControllerBase
         PlanPremioUpdate.IdPlan = planPremio.IdPlan;
         context.SaveChanges();
     }
+
+    [HttpDelete("{id}")]    
+    public void Delete(int id)
+    {
+        var context = new proyecto_bdContext();
+        var planPremio = context.PlanPremios.FirstOrDefault(x => x.IdPlan == id);
+        context.PlanPremios.Remove(planPremio);
+        context.SaveChanges();
+    }
 }
