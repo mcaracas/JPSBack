@@ -3,6 +3,15 @@ import PropTypes from 'prop-types';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
+// TODO: check props to receive and information to send to Backend
+
+/**
+ * Validation schema for the form
+ * @type {Yup.ObjectSchema}
+ * all the fields must be numbers and required
+ * except for contingencia, this is optional
+ */
+
 const marchamoSchema = Yup.object().shape({
     aperturaNT : Yup.number().required('Este campo es requerido'),
     aperturaNTR : Yup.number().required('Este campo es requerido'),

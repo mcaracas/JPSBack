@@ -3,6 +3,15 @@ import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
+// TODO: check props to receive and information to send to Backend
+
+/**
+ * Validation schema for the form
+ * @type {Yup.ObjectSchema}
+ * valija: string, required
+ * all the other fields must be number and required
+ */
+
 const pruebasSchema = Yup.object().shape(
     {
         valija : Yup.string().required('Valija requerida'),

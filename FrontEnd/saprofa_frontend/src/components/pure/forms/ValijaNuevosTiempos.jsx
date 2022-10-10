@@ -2,16 +2,25 @@ import React from 'react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
-    const pruebasSchema = Yup.object().shape(
-        {
-            valija : Yup.string().required('Valija requerida'),
-            bolita1 : Yup.number().required('Campo requerido'),
-            bolita2 : Yup.number().required('Campo requerido'),
-            bolita3 : Yup.number().required('Campo requerido'),
-            bolita4 : Yup.number().required('Campo requerido'),
-            bolita5 : Yup.number().required('Campo requerido')
-        }
-    );
+// TODO: check props to receive and information to send to Backend
+
+/**
+ * Validation schema for the form
+ * @type {Yup.ObjectSchema}
+ * valija: string, required
+ * all the other fields must be number and required
+ */
+
+const pruebasSchema = Yup.object().shape(
+    {
+        valija : Yup.string().required('Valija requerida'),
+        bolita1 : Yup.number().required('Campo requerido'),
+        bolita2 : Yup.number().required('Campo requerido'),
+        bolita3 : Yup.number().required('Campo requerido'),
+        bolita4 : Yup.number().required('Campo requerido'),
+        bolita5 : Yup.number().required('Campo requerido')
+    }
+);
 
 const ValijaNuevosTiempos = () => {
     return (
