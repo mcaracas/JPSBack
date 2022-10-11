@@ -49,4 +49,13 @@ public class UsuarioController : ControllerBase
         UsuarioUpdate.Id = usuario.Id;
         context.SaveChanges();
     }
+
+    [HttpDelete("{id}")]
+    public void Delete(int id)
+    {
+        var context = new proyecto_bdContext();
+        var usuario = context.Usuarios.FirstOrDefault(x => x.Id == id);
+        context.Usuarios.Remove(usuario);
+        context.SaveChanges();
+    }
 }
