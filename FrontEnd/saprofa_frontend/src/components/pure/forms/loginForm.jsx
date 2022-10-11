@@ -1,6 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { login } from '../../../services/axiosService';
 
 /**
  * Schema for the form
@@ -10,7 +11,7 @@ import * as Yup from 'yup';
  */
 const loginSchema = Yup.object().shape({
     username: Yup.string().required('Debe ingresar el nombre de usuario'),
-    password: Yup.string().min(8, 'La contraseña debe tener un minimo de 8 caracteres').required('Debe ingresar la contraseña')
+    password: Yup.string().min(8, 'La contraseña debe tener un mínimo de 8 caracteres').required('Debe ingresar la contraseña')
 });
 
 
@@ -24,6 +25,7 @@ const LoginForm = () => {
         username: '',
         password: ''
     } 
+    
 
     return (
         <div>
@@ -31,11 +33,16 @@ const LoginForm = () => {
                 initialValues={initialValues}
                 validationSchema={loginSchema}
                 onSubmit={async (values) => { 
-                    await new Promise(r => setTimeout(r, 1000));
-                    alert(JSON.stringify(values, null, 2));
-                    /* @TODO: Request to backend */
+                    login(values.username, values.password) //Using axios to make the request
+                        .then((response) => {   // If login is successful
+                            console.log('Status Code: ',response.status);
+                        }).catch((error) => {   // If login fails
+                            //sessionStorage.removeItem('token');
+                            console.log('Error: ',error);
+                        }
+                    );
                 }}>
-                {({ errors, touched }) => (
+                {({ errors, touched, isSubmitting }) => (
                     <Form>
                         <div className="form-group">
                             <div className='username-field'>
@@ -69,7 +76,9 @@ const LoginForm = () => {
                             <br></br>
                             <div className='button-field'>
                                 <button type="submit" className='btn'>Iniciar Sesión</button>
+                                {isSubmitting ? <p>Submitting...</p> : null}
                             </div>
+                            
                         </div>
                     </Form>
                 )}
