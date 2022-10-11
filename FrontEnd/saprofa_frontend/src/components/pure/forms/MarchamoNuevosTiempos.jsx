@@ -65,7 +65,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                             {
                                                 errors.aperturaNT && touched.aperturaNT && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaNT'></ErrorMessage>
                                                     </div>
                                                 )
@@ -75,7 +75,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                         {
                                                 errors.aperturaNTR && touched.aperturaNTR && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaNTR'></ErrorMessage>
                                                     </div>
                                                 )
@@ -88,7 +88,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                             {
                                                 errors.cierreNT && touched.cierreNT && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreNT'></ErrorMessage>
                                                     </div>
                                                 )
@@ -97,7 +97,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                             {
                                                 errors.cierreNTR && touched.cierreNTR && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreNTR'></ErrorMessage>
                                                     </div>
                                                 )
@@ -110,7 +110,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                             {
                                                 errors.contingencia1NT && touched.contingencia1NT && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='contingencia1NT'></ErrorMessage>
                                                     </div>
                                                 )
@@ -119,7 +119,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                             {
                                                 errors.contingencia2NT && touched.contingencia2NT && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='contingencia2NT'></ErrorMessage>
                                                     </div>
                                                 )
@@ -129,7 +129,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                             {
                                                 errors.contingenciaNTR && touched.contingenciaNTR && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='contingenciaNTR'></ErrorMessage>
                                                     </div>
                                                 )

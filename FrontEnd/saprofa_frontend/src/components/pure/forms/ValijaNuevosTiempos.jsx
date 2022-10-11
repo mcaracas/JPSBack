@@ -50,7 +50,7 @@ const ValijaNuevosTiempos = () => {
                                             {
                                                 errors.valija && touched.valija && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='valija'></ErrorMessage>
                                                     </div>
                                                 )
@@ -60,7 +60,7 @@ const ValijaNuevosTiempos = () => {
                                             {
                                                 errors.bolita1 && touched.bolita1 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='bolita1'></ErrorMessage>
                                                     </div>
                                                 )
@@ -70,7 +70,7 @@ const ValijaNuevosTiempos = () => {
                                             {
                                                 errors.bolita2 && touched.bolita2 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='bolita2'></ErrorMessage>
                                                     </div>
                                                 )
@@ -80,7 +80,7 @@ const ValijaNuevosTiempos = () => {
                                             {
                                                 errors.bolita3 && touched.bolita3 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='bolita3'></ErrorMessage>
                                                     </div>
                                                 )
@@ -90,7 +90,7 @@ const ValijaNuevosTiempos = () => {
                                             {
                                                 errors.bolita4 && touched.bolita4 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='bolita4'></ErrorMessage>
                                                     </div>
                                                 )
@@ -100,7 +100,7 @@ const ValijaNuevosTiempos = () => {
                                             {
                                                 errors.bolita5 && touched.bolita5 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='bolita5'></ErrorMessage>
                                                     </div>
                                                 )

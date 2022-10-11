@@ -1,5 +1,6 @@
 import './App.css';
 import LotteryCardList from './components/container/LotteryCardList';
+import Marchamo3Monazos from './components/pure/forms/Marchamo3Monazos';
 import LoginPage from './pages/auth/LoginPage';
 
 function App() {
@@ -7,7 +8,8 @@ function App() {
     <div className="App">
         {/** @TODO: Routes */}
         {/* <LoginPage></LoginPage> * Login page */}
-        <LotteryCardList></LotteryCardList>
+        {/* <LotteryCardList></LotteryCardList> */}
+        <Marchamo3Monazos></Marchamo3Monazos>
     </div>
   );
 }

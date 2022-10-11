@@ -65,7 +65,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaS1 && touched.aperturaS1 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaS1'></ErrorMessage>
                                                     </div>
                                                 )
@@ -76,7 +76,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.cierreS && touched.cierreS && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreS'></ErrorMessage>
                                                     </div>
                                                 )
@@ -88,7 +88,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaS2 && touched.aperturaS2 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaS2'></ErrorMessage>
                                                     </div>
                                                 )
@@ -100,7 +100,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaS3 && touched.aperturaS3 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaS3'></ErrorMessage>
                                                     </div>
                                                 )
@@ -112,7 +112,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaS4 && touched.aperturaS4 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaS4'></ErrorMessage>
                                                     </div>
                                                 )
@@ -125,7 +125,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaN && touched.aperturaN && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaN'></ErrorMessage>
                                                     </div>
                                                 )
@@ -136,7 +136,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.cierreN && touched.cierreN && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreN'></ErrorMessage>
                                                     </div>
                                                 )
@@ -149,7 +149,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaP && touched.aperturaP && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaP'></ErrorMessage>
                                                     </div>
                                                 )
@@ -160,7 +160,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.cierreP && touched.cierreP && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreP'></ErrorMessage>
                                                     </div>
                                                 )
@@ -174,7 +174,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaAcumFich && touched.aperturaAcumFich && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaAcumFich'></ErrorMessage>
                                                     </div>
                                                 )
@@ -183,7 +183,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaAcumTula && touched.aperturaAcumTula && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaAcumTula'></ErrorMessage>
                                                     </div>
                                                 )
@@ -194,7 +194,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.cierreAcumFich && touched.cierreAcumFich && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreAcumFich'></ErrorMessage>
                                                     </div>
                                                 )
@@ -203,7 +203,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.cierreAcumTula && touched.cierreAcumTula && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreAcumTula'></ErrorMessage>
                                                     </div>
                                                 )

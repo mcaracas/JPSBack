@@ -59,7 +59,7 @@ const Marchamo3Monazos = () => {
                                             {
                                                 errors.aperturaValjA && touched.aperturaValjA && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaValjA'></ErrorMessage>
                                                     </div>
                                                 )
@@ -69,7 +69,7 @@ const Marchamo3Monazos = () => {
                                             {
                                                 errors.aperturaValjB && touched.aperturaValjB && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaValjB'></ErrorMessage>
                                                     </div>
                                                 )
@@ -79,7 +79,7 @@ const Marchamo3Monazos = () => {
                                             {
                                                 errors.cierrejValjA && touched.cierrejValjA && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierrejValjA'></ErrorMessage>
                                                     </div>
                                                 )
@@ -89,7 +89,7 @@ const Marchamo3Monazos = () => {
                                             {
                                                 errors.cierrejValjB && touched.cierrejValjB && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierrejValjB'></ErrorMessage>
                                                     </div>
                                                 )

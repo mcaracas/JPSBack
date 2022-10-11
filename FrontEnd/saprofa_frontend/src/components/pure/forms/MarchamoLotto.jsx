@@ -54,7 +54,7 @@ const MarchamoLotto = () => {
                                             {
                                                 errors.tomoAnterior && touched.tomoAnterior && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='tomoAnterior'></ErrorMessage>
                                                     </div>
                                                 )
@@ -65,7 +65,7 @@ const MarchamoLotto = () => {
                                             {
                                                 errors.apertura && touched.apertura && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='apertura'></ErrorMessage>
                                                     </div>
                                                 )
@@ -79,7 +79,7 @@ const MarchamoLotto = () => {
                                             {
                                                 errors.tomoActual && touched.tomoActual && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='tomoActual'></ErrorMessage>
                                                     </div>
                                                 )
@@ -90,7 +90,7 @@ const MarchamoLotto = () => {
                                             {
                                                 errors.cierre && touched.cierre && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierre'></ErrorMessage>
                                                     </div>
                                                 )
