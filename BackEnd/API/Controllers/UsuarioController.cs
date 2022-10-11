@@ -4,7 +4,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-
+#nullable disable
 public class UsuarioController : ControllerBase
 {
     private readonly ILogger<UsuarioController> _logger;
@@ -47,6 +47,15 @@ public class UsuarioController : ControllerBase
         var context = new proyecto_bdContext();
         var UsuarioUpdate = context.Usuarios.FirstOrDefault(x => x.Id == usuario.Id);
         UsuarioUpdate.Id = usuario.Id;
+        context.SaveChanges();
+    }
+
+    [HttpDelete("{id}")]
+    public void Delete(int id)
+    {
+        var context = new proyecto_bdContext();
+        var usuario = context.Usuarios.FirstOrDefault(x => x.Id == id);
+        context.Usuarios.Remove(usuario);
         context.SaveChanges();
     }
 }

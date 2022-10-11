@@ -1,0 +1,5 @@
+{
+    "appService.preDeployTask": "publish-release",
+    "appService.deploySubpath": "bin\\Release\\net6.0\\publish",
+    "appService.defaultWebAppToDeploy": "/subscriptions/90d87d38-1b5b-43b9-8af1-03dbd5be180f/resourceGroups/appsvc_windows_centralus/providers/Microsoft.Web/sites/SAPROFA"
+}

@@ -1,0 +1,18 @@
+﻿#nullable disable
+
+namespace API
+{
+    public partial class Usuario
+    {
+        public Usuario()
+        {
+            DatosSorteos = new HashSet<DatosSorteo>();
+        }
+
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Clave { get; set; }
+
+        public virtual ICollection<DatosSorteo> DatosSorteos { get; set; }
+    }
+}

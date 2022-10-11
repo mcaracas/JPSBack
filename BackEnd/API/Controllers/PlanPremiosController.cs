@@ -4,7 +4,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-
+#nullable disable
 public class PlanPremiosController : ControllerBase
 {
     private readonly ILogger<PlanPremiosController> _logger;
@@ -47,6 +47,15 @@ public class PlanPremiosController : ControllerBase
         var context = new proyecto_bdContext();
         var PlanPremioUpdate = context.PlanPremios.FirstOrDefault(x => x.IdPlan == planPremio.IdPlan);
         PlanPremioUpdate.IdPlan = planPremio.IdPlan;
+        context.SaveChanges();
+    }
+
+    [HttpDelete("{id}")]    
+    public void Delete(int id)
+    {
+        var context = new proyecto_bdContext();
+        var planPremio = context.PlanPremios.FirstOrDefault(x => x.IdPlan == id);
+        context.PlanPremios.Remove(planPremio);
         context.SaveChanges();
     }
 }

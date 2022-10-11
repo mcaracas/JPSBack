@@ -4,7 +4,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-
+#nullable disable
 public class ResultadoController : ControllerBase
 {
     private readonly ILogger<ResultadoController> _logger;
@@ -47,6 +47,15 @@ public class ResultadoController : ControllerBase
         var context = new proyecto_bdContext();
         var ResultadoUpdate = context.Resultados.FirstOrDefault(x => x.IdResultado == resultado.IdResultado);
         ResultadoUpdate.IdResultado = resultado.IdResultado;
+        context.SaveChanges();
+    }
+
+    [HttpDelete("{id}")]
+    public void Delete(int id)
+    {
+        var context = new proyecto_bdContext();
+        var resultado = context.Resultados.FirstOrDefault(x => x.IdResultado == id);
+        context.Resultados.Remove(resultado);
         context.SaveChanges();
     }
 }

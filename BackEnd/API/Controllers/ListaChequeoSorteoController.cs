@@ -4,6 +4,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+#nullable disable
 
 public class ListaChequeoSorteoController : ControllerBase
 {
@@ -47,6 +48,14 @@ public class ListaChequeoSorteoController : ControllerBase
         var context = new proyecto_bdContext();
         var ListaChequeoSorteoUpdate = context.ListaChequeoSorteos.FirstOrDefault(x => x.Id == listaChequeoSorteo.Id);
         ListaChequeoSorteoUpdate.Id = listaChequeoSorteo.Id;
+        context.SaveChanges();
+    }
+    [HttpDelete("{id}")]    
+    public void Delete(int id)
+    {
+        var context = new proyecto_bdContext();
+        var listaChequeoSorteo = context.ListaChequeoSorteos.FirstOrDefault(x => x.Id == id);
+        context.ListaChequeoSorteos.Remove(listaChequeoSorteo);
         context.SaveChanges();
     }
 }
