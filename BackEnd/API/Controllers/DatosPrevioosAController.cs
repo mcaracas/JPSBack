@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+#nullable disable
 
 [ApiController]
 [Route("[controller]")]

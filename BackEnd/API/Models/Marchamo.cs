@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-#nullable disable
+﻿#nullable disable
 
 namespace API
 {
@@ -14,5 +11,7 @@ namespace API
         public string Tipo { get; set; }
         public string Valija { get; set; }
         public string Observacion { get; set; }
+
+        public virtual DatosSorteo IdDatosSorteoNavigation { get; set; }
     }
 }

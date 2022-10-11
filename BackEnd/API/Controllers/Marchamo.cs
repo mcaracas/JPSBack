@@ -4,6 +4,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+#nullable disable
 public class MarchamoController : ControllerBase
 {
     private readonly ILogger<MarchamoController> _logger;
