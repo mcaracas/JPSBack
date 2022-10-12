@@ -11,9 +11,9 @@ function App() {
   return (
     <div className="App">
         {/** @TODO: Routes */}
-        <LoginPage></LoginPage>
+        {/* <LoginPage></LoginPage> * Login page */}
         {/* <LotteryCardList></LotteryCardList> */}
-        {/* <h1>3 Monazos</h1>
+        <h1>3 Monazos</h1>
         <Marchamo3Monazos></Marchamo3Monazos>
         <h1>Nuevos Tiempos</h1>
         <MarchamoNuevosTiempos></MarchamoNuevosTiempos>
@@ -22,7 +22,7 @@ function App() {
         <h1>Popular</h1>
         <MarchamoPopular></MarchamoPopular>
         <h1>Nacional</h1>
-        <MarchamoNacional></MarchamoNacional> */}
+        <MarchamoNacional></MarchamoNacional>
     </div>
   );
 }
