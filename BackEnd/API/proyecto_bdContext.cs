@@ -44,6 +44,7 @@ namespace API
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseMySQL(Environment.GetEnvironmentVariable("MESSAGE"));
+                
             }
         }
 
