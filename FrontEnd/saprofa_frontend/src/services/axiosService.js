@@ -14,18 +14,10 @@ export function login(username, password) {
     });
 }
 
-export function insertMarchamoLotto(lottery){
-    return APIRequest.post('/MarchamoLotto',lottery);
+export function insertMarchamo(marchamoList){
+    return APIRequest.post('/Marchamo',marchamoList);
 }
 
-export function insertMarchamo3Monazos(lottery){
-    return APIRequest.post('/Marchamo3monazo',lottery);
-}
-
-export function insertMarchamoNT(lottery){
-    return APIRequest.post('/MarchamoNtNtr',lottery);
-}
-
-export function insertMarchamoFisica(lottery){
-    return APIRequest.post('/marchamoFisica',lottery);
+export function getActualLotteryInfo(){
+    return APIRequest.get('/DatosSorteo');
 }

@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { insertMarchamoFisica } from '../../../services/axiosService';
-
-// TODO: check props to receive and information to send to Backend
+import { insertMarchamo } from '../../../services/axiosService';
 
 /**
  * Validation schema for the form
@@ -28,6 +26,99 @@ const marchamoSchema = Yup.object().shape({
 
 });
 
+let marchamoDefault = {
+    id : 'LP',
+    tipo : 'Apertura',
+    valija : '',
+    tipoMarchamo : 'Serie',
+    numeroMarchamo : '1525',
+}
+
+
+const buildMarchamoList = (values) => {
+    // console.log(values);
+    const marchamos = [];
+
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLT-S-0000${values.aperturaS1}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLT-S-0000${values.aperturaS2}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLT-S-0000${values.aperturaS3}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLT-S-0000${values.aperturaS4}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLT-S-0000${values.cierreS}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'Numero',
+            numeroMarchamo : `JPS-SLT-N-0000${values.aperturaN}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Cierre',
+            tipoMarchamo : 'Numero',
+            numeroMarchamo : `JPS-SLT-N-0000${values.cierreN}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'AcumuladoFichero',
+            numeroMarchamo : `JPS-SLT-OTROS 000${values.aperturaAcumFich}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'AcumuladoFichero',
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLT-OTROS 000${values.cierreAcumFich}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'AcumuladoTula',
+            numeroMarchamo : `JPS-SLT-OTROS 000${values.aperturaAcumTula}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'AcumuladoTula',
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLT-OTROS 000${values.cierreAcumTula}`,
+        }
+    );
+    // console.log(marchamos);
+    return marchamos;
+}
+
 const MarchamoPopular = (id) => {
     return (
         <div className='container'>
@@ -35,8 +126,9 @@ const MarchamoPopular = (id) => {
                 initialValues={{}}
                 validationSchema={marchamoSchema}
                 onSubmit={async (values)=>{
-                    console.log(values)
-                    insertMarchamoFisica(values)
+                    const marchamoList = buildMarchamoList(values);
+                    // console.log(values)
+                    insertMarchamo(marchamoList)
                         .then((response) => { 
                             if(response.status === 200){
                                 alert(JSON.stringify(response.data));
@@ -70,7 +162,7 @@ const MarchamoPopular = (id) => {
                                     <tr>
                                         <th rowSpan={4}>Series</th>
                                         <td >JPS-SLT-S-0000 <Field id='aperturaS1' name='aperturaS1' type='number' className='form-control'/>
-                                            {
+                                            { 
                                                 errors.aperturaS1 && touched.aperturaS1 && 
                                                 (
                                                     <div style={{color:'red'}}>

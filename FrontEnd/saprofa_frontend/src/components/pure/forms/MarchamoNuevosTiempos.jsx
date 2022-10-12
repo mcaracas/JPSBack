@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { insertMarchamoNT } from '../../../services/axiosService';
-
-// TODO: check props to receive and information to send to Backend
+import { insertMarchamo } from '../../../services/axiosService';
 
 /**
  * Validation schema for the form
@@ -23,6 +21,74 @@ const marchamoSchema = Yup.object().shape({
     contingenciaNTR : Yup.number()
 });
 
+let marchamoDefault = {
+    id : 'NT5367',
+    tipo : 'Apertura',
+    valija : '',
+    tipoMarchamo : 'ElectronicaNT',
+    numeroMarchamo : '1525',
+}
+
+
+const buildMarchamoList = (values) => {
+
+    const marchamos = [];
+
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLE-000${values.aperturaNT}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLE-000${values.cierreNT}`,
+        }
+    );
+    //TODO verificar NT y NTR
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'ElectronicaNTR',
+            numeroMarchamo : `JPS-SLE-000${values.aperturaNTR}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'ElectronicaNTR',
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLE-000${values.cierreNTR}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Contingencia',
+            numeroMarchamo : `JPS-SLE-000${values.contingencia1NT}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Contingencia',
+            numeroMarchamo : `JPS-SLE-000${values.contingencia2NT}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'ElectronicaNTR',
+            tipo : 'Contingencia',
+            numeroMarchamo : `JPS-SLE-000${values.contingenciaNTR}`,
+        }
+    );
+    
+    return marchamos;
+}
+
 const MarchamoNuevosTiempos = (id) => {
     return (
         <div className='container'>
@@ -30,8 +96,9 @@ const MarchamoNuevosTiempos = (id) => {
                 initialValues={{}}
                 validationSchema={marchamoSchema}
                 onSubmit={async (values)=>{
-                    console.log(values)
-                    insertMarchamoNT(values)
+                    const marchamoList = buildMarchamoList(values);
+                    console.log(marchamoList);
+                    insertMarchamo(marchamoList)
                         .then((response) => { 
                             if(response.status === 200){
                                 alert(JSON.stringify(response.data));
