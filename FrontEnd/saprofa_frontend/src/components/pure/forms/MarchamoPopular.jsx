@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { insertMarchamoFisica } from '../../../services/axiosService';
 
 // TODO: check props to receive and information to send to Backend
 
@@ -27,13 +28,25 @@ const marchamoSchema = Yup.object().shape({
 
 });
 
-const MarchamoPopular = (marchamoApertura) => {
+const MarchamoPopular = (id) => {
     return (
         <div className='container'>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}
-                onSubmit={()=>{}}
+                onSubmit={async (values)=>{
+                    console.log(values)
+                    insertMarchamoFisica(values)
+                        .then((response) => { 
+                            if(response.status === 200){
+                                alert(JSON.stringify(response.data));
+                            }else{
+                                throw new Error('Marchamo no insertado');
+                            }
+                        }).catch((error) => { 
+                            alert(`Algo salió mal: ${error}`);
+                        })
+                }}
                 >
                 {({ values,
                     touched,
@@ -60,7 +73,7 @@ const MarchamoPopular = (marchamoApertura) => {
                                             {
                                                 errors.aperturaS1 && touched.aperturaS1 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaS1'></ErrorMessage>
                                                     </div>
                                                 )
@@ -70,7 +83,7 @@ const MarchamoPopular = (marchamoApertura) => {
                                             {
                                                 errors.cierreS && touched.cierreS && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreS'></ErrorMessage>
                                                     </div>
                                                 )
@@ -82,7 +95,7 @@ const MarchamoPopular = (marchamoApertura) => {
                                             {
                                                 errors.aperturaS2 && touched.aperturaS2 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaS2'></ErrorMessage>
                                                     </div>
                                                 )
@@ -94,7 +107,7 @@ const MarchamoPopular = (marchamoApertura) => {
                                             {
                                                 errors.aperturaS3 && touched.aperturaS3 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaS3'></ErrorMessage>
                                                     </div>
                                                 )
@@ -106,7 +119,7 @@ const MarchamoPopular = (marchamoApertura) => {
                                             {
                                                 errors.aperturaS4 && touched.aperturaS4 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaS4'></ErrorMessage>
                                                     </div>
                                                 )
@@ -119,7 +132,7 @@ const MarchamoPopular = (marchamoApertura) => {
                                             {
                                                 errors.aperturaN && touched.aperturaN && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaN'></ErrorMessage>
                                                     </div>
                                                 )
@@ -129,7 +142,7 @@ const MarchamoPopular = (marchamoApertura) => {
                                             {
                                                 errors.cierreN && touched.cierreN && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreN'></ErrorMessage>
                                                     </div>
                                                 )
@@ -143,7 +156,7 @@ const MarchamoPopular = (marchamoApertura) => {
                                             {
                                                 errors.aperturaAcumFich && touched.aperturaAcumFich && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaAcumFich'></ErrorMessage>
                                                     </div>
                                                 )
@@ -152,7 +165,7 @@ const MarchamoPopular = (marchamoApertura) => {
                                             {
                                                 errors.aperturaAcumTula && touched.aperturaAcumTula && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaAcumTula'></ErrorMessage>
                                                     </div>
                                                 )
@@ -163,7 +176,7 @@ const MarchamoPopular = (marchamoApertura) => {
                                             {
                                                 errors.cierreAcumFich && touched.cierreAcumFich && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreAcumFich'></ErrorMessage>
                                                     </div>
                                                 )
@@ -172,7 +185,7 @@ const MarchamoPopular = (marchamoApertura) => {
                                             {
                                                 errors.cierreAcumTula && touched.cierreAcumTula && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreAcumTula'></ErrorMessage>
                                                     </div>
                                                 )
@@ -181,6 +194,10 @@ const MarchamoPopular = (marchamoApertura) => {
                                     </tr>
                                 </tbody>
                             </table>
+                            <div className='button-field'>
+                                <button type="submit" className='btn'>Registrar Marchamos</button>
+                                {isSubmitting ? <p>Submitting...</p> : null}
+                            </div>
                         </Form>
                     )}
             </Formik>
@@ -190,7 +207,7 @@ const MarchamoPopular = (marchamoApertura) => {
 
 
 MarchamoPopular.propTypes = {
-    marchamoApertura: PropTypes.string.isRequired,
+
 };
 
 

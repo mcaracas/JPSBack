@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { insertMarchamo3Monazos } from '../../../services/axiosService'
 
 // TODO: check props to receive and information to send to Backend
 
@@ -19,13 +20,24 @@ const marchamoSchema = Yup.object().shape({
     contingencia: Yup.number()
 });
 
-const Marchamo3Monazos = () => {
+const Marchamo3Monazos = (id) => {
     return (
         <div className='container'>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}
-                onSubmit={()=>{}}
+                onSubmit={async (values)=>{
+                    insertMarchamo3Monazos(values)
+                        .then((response) => { 
+                            if(response.status === 200){
+                                alert(JSON.stringify(response.data));
+                            }else{
+                                throw new Error('Marchamo no insertado');
+                            }
+                        }).catch((error) => { 
+                            alert(`Algo salió mal: ${error}`);
+                        })
+                }}
                 >
                 {({ values,
                     touched,
@@ -59,7 +71,7 @@ const Marchamo3Monazos = () => {
                                             {
                                                 errors.aperturaValjA && touched.aperturaValjA && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaValjA'></ErrorMessage>
                                                     </div>
                                                 )
@@ -69,7 +81,7 @@ const Marchamo3Monazos = () => {
                                             {
                                                 errors.aperturaValjB && touched.aperturaValjB && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaValjB'></ErrorMessage>
                                                     </div>
                                                 )
@@ -79,7 +91,7 @@ const Marchamo3Monazos = () => {
                                             {
                                                 errors.cierrejValjA && touched.cierrejValjA && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierrejValjA'></ErrorMessage>
                                                     </div>
                                                 )
@@ -89,7 +101,7 @@ const Marchamo3Monazos = () => {
                                             {
                                                 errors.cierrejValjB && touched.cierrejValjB && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierrejValjB'></ErrorMessage>
                                                     </div>
                                                 )
@@ -103,6 +115,10 @@ const Marchamo3Monazos = () => {
                                     </tr>
                                 </tbody>
                             </table>
+                            <div className='button-field'>
+                                <button type="submit" className='btn'>Registrar Marchamos</button>
+                                {isSubmitting ? <p>Submitting...</p> : null}
+                            </div>
                         </Form>
                     )}
             </Formik>
