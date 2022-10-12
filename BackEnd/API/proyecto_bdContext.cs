@@ -23,10 +23,7 @@ namespace API
         public virtual DbSet<DatosSorteo> DatosSorteos { get; set; }
         public virtual DbSet<ListaChequeoDetalle> ListaChequeoDetalles { get; set; }
         public virtual DbSet<ListaChequeoSorteo> ListaChequeoSorteos { get; set; }
-        public virtual DbSet<Marchamo3monazo> Marchamo3monazos { get; set; }
-        public virtual DbSet<MarchamoLotto> MarchamoLottos { get; set; }
-        public virtual DbSet<MarchamoNtNtr> MarchamoNtNtrs { get; set; }
-        public virtual DbSet<MarchamoPopularNacional> MarchamoPopularNacionals { get; set; }
+        public virtual DbSet<Marchamo> Marchamos { get; set; }
         public virtual DbSet<PlanPremio> PlanPremios { get; set; }
         public virtual DbSet<PlanPremiosDetalle> PlanPremiosDetalles { get; set; }
         public virtual DbSet<Prueba> Pruebas { get; set; }
@@ -44,7 +41,6 @@ namespace API
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseMySQL(Environment.GetEnvironmentVariable("MESSAGE"));
-                
             }
         }
 
@@ -245,196 +241,36 @@ namespace API
                     .HasConstraintName("lista_chequeo_sorteo_ibfk_1");
             });
 
-            modelBuilder.Entity<Marchamo3monazo>(entity =>
+            modelBuilder.Entity<Marchamo>(entity =>
             {
-                entity.ToTable("marchamo_3monazos");
+                entity.ToTable("marchamo");
 
-                entity.HasIndex(e => e.IdSorteo, "idSorteo_idx");
+                entity.HasIndex(e => e.IdSorteo, "id_Sorteo_idx");
 
                 entity.Property(e => e.Id)
                     .HasColumnType("int(11)")
                     .HasColumnName("id");
 
-                entity.Property(e => e.AperturaValijaA)
-                    .HasMaxLength(45)
-                    .HasColumnName("apertura_valija_A");
-
-                entity.Property(e => e.AperturaValijaB)
-                    .HasMaxLength(45)
-                    .HasColumnName("apertura_valija_B");
-
-                entity.Property(e => e.Contingencia)
-                    .HasMaxLength(45)
-                    .HasColumnName("contingencia");
-
                 entity.Property(e => e.IdSorteo)
                     .HasColumnType("int(11)")
                     .HasColumnName("idSorteo");
 
-                entity.HasOne(d => d.IdSorteoNavigation)
-                    .WithMany(p => p.Marchamo3monazos)
-                    .HasForeignKey(d => d.IdSorteo)
-                    .HasConstraintName("idSorteo");
-            });
-
-            modelBuilder.Entity<MarchamoLotto>(entity =>
-            {
-                entity.ToTable("marchamo_lotto");
-
-                entity.HasIndex(e => e.IdSorteo, "idSorteo_idx");
-
-                entity.Property(e => e.Id)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("id");
-
-                entity.Property(e => e.Apertura)
+                entity.Property(e => e.NumeroMarchamo)
                     .HasMaxLength(45)
-                    .HasColumnName("apertura");
+                    .HasColumnName("numeroMarchamo");
 
-                entity.Property(e => e.Cierre)
+                entity.Property(e => e.Tipo)
                     .HasMaxLength(45)
-                    .HasColumnName("cierre");
+                    .HasColumnName("tipo");
 
-                entity.Property(e => e.Contingencia)
+                entity.Property(e => e.TipoMarchamo)
                     .HasMaxLength(45)
-                    .HasColumnName("contingencia");
-
-                entity.Property(e => e.IdSorteo)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("idSorteo");
+                    .HasColumnName("tipoMarchamo");
 
                 entity.HasOne(d => d.IdSorteoNavigation)
-                    .WithMany(p => p.MarchamoLottos)
+                    .WithMany(p => p.Marchamos)
                     .HasForeignKey(d => d.IdSorteo)
                     .HasConstraintName("id_Sorteo");
-            });
-
-            modelBuilder.Entity<MarchamoNtNtr>(entity =>
-            {
-                entity.ToTable("marchamo_nt_ntr");
-
-                entity.HasIndex(e => e.IdSorteo, "idSorteo_idx");
-
-                entity.Property(e => e.Id)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("id");
-
-                entity.Property(e => e.AperturaNt)
-                    .HasMaxLength(45)
-                    .HasColumnName("aperturaNT");
-
-                entity.Property(e => e.AperturaNtr)
-                    .HasMaxLength(45)
-                    .HasColumnName("aperturaNTR");
-
-                entity.Property(e => e.CierreNt)
-                    .HasMaxLength(45)
-                    .HasColumnName("cierreNT");
-
-                entity.Property(e => e.CierreNtr)
-                    .HasMaxLength(45)
-                    .HasColumnName("cierreNTR");
-
-                entity.Property(e => e.Contingencia1Nt)
-                    .HasMaxLength(45)
-                    .HasColumnName("contingencia1NT");
-
-                entity.Property(e => e.Contingencia1Ntr)
-                    .HasMaxLength(45)
-                    .HasColumnName("contingencia1NTR");
-
-                entity.Property(e => e.Contingencia2Nt)
-                    .HasMaxLength(45)
-                    .HasColumnName("contingencia2NT");
-
-                entity.Property(e => e.IdSorteo)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("idSorteo");
-
-                entity.HasOne(d => d.IdSorteoNavigation)
-                    .WithMany(p => p.MarchamoNtNtrs)
-                    .HasForeignKey(d => d.IdSorteo)
-                    .HasConstraintName("idSort");
-            });
-
-            modelBuilder.Entity<MarchamoPopularNacional>(entity =>
-            {
-                entity.ToTable("marchamo_popular_nacional");
-
-                entity.HasIndex(e => e.IdSorteo, "id_sorteo_idx");
-
-                entity.Property(e => e.Id)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("id");
-
-                entity.Property(e => e.AperturaAcumuladoFichero)
-                    .HasMaxLength(45)
-                    .HasColumnName("apertura_acumulado_fichero");
-
-                entity.Property(e => e.AperturaAcumuladoTula)
-                    .HasMaxLength(45)
-                    .HasColumnName("apertura_acumulado_tula");
-
-                entity.Property(e => e.AperturaNumero)
-                    .HasMaxLength(45)
-                    .HasColumnName("apertura_numero");
-
-                entity.Property(e => e.AperturaPremio)
-                    .HasMaxLength(45)
-                    .HasColumnName("apertura_premio");
-
-                entity.Property(e => e.AperturaSerie1)
-                    .HasMaxLength(45)
-                    .HasColumnName("apertura_serie1");
-
-                entity.Property(e => e.AperturaSerie2)
-                    .HasMaxLength(45)
-                    .HasColumnName("apertura_serie2");
-
-                entity.Property(e => e.AperturaSerie3)
-                    .HasMaxLength(45)
-                    .HasColumnName("apertura_serie3");
-
-                entity.Property(e => e.AperturaSerie4)
-                    .HasMaxLength(45)
-                    .HasColumnName("apertura_serie4");
-
-                entity.Property(e => e.CierreAcumuladoFichero)
-                    .HasMaxLength(45)
-                    .HasColumnName("cierre_acumulado_fichero");
-
-                entity.Property(e => e.CierreAcumuladoTula)
-                    .HasMaxLength(45)
-                    .HasColumnName("cierre_acumulado_tula");
-
-                entity.Property(e => e.CierreNumero)
-                    .HasMaxLength(45)
-                    .HasColumnName("cierre_numero");
-
-                entity.Property(e => e.CierrePremio)
-                    .HasMaxLength(45)
-                    .HasColumnName("cierre_premio");
-
-                entity.Property(e => e.CierreSeries)
-                    .HasMaxLength(45)
-                    .HasColumnName("cierre_series");
-
-                entity.Property(e => e.IdSorteo)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("idSorteo");
-
-                entity.Property(e => e.TomoActua)
-                    .HasMaxLength(45)
-                    .HasColumnName("tomoActua");
-
-                entity.Property(e => e.TomoAnterior)
-                    .HasMaxLength(45)
-                    .HasColumnName("tomoAnterior");
-
-                entity.HasOne(d => d.IdSorteoNavigation)
-                    .WithMany(p => p.MarchamoPopularNacionals)
-                    .HasForeignKey(d => d.IdSorteo)
-                    .HasConstraintName("id_sorteom");
             });
 
             modelBuilder.Entity<PlanPremio>(entity =>

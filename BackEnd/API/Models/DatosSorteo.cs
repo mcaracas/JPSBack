@@ -11,10 +11,7 @@ namespace API
         {
             DatosPreviosAdministracions = new HashSet<DatosPreviosAdministracion>();
             ListaChequeoSorteos = new HashSet<ListaChequeoSorteo>();
-            Marchamo3monazos = new HashSet<Marchamo3monazo>();
-            MarchamoLottos = new HashSet<MarchamoLotto>();
-            MarchamoNtNtrs = new HashSet<MarchamoNtNtr>();
-            MarchamoPopularNacionals = new HashSet<MarchamoPopularNacional>();
+            Marchamos = new HashSet<Marchamo>();
             Resultados = new HashSet<Resultado>();
         }
 
@@ -30,10 +27,7 @@ namespace API
         public virtual TipoLoterium TipoLoteriaNavigation { get; set; }
         public virtual ICollection<DatosPreviosAdministracion> DatosPreviosAdministracions { get; set; }
         public virtual ICollection<ListaChequeoSorteo> ListaChequeoSorteos { get; set; }
-        public virtual ICollection<Marchamo3monazo> Marchamo3monazos { get; set; }
-        public virtual ICollection<MarchamoLotto> MarchamoLottos { get; set; }
-        public virtual ICollection<MarchamoNtNtr> MarchamoNtNtrs { get; set; }
-        public virtual ICollection<MarchamoPopularNacional> MarchamoPopularNacionals { get; set; }
+        public virtual ICollection<Marchamo> Marchamos { get; set; }
         public virtual ICollection<Resultado> Resultados { get; set; }
     }
 }
