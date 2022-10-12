@@ -4,7 +4,6 @@ import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { insertMarchamo3Monazos } from '../../../services/axiosService'
 
-// TODO: check props to receive and information to send to Backend
 
 /**
  * Validation schema for the form
@@ -20,6 +19,55 @@ const marchamoSchema = Yup.object().shape({
     contingencia: Yup.number()
 });
 
+let marchamoDefault = {
+    id : '3M',
+    tipo : 'Apertura',
+    tipoMarchamo : 'Electronica',
+    numeroMarchamo : '1525',
+}
+
+
+const buildMarchamoList = (values) => {
+
+    const marchamos = [];
+    //TODO check valija A and B
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLE-000${values.aperturaValjA}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLE-000${values.cierrejValjA}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLE-000${values.aperturaValjB}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLE-000${values.cierrejValjB}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Contingencia',
+            numeroMarchamo : `JPS-SLE-000${values.contingencia}`,
+        }
+    );
+    
+    return marchamos;
+}
+
 const Marchamo3Monazos = (id) => {
     return (
         <div className='container'>
@@ -27,7 +75,9 @@ const Marchamo3Monazos = (id) => {
                 initialValues={{}}
                 validationSchema={marchamoSchema}
                 onSubmit={async (values)=>{
-                    insertMarchamo3Monazos(values)
+                    const marchamos = buildMarchamoList(values);
+                    console.log(marchamos);
+                    insertMarchamo3Monazos(marchamos)
                         .then((response) => { 
                             if(response.status === 200){
                                 alert(JSON.stringify(response.data));

@@ -13,12 +13,16 @@ function App() {
         {/** @TODO: Routes */}
         {/* <LoginPage></LoginPage> * Login page */}
         {/* <LotteryCardList></LotteryCardList> */}
+        <h1>3 Monazos</h1>
         <Marchamo3Monazos></Marchamo3Monazos>
-        <MarchamoLotto></MarchamoLotto>
-        <MarchamoNacional></MarchamoNacional>
+        <h1>Nuevos Tiempos</h1>
         <MarchamoNuevosTiempos></MarchamoNuevosTiempos>
+        <h1>Lotto</h1>
+        <MarchamoLotto></MarchamoLotto>
+        <h1>Popular</h1>
         <MarchamoPopular></MarchamoPopular>
-
+        <h1>Nacional</h1>
+        <MarchamoNacional></MarchamoNacional>
     </div>
   );
 }

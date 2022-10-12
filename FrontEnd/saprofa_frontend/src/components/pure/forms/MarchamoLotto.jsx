@@ -4,7 +4,6 @@ import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { insertMarchamoLotto } from '../../../services/axiosService';
 
-// TODO: check props to receive and information to send to Backend
 
 /**
  * Validation schema for the form
@@ -21,6 +20,42 @@ const marchamoSchema = Yup.object().shape({
     contingencia: Yup.number()
 });
 
+let marchamoDefault = {
+    id : 'LT',
+    tipo : 'Apertura',
+    tipoMarchamo : 'Electronica',
+    numeroMarchamo : '1525',
+}
+
+
+const buildMarchamoList = (values) => {
+
+    const marchamos = [];
+
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLE-000${values.apertura}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLE-000${values.cierre}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Contingencia',
+            numeroMarchamo : `JPS-SLE-000${values.contingencia}`,
+        }
+    );
+    
+    return marchamos;
+}
+
 const MarchamoLotto = (id) => {
     return (
         <div className='container'>
@@ -28,8 +63,9 @@ const MarchamoLotto = (id) => {
                 initialValues={{}}
                 validationSchema={marchamoSchema}
                 onSubmit={async (values)=>{
-                    console.log(values)
-                    insertMarchamoLotto(values)
+                    const marchamoList = buildMarchamoList(values);
+                    console.log(marchamoList);
+                    insertMarchamoLotto(marchamoList)
                         .then((response) => { 
                             if(response.status === 200){
                                 alert(JSON.stringify(response.data));

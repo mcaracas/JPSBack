@@ -4,8 +4,6 @@ import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { insertMarchamoNT } from '../../../services/axiosService';
 
-// TODO: check props to receive and information to send to Backend
-
 /**
  * Validation schema for the form
  * @type {Yup.ObjectSchema}
@@ -23,6 +21,73 @@ const marchamoSchema = Yup.object().shape({
     contingenciaNTR : Yup.number()
 });
 
+let marchamoDefault = {
+    id : 'NT',
+    tipo : 'Apertura',
+    tipoMarchamo : 'Electronica',
+    numeroMarchamo : '1525',
+}
+
+
+const buildMarchamoList = (values) => {
+
+    const marchamos = [];
+
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLE-000${values.aperturaNT}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLE-000${values.cierreNT}`,
+        }
+    );
+    //TODO verificar NT y NTR
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            id : 'NTR',
+            numeroMarchamo : `JPS-SLE-000${values.aperturaNTR}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            id : 'NTR',
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLE-000${values.cierreNTR}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Contingencia',
+            numeroMarchamo : `JPS-SLE-000${values.contingencia1NT}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Contingencia',
+            numeroMarchamo : `JPS-SLE-000${values.contingencia2NT}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            id: 'NTR',
+            tipo : 'Contingencia',
+            numeroMarchamo : `JPS-SLE-000${values.contingenciaNTR}`,
+        }
+    );
+    
+    return marchamos;
+}
+
 const MarchamoNuevosTiempos = (id) => {
     return (
         <div className='container'>
@@ -30,8 +95,8 @@ const MarchamoNuevosTiempos = (id) => {
                 initialValues={{}}
                 validationSchema={marchamoSchema}
                 onSubmit={async (values)=>{
-                    console.log(values)
-                    insertMarchamoNT(values)
+                    const marchamoList = buildMarchamoList(values);
+                    insertMarchamoNT(marchamoList)
                         .then((response) => { 
                             if(response.status === 200){
                                 alert(JSON.stringify(response.data));

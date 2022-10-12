@@ -5,8 +5,6 @@ import * as Yup from 'yup';
 import { insertMarchamoLotto } from '../../../services/axiosService';
 
 
-// TODO: check props to receive and information to send to Backend
-
 /**
  * Validation schema for the form
  * @type {Yup.ObjectSchema}
@@ -30,6 +28,113 @@ const marchamoSchema = Yup.object().shape({
 
 });
 
+let marchamoDefault = {
+    id : 'LN',
+    tipo : 'Apertura',
+    tipoMarchamo : 'Serie',
+    numeroMarchamo : '1525',
+}
+
+
+const buildMarchamoList = (values) => {
+
+    const marchamos = [];
+
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLT-S-0000${values.aperturaS1}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLT-S-0000${values.aperturaS2}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLT-S-0000${values.aperturaS3}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            numeroMarchamo : `JPS-SLT-S-0000${values.aperturaS4}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLT-S-0000${values.cierreS}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'Numero',
+            numeroMarchamo : `JPS-SLT-N-0000${values.aperturaN}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Cierre',
+            tipoMarchamo : 'Numero',
+            numeroMarchamo : `JPS-SLT-N-0000${values.cierreN}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'Premio',
+            numeroMarchamo : `JPS-SLT-P-0000${values.aperturaP}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipo : 'Cierre',
+            tipoMarchamo : 'Premio',
+            numeroMarchamo : `JPS-SLT-P-0000${values.cierreP}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'AcumuladoFichero',
+            numeroMarchamo : `JPS-SLT-OTROS 000${values.aperturaAcumFich}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'AcumuladoFichero',
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLT-OTROS 000${values.cierreAcumFich}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'AcumuladoTula',
+            numeroMarchamo : `JPS-SLT-OTROS 000${values.aperturaAcumTula}`,
+        }
+    );
+    marchamos.push(
+        {
+            ...marchamoDefault,
+            tipoMarchamo : 'AcumuladoTula',
+            tipo : 'Cierre',
+            numeroMarchamo : `JPS-SLT-OTROS 000${values.cierreAcumTula}`,
+        }
+    );
+    console.log(marchamos);
+    return marchamos;
+}
+
 const MarchamoNacional = (id) => {
     return (
         <div className='container'>
@@ -37,8 +142,8 @@ const MarchamoNacional = (id) => {
                 initialValues={{}}
                 validationSchema={marchamoSchema}
                 onSubmit={async (values)=>{
-                    console.log(values)
-                    insertMarchamoLotto(values)
+                    const marchamoList = buildMarchamoList(values);
+                    insertMarchamoLotto(marchamoList)
                         .then((response) => { 
                             if(response.status === 200){
                                 alert(JSON.stringify(response.data));
