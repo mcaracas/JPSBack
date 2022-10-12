@@ -21,7 +21,7 @@ const marchamoSchema = Yup.object().shape({
 });
 
 let marchamoDefault = {
-    id : 'LT',
+    idSorteo : 'LT',
     tipo : 'Apertura',
     valija : '',
     tipoMarchamo : 'Electronica',
