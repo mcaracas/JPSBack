@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Proyecto Inge\\2022-01\\backend\\api\\API.csproj": {}
+    "D:\\U\\RepoInge\\2022-01\\BackEnd\\API\\API.csproj": {}
   },
   "projects": {
-    "C:\\Proyecto Inge\\2022-01\\backend\\api\\API.csproj": {
+    "D:\\U\\RepoInge\\2022-01\\BackEnd\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Proyecto Inge\\2022-01\\backend\\api\\API.csproj",
+        "projectUniqueName": "D:\\U\\RepoInge\\2022-01\\BackEnd\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "C:\\Proyecto Inge\\2022-01\\backend\\api\\API.csproj",
-        "packagesPath": "C:\\Users\\cabez\\.nuget\\packages\\",
-        "outputPath": "C:\\Proyecto Inge\\2022-01\\backend\\api\\obj\\",
+        "projectPath": "D:\\U\\RepoInge\\2022-01\\BackEnd\\API\\API.csproj",
+        "packagesPath": "C:\\Users\\chelo\\.nuget\\packages\\",
+        "outputPath": "D:\\U\\RepoInge\\2022-01\\BackEnd\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\cabez\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\chelo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
