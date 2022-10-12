@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { insertMarchamoFisica } from '../../../services/axiosService';
+import { insertMarchamo } from '../../../services/axiosService';
 
 /**
  * Validation schema for the form
@@ -127,7 +127,7 @@ const MarchamoPopular = (id) => {
                 onSubmit={async (values)=>{
                     const marchamoList = buildMarchamoList(values);
                     // console.log(values)
-                    insertMarchamoFisica(marchamoList)
+                    insertMarchamo(marchamoList)
                         .then((response) => { 
                             if(response.status === 200){
                                 alert(JSON.stringify(response.data));

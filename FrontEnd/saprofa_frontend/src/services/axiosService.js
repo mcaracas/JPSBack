@@ -14,20 +14,8 @@ export function login(username, password) {
     });
 }
 
-export function insertMarchamoLotto(marchamoList){
-    return APIRequest.post('/MarchamoLotto',marchamoList);
-}
-
-export function insertMarchamo3Monazos(marchamoList){
-    return APIRequest.post('/Marchamo3monazo',marchamoList);
-}
-
-export function insertMarchamoNT(marchamoList){
-    return APIRequest.post('/MarchamoNtNtr',marchamoList);
-}
-
-export function insertMarchamoFisica(marchamoList){
-    return APIRequest.post('/marchamoFisica',marchamoList);
+export function insertMarchamo(marchamoList){
+    return APIRequest.post('/Marchamo',marchamoList);
 }
 
 export function getActualLotteryInfo(){
