@@ -1,8 +1,8 @@
 import React from 'react'
-import './contenedor.scss'
-import ListItem from './List-item'
+import './contenedorLista.scss'
+import ListItem from '../pure/List-item'
 import axios from 'axios';
-import List from './List'
+import List from '../pure/List'
 import { useEffect, useState } from 'react';
 
 
