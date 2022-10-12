@@ -20,7 +20,9 @@ const marchamoSchema = Yup.object().shape({
 });
 
 let marchamoDefault = {
-    idSorteo : '3M',
+    //TODO: change this to the real idSorteo as a string, momentanly is a number because
+    // the backend is expecting a number
+    idSorteo : 1,
     tipo : 'Apertura',
     valija : 'A',
     tipoMarchamo : 'Electronica',
@@ -31,7 +33,6 @@ let marchamoDefault = {
 const buildMarchamoList = (values) => {
 
     const marchamos = [];
-    //TODO check valija A and B
     marchamos.push(
         {
             ...marchamoDefault,
