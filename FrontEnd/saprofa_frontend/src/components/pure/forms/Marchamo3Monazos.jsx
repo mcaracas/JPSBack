@@ -22,6 +22,7 @@ const marchamoSchema = Yup.object().shape({
 let marchamoDefault = {
     id : '3M',
     tipo : 'Apertura',
+    valija : 'A',
     tipoMarchamo : 'Electronica',
     numeroMarchamo : '1525',
 }
@@ -47,6 +48,7 @@ const buildMarchamoList = (values) => {
     marchamos.push(
         {
             ...marchamoDefault,
+            valija : 'B',
             numeroMarchamo : `JPS-SLE-000${values.aperturaValjB}`,
         }
     );
@@ -54,6 +56,7 @@ const buildMarchamoList = (values) => {
         {
             ...marchamoDefault,
             tipo : 'Cierre',
+            valija : 'B',
             numeroMarchamo : `JPS-SLE-000${values.cierrejValjB}`,
         }
     );

@@ -22,9 +22,10 @@ const marchamoSchema = Yup.object().shape({
 });
 
 let marchamoDefault = {
-    id : 'NT',
+    id : 'NT5367',
     tipo : 'Apertura',
-    tipoMarchamo : 'Electronica',
+    valija : '',
+    tipoMarchamo : 'ElectronicaNT',
     numeroMarchamo : '1525',
 }
 
@@ -50,14 +51,14 @@ const buildMarchamoList = (values) => {
     marchamos.push(
         {
             ...marchamoDefault,
-            id : 'NTR',
+            tipoMarchamo : 'ElectronicaNTR',
             numeroMarchamo : `JPS-SLE-000${values.aperturaNTR}`,
         }
     );
     marchamos.push(
         {
             ...marchamoDefault,
-            id : 'NTR',
+            tipoMarchamo : 'ElectronicaNTR',
             tipo : 'Cierre',
             numeroMarchamo : `JPS-SLE-000${values.cierreNTR}`,
         }
@@ -79,7 +80,7 @@ const buildMarchamoList = (values) => {
     marchamos.push(
         {
             ...marchamoDefault,
-            id: 'NTR',
+            tipoMarchamo : 'ElectronicaNTR',
             tipo : 'Contingencia',
             numeroMarchamo : `JPS-SLE-000${values.contingenciaNTR}`,
         }
@@ -96,6 +97,7 @@ const MarchamoNuevosTiempos = (id) => {
                 validationSchema={marchamoSchema}
                 onSubmit={async (values)=>{
                     const marchamoList = buildMarchamoList(values);
+                    console.log(marchamoList);
                     insertMarchamo(marchamoList)
                         .then((response) => { 
                             if(response.status === 200){
