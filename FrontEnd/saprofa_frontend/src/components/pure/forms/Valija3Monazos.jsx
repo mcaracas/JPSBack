@@ -55,7 +55,7 @@ const Valija3Monazos = () => {
                                                 {
                                                     errors.valija && touched.valija && 
                                                     (
-                                                        <div>
+                                                        <div style={{color:'red'}}>
                                                             <ErrorMessage name='valija'></ErrorMessage>
                                                         </div>
                                                     )
@@ -65,7 +65,7 @@ const Valija3Monazos = () => {
                                                 {
                                                     errors.bolita1 && touched.bolita1 && 
                                                     (
-                                                        <div>
+                                                        <div style={{color:'red'}}>
                                                             <ErrorMessage name='bolita1'></ErrorMessage>
                                                         </div>
                                                     )
@@ -75,7 +75,7 @@ const Valija3Monazos = () => {
                                                 {
                                                     errors.bolita2 && touched.bolita2 && 
                                                     (
-                                                        <div>
+                                                        <div style={{color:'red'}}>
                                                             <ErrorMessage name='bolita2'></ErrorMessage>
                                                         </div>
                                                     )
@@ -85,7 +85,7 @@ const Valija3Monazos = () => {
                                                 {
                                                     errors.bolita3 && touched.bolita3 && 
                                                     (
-                                                        <div>
+                                                        <div style={{color:'red'}}>
                                                             <ErrorMessage name='bolita3'></ErrorMessage>
                                                         </div>
                                                     )
@@ -95,7 +95,7 @@ const Valija3Monazos = () => {
                                                 {
                                                     errors.bolita4 && touched.bolita4 && 
                                                     (
-                                                        <div>
+                                                        <div style={{color:'red'}}>
                                                             <ErrorMessage name='bolita4'></ErrorMessage>
                                                         </div>
                                                     )
@@ -105,7 +105,7 @@ const Valija3Monazos = () => {
                                                 {
                                                     errors.bolita5 && touched.bolita5 && 
                                                     (
-                                                        <div>
+                                                        <div style={{color:'red'}}>
                                                             <ErrorMessage name='bolita5'></ErrorMessage>
                                                         </div>
                                                     )
@@ -115,7 +115,7 @@ const Valija3Monazos = () => {
                                                 {
                                                     errors.bolita6 && touched.bolita6 && 
                                                     (
-                                                        <div>
+                                                        <div style={{color:'red'}}>
                                                             <ErrorMessage name='bolita6'></ErrorMessage>
                                                         </div>
                                                     )
@@ -125,7 +125,7 @@ const Valija3Monazos = () => {
                                                 {
                                                     errors.bolita7 && touched.bolita7 && 
                                                     (
-                                                        <div>
+                                                        <div style={{color:'red'}}>
                                                             <ErrorMessage name='bolita7'></ErrorMessage>
                                                         </div>
                                                     )
@@ -135,7 +135,7 @@ const Valija3Monazos = () => {
                                                 {
                                                     errors.bolita8 && touched.bolita8 && 
                                                     (
-                                                        <div>
+                                                        <div style={{color:'red'}}>
                                                             <ErrorMessage name='bolita8'></ErrorMessage>
                                                         </div>
                                                     )
@@ -145,7 +145,7 @@ const Valija3Monazos = () => {
                                                 {
                                                     errors.bolita9 && touched.bolita9 && 
                                                     (
-                                                        <div>
+                                                        <div style={{color:'red'}}>
                                                             <ErrorMessage name='bolita9'></ErrorMessage>
                                                         </div>
                                                     )

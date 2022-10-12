@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { insertMarchamoNT } from '../../../services/axiosService';
 
 // TODO: check props to receive and information to send to Backend
 
@@ -22,13 +23,25 @@ const marchamoSchema = Yup.object().shape({
     contingenciaNTR : Yup.number()
 });
 
-const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
+const MarchamoNuevosTiempos = (id) => {
     return (
         <div className='container'>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}
-                onSubmit={()=>{}}
+                onSubmit={async (values)=>{
+                    console.log(values)
+                    insertMarchamoNT(values)
+                        .then((response) => { 
+                            if(response.status === 200){
+                                alert(JSON.stringify(response.data));
+                            }else{
+                                throw new Error('Marchamo no insertado');
+                            }
+                        }).catch((error) => { 
+                            alert(`Algo salió mal: ${error}`);
+                        })
+                }}
                 >
                 {({ values,
                     touched,
@@ -65,7 +78,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                             {
                                                 errors.aperturaNT && touched.aperturaNT && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaNT'></ErrorMessage>
                                                     </div>
                                                 )
@@ -75,7 +88,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                         {
                                                 errors.aperturaNTR && touched.aperturaNTR && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaNTR'></ErrorMessage>
                                                     </div>
                                                 )
@@ -88,7 +101,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                             {
                                                 errors.cierreNT && touched.cierreNT && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreNT'></ErrorMessage>
                                                     </div>
                                                 )
@@ -97,7 +110,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                             {
                                                 errors.cierreNTR && touched.cierreNTR && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreNTR'></ErrorMessage>
                                                     </div>
                                                 )
@@ -110,7 +123,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                             {
                                                 errors.contingencia1NT && touched.contingencia1NT && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='contingencia1NT'></ErrorMessage>
                                                     </div>
                                                 )
@@ -119,7 +132,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                             {
                                                 errors.contingencia2NT && touched.contingencia2NT && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='contingencia2NT'></ErrorMessage>
                                                     </div>
                                                 )
@@ -129,7 +142,7 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                             {
                                                 errors.contingenciaNTR && touched.contingenciaNTR && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='contingenciaNTR'></ErrorMessage>
                                                     </div>
                                                 )
@@ -138,6 +151,10 @@ const MarchamoNuevosTiempos = ({ marchamoApertNT, marchamoApertNTR }) => {
                                     </tr>
                                 </tbody>
                             </table>
+                            <div className='button-field'>
+                                <button type="submit" className='btn'>Registrar Marchamos</button>
+                                {isSubmitting ? <p>Submitting...</p> : null}
+                            </div>
                         </Form>
                     )}
             </Formik>

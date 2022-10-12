@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { insertMarchamoLotto } from '../../../services/axiosService';
 
 // TODO: check props to receive and information to send to Backend
 
@@ -13,20 +14,32 @@ import * as Yup from 'yup';
  */
 
 const marchamoSchema = Yup.object().shape({
-    tomoAnterior: Yup.number().required('El campo es requerido'),
-    tomoActual: Yup.number().required('El campo es requerido'),
+    // tomoAnterior: Yup.number().required('El campo es requerido'),
+    // tomoActual: Yup.number().required('El campo es requerido'),
     apertura: Yup.number().required('El campo es requerido'),
     cierre: Yup.number().required('El campo es requerido'),
     contingencia: Yup.number()
 });
 
-const MarchamoLotto = () => {
+const MarchamoLotto = (id) => {
     return (
         <div className='container'>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}
-                onSubmit={()=>{}}
+                onSubmit={async (values)=>{
+                    console.log(values)
+                    insertMarchamoLotto(values)
+                        .then((response) => { 
+                            if(response.status === 200){
+                                alert(JSON.stringify(response.data));
+                            }else{
+                                throw new Error('Marchamo no insertado');
+                            }
+                        }).catch((error) => { 
+                            alert(`Algo salió mal: ${error}`);
+                        })
+                }}
                 >
                 {({ values,
                     touched,
@@ -38,7 +51,7 @@ const MarchamoLotto = () => {
                             <table className='table table-bordered align-middle'>
                                 <thead className='thead-dark'>
                                     <tr>
-                                        <th rowSpan={2} colSpan={2}>Número de Acta donde se consigna el resultado oficial del sorteo, suscrita por los fiscalizadores del Sorteo</th>
+                                        {/* <th rowSpan={2} colSpan={2}>Número de Acta donde se consigna el resultado oficial del sorteo, suscrita por los fiscalizadores del Sorteo</th> */}
                                         <th colSpan={3}>Número de marchamo para el fichero</th>
                                     </tr>
                                     <tr>
@@ -49,23 +62,23 @@ const MarchamoLotto = () => {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Sorteo anterior</td>
+                                        {/* <td>Sorteo anterior</td>
                                         <td>Tomo <Field id='tomoAnterior' name='tomoAnterior' type='number' className='form-control'/>
                                             {
                                                 errors.tomoAnterior && touched.tomoAnterior && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='tomoAnterior'></ErrorMessage>
                                                     </div>
                                                 )
                                             }
-                                        </td>
+                                        </td> */}
                                         <td>Apertura</td>
                                         <td>JPS-SLE-000 <Field id='apertura' name='apertura' type='number' className='form-control'/>
                                             {
                                                 errors.apertura && touched.apertura && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='apertura'></ErrorMessage>
                                                     </div>
                                                 )
@@ -74,23 +87,23 @@ const MarchamoLotto = () => {
                                         <td rowSpan={2}>JPS-SLE-000 <Field id='contingencia' name='contingencia' type='number' className='form-control'/></td>
                                     </tr>
                                     <tr>
-                                        <td>Sorteo actual</td>
+                                        {/* <td>Sorteo actual</td>
                                         <td>Tomo <Field id='tomoActual' name='tomoActual' type='number' className='form-control'/>
                                             {
                                                 errors.tomoActual && touched.tomoActual && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='tomoActual'></ErrorMessage>
                                                     </div>
                                                 )
                                             }
-                                        </td>
+                                        </td> */}
                                         <td>Cierre</td>
                                         <td>JPS-SLE-000 <Field id='cierre' name='cierre' type='number' className='form-control'/>
                                             {
                                                 errors.cierre && touched.cierre && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierre'></ErrorMessage>
                                                     </div>
                                                 )
@@ -99,6 +112,10 @@ const MarchamoLotto = () => {
                                     </tr>
                                 </tbody>
                             </table>
+                            <div className='button-field'>
+                                <button type="submit" className='btn'>Registrar Marchamos</button>
+                                {isSubmitting ? <p>Submitting...</p> : null}
+                            </div>
                         </Form>
                     )}
             </Formik>

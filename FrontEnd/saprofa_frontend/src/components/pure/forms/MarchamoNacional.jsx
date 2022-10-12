@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { insertMarchamoLotto } from '../../../services/axiosService';
+
 
 // TODO: check props to receive and information to send to Backend
 
@@ -28,13 +30,25 @@ const marchamoSchema = Yup.object().shape({
 
 });
 
-const MarchamoNacional = ({marchamoApertura}) => {
+const MarchamoNacional = (id) => {
     return (
         <div className='container'>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}
-                onSubmit={()=>{}}
+                onSubmit={async (values)=>{
+                    console.log(values)
+                    insertMarchamoLotto(values)
+                        .then((response) => { 
+                            if(response.status === 200){
+                                alert(JSON.stringify(response.data));
+                            }else{
+                                throw new Error('Marchamo no insertado');
+                            }
+                        }).catch((error) => { 
+                            alert(`Algo salió mal: ${error}`);
+                        })
+                }}
                 >
                 {({ values,
                     touched,
@@ -65,7 +79,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaS1 && touched.aperturaS1 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaS1'></ErrorMessage>
                                                     </div>
                                                 )
@@ -76,7 +90,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.cierreS && touched.cierreS && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreS'></ErrorMessage>
                                                     </div>
                                                 )
@@ -88,7 +102,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaS2 && touched.aperturaS2 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaS2'></ErrorMessage>
                                                     </div>
                                                 )
@@ -100,7 +114,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaS3 && touched.aperturaS3 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaS3'></ErrorMessage>
                                                     </div>
                                                 )
@@ -112,7 +126,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaS4 && touched.aperturaS4 && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaS4'></ErrorMessage>
                                                     </div>
                                                 )
@@ -125,7 +139,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaN && touched.aperturaN && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaN'></ErrorMessage>
                                                     </div>
                                                 )
@@ -136,7 +150,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.cierreN && touched.cierreN && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreN'></ErrorMessage>
                                                     </div>
                                                 )
@@ -149,7 +163,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaP && touched.aperturaP && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaP'></ErrorMessage>
                                                     </div>
                                                 )
@@ -160,7 +174,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.cierreP && touched.cierreP && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreP'></ErrorMessage>
                                                     </div>
                                                 )
@@ -174,7 +188,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaAcumFich && touched.aperturaAcumFich && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaAcumFich'></ErrorMessage>
                                                     </div>
                                                 )
@@ -183,7 +197,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.aperturaAcumTula && touched.aperturaAcumTula && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='aperturaAcumTula'></ErrorMessage>
                                                     </div>
                                                 )
@@ -194,7 +208,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.cierreAcumFich && touched.cierreAcumFich && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreAcumFich'></ErrorMessage>
                                                     </div>
                                                 )
@@ -203,7 +217,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                             {
                                                 errors.cierreAcumTula && touched.cierreAcumTula && 
                                                 (
-                                                    <div>
+                                                    <div style={{color:'red'}}>
                                                         <ErrorMessage name='cierreAcumTula'></ErrorMessage>
                                                     </div>
                                                 )
@@ -212,6 +226,10 @@ const MarchamoNacional = ({marchamoApertura}) => {
                                     </tr>
                                 </tbody>
                             </table>
+                            <div className='button-field'>
+                                <button type="submit" className='btn'>Registrar Marchamos</button>
+                                {isSubmitting ? <p>Submitting...</p> : null}
+                            </div>
                         </Form>
                     )}
             </Formik>
@@ -221,7 +239,7 @@ const MarchamoNacional = ({marchamoApertura}) => {
 
 
 MarchamoNacional.propTypes = {
-    marchamoApertura : PropTypes.string.isRequired,
+
 };
 
 
