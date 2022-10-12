@@ -5,8 +5,9 @@ import './App.css';
 //import MarchamoNacional from './components/pure/forms/MarchamoNacional';
 //import MarchamoNuevosTiempos from './components/pure/forms/MarchamoNuevosTiempos';
 //import MarchamoPopular from './components/pure/forms/MarchamoPopular';
-//import LoginPage from './pages/auth/LoginPage';
-//import ListItem from './components/pure/List-item';
+import LoginPage from './pages/auth/LoginPage';
+
+import NombreFiscalizadores from './pages/auth/NombreFiscalizadores';
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
         {/*<MarchamoNacional></MarchamoNacional>*/}
         {/*<MarchamoNuevosTiempos></MarchamoNuevosTiempos>*/}
         {/*<MarchamoPopular></MarchamoPopular>*/}
+        <NombreFiscalizadores></NombreFiscalizadores>
+        
+  
         
 
 
