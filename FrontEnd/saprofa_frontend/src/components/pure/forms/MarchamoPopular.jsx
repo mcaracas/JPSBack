@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { insertMarchamoFisica } from '../../../services/axiosService';
 
 // TODO: check props to receive and information to send to Backend
 
@@ -27,13 +28,25 @@ const marchamoSchema = Yup.object().shape({
 
 });
 
-const MarchamoPopular = (marchamoApertura) => {
+const MarchamoPopular = (id) => {
     return (
         <div className='container'>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}
-                onSubmit={()=>{}}
+                onSubmit={async (values)=>{
+                    console.log(values)
+                    insertMarchamoFisica(values)
+                        .then((response) => { 
+                            if(response.status === 200){
+                                alert(JSON.stringify(response.data));
+                            }else{
+                                throw new Error('Marchamo no insertado');
+                            }
+                        }).catch((error) => { 
+                            alert(`Algo salió mal: ${error}`);
+                        })
+                }}
                 >
                 {({ values,
                     touched,
@@ -181,6 +194,10 @@ const MarchamoPopular = (marchamoApertura) => {
                                     </tr>
                                 </tbody>
                             </table>
+                            <div className='button-field'>
+                                <button type="submit" className='btn'>Registrar Marchamos</button>
+                                {isSubmitting ? <p>Submitting...</p> : null}
+                            </div>
                         </Form>
                     )}
             </Formik>
@@ -190,7 +207,7 @@ const MarchamoPopular = (marchamoApertura) => {
 
 
 MarchamoPopular.propTypes = {
-    marchamoApertura: PropTypes.string.isRequired,
+
 };
 
 

@@ -20,13 +20,24 @@ const marchamoSchema = Yup.object().shape({
     contingencia: Yup.number()
 });
 
-const Marchamo3Monazos = () => {
+const Marchamo3Monazos = (id) => {
     return (
         <div className='container'>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}
-                onSubmit={()=>{}}
+                onSubmit={async (values)=>{
+                    insertMarchamo3Monazos(values)
+                        .then((response) => { 
+                            if(response.status === 200){
+                                alert(JSON.stringify(response.data));
+                            }else{
+                                throw new Error('Marchamo no insertado');
+                            }
+                        }).catch((error) => { 
+                            alert(`Algo salió mal: ${error}`);
+                        })
+                }}
                 >
                 {({ values,
                     touched,
