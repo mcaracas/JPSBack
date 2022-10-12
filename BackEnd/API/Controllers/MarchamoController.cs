@@ -31,24 +31,18 @@ public class MarchamoController : ControllerBase
         return marchamo;
     }
 
-    [HttpPost]
-    public ActionResult Post([FromBody] Marchamo Marchamo)
+  [HttpPost]
+    public ActionResult Post([FromBody] List<Marchamo> Marchamo)
     {
         var context = new proyecto_bdContext();
-        context.Marchamos.Add(Marchamo);
-        context.SaveChanges();
+        foreach (var item in Marchamo)
+        {
+            context.Marchamos.Add(item);
+            context.SaveChanges();
+        }   
         return Ok();
     }
-/*
-  [HttpPost("{List}")]
-    public ActionResult Post([FromBody] Marchamo Marchamo)
-    {
-        var context = new proyecto_bdContext();
-        context.Marchamos.Add(Marchamo);
-        context.SaveChanges();
-        return Ok();
-    }
-    */
+    
     [HttpPut("{id}")]
         [HttpPut]
     public void UpdateMarchamo(Marchamo marchamo)
