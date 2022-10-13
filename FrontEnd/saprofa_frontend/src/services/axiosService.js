@@ -5,13 +5,14 @@ import APIRequest from "../utils/config/axios.config";
  * @param {String} password 
  * @returns post request
  */
-export function login(username, password) {
-    return APIRequest.post('/usuario',{
+export function login(values) {
+    const data ={
         '"id"': 19,
-        '"nombre"': username,
-        '"clave"': password,
+        '"nombre"': values.username,
+        '"clave"': values.password,
         '"datosSorteos"': null
-    });
+    }
+    return APIRequest.post('/usuario',data);
 }
 
 export function insertMarchamo(marchamoList){
