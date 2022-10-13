@@ -48,7 +48,7 @@ const LoginForm = () => {
                             <div className='username-field'>
                                 <label className='lbl' htmlFor="username">Usuario</label>
                                 <br></br>
-                                <Field name="username" type="text" id="username"
+                                <Field name="username" type="number" id="username"
                                     placeholder="Numero de Cédula o Residencia"
                                     className="inp" />
                                 {/* If the username field is touched, but the 
