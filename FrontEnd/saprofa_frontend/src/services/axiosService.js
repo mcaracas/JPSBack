@@ -7,12 +7,11 @@ import APIRequest from "../utils/config/axios.config";
  */
 export function login(values) {
     const data ={
-        '"id"': 19,
-        '"nombre"': values.username,
-        '"clave"': values.password,
-        '"datosSorteos"': null
+        '"id"': values.username,
+        '"clave"': values.password
     }
-    return APIRequest.post('/usuario',data);
+    console.log(data);
+    return APIRequest.post('/usuario/login',data);
 }
 
 export function insertMarchamo(marchamoList){
