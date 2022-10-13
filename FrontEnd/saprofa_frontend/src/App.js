@@ -6,6 +6,7 @@ import MarchamoNacional from './components/pure/forms/MarchamoNacional';
 import MarchamoNuevosTiempos from './components/pure/forms/MarchamoNuevosTiempos';
 import MarchamoPopular from './components/pure/forms/MarchamoPopular';
 import LoginPage from './pages/auth/LoginPage';
+import DatosPrevios from './pages/DatosPrevios/DatosPrevios';
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         {/** @TODO: Routes */}
         {/* <LoginPage></LoginPage> * Login page */}
         {/* <LotteryCardList></LotteryCardList> */}
-        <h1>3 Monazos</h1>
+        {/* <h1>3 Monazos</h1>
         <Marchamo3Monazos></Marchamo3Monazos>
         <h1>Nuevos Tiempos</h1>
         <MarchamoNuevosTiempos></MarchamoNuevosTiempos>
@@ -22,7 +23,8 @@ function App() {
         <h1>Popular</h1>
         <MarchamoPopular></MarchamoPopular>
         <h1>Nacional</h1>
-        <MarchamoNacional></MarchamoNacional>
+        <MarchamoNacional></MarchamoNacional> */}
+        <DatosPrevios></DatosPrevios>
     </div>
   );
 }
