@@ -23,11 +23,11 @@ public class DatosSorteoController : ControllerBase
         return DatosSorteos;
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{num_sorteo}")]
     public DatosSorteo Get(int id)
     {
         var context = new proyecto_bdContext();
-        var datosSorteo = context.DatosSorteos.FirstOrDefault(x => x.IdInterno == id);
+        var datosSorteo = context.DatosSorteos.FirstOrDefault(x => x.NumSorteo == id);
         return datosSorteo;
     }
 
