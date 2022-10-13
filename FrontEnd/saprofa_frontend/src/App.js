@@ -24,7 +24,7 @@ function App() {
         <MarchamoPopular></MarchamoPopular>
         <h1>Nacional</h1>
         <MarchamoNacional></MarchamoNacional> */}
-        <DatosPrevios></DatosPrevios>
+        <DatosPrevios numSorteo={2596}></DatosPrevios>
     </div>
   );
 }
