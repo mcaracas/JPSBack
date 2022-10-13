@@ -33,7 +33,7 @@ const LoginForm = () => {
                 initialValues={initialValues}
                 validationSchema={loginSchema}
                 onSubmit={async (values) => { 
-                    login(values.username, values.password) //Using axios to make the request
+                    login(values) //Using axios to make the request
                         .then((response) => {   // If login is successful
                             console.log('Status Code: ',response.status);
                         }).catch((error) => {   // If login fails
