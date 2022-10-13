@@ -24,10 +24,10 @@ public class DatosSorteoController : ControllerBase
     }
 
     [HttpGet("{num_sorteo}")]
-    public DatosSorteo Get(int id)
+    public DatosSorteo Get(int num_sorteo)
     {
         var context = new proyecto_bdContext();
-        var datosSorteo = context.DatosSorteos.FirstOrDefault(x => x.NumSorteo == id);
+        var datosSorteo = context.DatosSorteos.FirstOrDefault(x => x.NumSorteo == num_sorteo);
         return datosSorteo;
     }
 
