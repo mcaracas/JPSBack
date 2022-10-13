@@ -39,7 +39,21 @@ public class UsuarioController : ControllerBase
         return Ok();
     }
 
-    
+    [HttpPost, Route("[action]", Name = "Login")]
+    public ActionResult Login([FromBody] Usuario Usuario)
+    {
+        var context = new proyecto_bdContext();
+        var usuario = context.Usuarios.FirstOrDefault(x => x.Id == Usuario.Id  && x.Clave == Usuario.Clave);
+        if (usuario != null)
+        {
+            return Ok(usuario);
+        }
+        else
+        {
+            return BadRequest();
+        }
+    }
+
     [HttpPut("{id}")]
         [HttpPut]
     public void UpdateUsuario(Usuario usuario)

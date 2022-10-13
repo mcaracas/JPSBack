@@ -33,7 +33,7 @@ const LoginForm = () => {
                 initialValues={initialValues}
                 validationSchema={loginSchema}
                 onSubmit={async (values) => { 
-                    login(values.username, values.password) //Using axios to make the request
+                    login(values) //Using axios to make the request
                         .then((response) => {   // If login is successful
                             console.log('Status Code: ',response.status);
                         }).catch((error) => {   // If login fails
@@ -48,7 +48,7 @@ const LoginForm = () => {
                             <div className='username-field'>
                                 <label className='lbl' htmlFor="username">Usuario</label>
                                 <br></br>
-                                <Field name="username" type="text" id="username"
+                                <Field name="username" type="number" id="username"
                                     placeholder="Numero de Cédula o Residencia"
                                     className="inp" />
                                 {/* If the username field is touched, but the 
