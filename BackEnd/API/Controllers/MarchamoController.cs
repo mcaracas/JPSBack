@@ -50,7 +50,9 @@ public class MarchamoController : ControllerBase
         var context = new proyecto_bdContext();
         var MarchamoUpdate = context.Marchamos.FirstOrDefault(x => x.Id == marchamo.Id);
         MarchamoUpdate.Id = marchamo.Id;
+        MarchamoUpdate.IdSorteo = marchamo.IdSorteo;
         MarchamoUpdate.Tipo = marchamo.Tipo;
+        MarchamoUpdate.Valija = marchamo.Valija;
         MarchamoUpdate.TipoMarchamo = marchamo.TipoMarchamo;
         MarchamoUpdate.NumeroMarchamo = marchamo.NumeroMarchamo;
         context.SaveChanges();
