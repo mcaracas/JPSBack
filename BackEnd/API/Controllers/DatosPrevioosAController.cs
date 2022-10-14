@@ -16,12 +16,14 @@ public class DatosPreviosAController : ControllerBase
     }
 
     [HttpGet]
-        public IEnumerable<DatosPreviosAdministracion> Get()
+        public IAsyncEnumerable<DatosPreviosAdministracion> Get()
     {
         var context = new proyecto_bdContext();
-        var DatosPreviosAdministracions = context.DatosPreviosAdministracions.ToList();
+        var DatosPreviosAdministracions = context.DatosPreviosAdministracions.AsAsyncEnumerable();
         return DatosPreviosAdministracions;
     }
+
+
 
     [HttpGet("{id}")]
     public DatosPreviosAdministracion Get(int id)
