@@ -35,10 +35,14 @@ const LoginForm = () => {
                 onSubmit={async (values) => { 
                     login(values) //Using axios to make the request
                         .then((response) => {   // If login is successful
-                            console.log('Status Code: ',response.status);
+                            //@TODO: Redirect to home page
+                            
+
                         }).catch((error) => {   // If login fails
-                            //sessionStorage.removeItem('token');
                             console.log('Error: ',error);
+                            if(error.response.status === 400){
+                                alert('Usuario o contraseña incorrectos');
+                            }
                         }
                     );
                 }}>
