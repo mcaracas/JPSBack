@@ -3,6 +3,7 @@ import FranjaLogo from '../../components/pure/FranjaLogo'
 import FranjaPrincipal from '../../components/pure/Franja'
 import FranjaRoja from '../../components/pure/FranjaR'
 import ContenedorLista from '../../components/container/ContenedorLista'
+import EncabezadoFranjas from '../../components/container/EncabezadoFranjas'
 import TituloPrincipal from '../../components/pure/TituloPrincipal'
 
 
@@ -10,12 +11,8 @@ import TituloPrincipal from '../../components/pure/TituloPrincipal'
 const NombreFiscalizadores = () => {
   return (
     <div>
-      <FranjaLogo/>
-      <FranjaPrincipal/>
-      <FranjaRoja />
+      <EncabezadoFranjas titulo= {"FISCALIZADORES"}></EncabezadoFranjas>
       <ContenedorLista/>
-
-
     </div>
   )
 }
