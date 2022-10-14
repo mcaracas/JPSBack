@@ -6,11 +6,8 @@ import APIRequest from "../utils/config/axios.config";
  * @returns post request
  */
 export function login(values) {
-    const data ={
-        '"id"': values.username,
-        '"clave"': values.password
-    }
-    console.log(data);
+    const data ={"id": values.username, 
+    "clave": values.password.toString()}
     return APIRequest.post('/usuario/login',data);
 }
 
