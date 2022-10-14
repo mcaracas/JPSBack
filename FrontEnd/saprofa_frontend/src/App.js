@@ -13,18 +13,18 @@ function App() {
     <div className="App">
         {/** @TODO: Routes */}
         {/* <LoginPage></LoginPage> * Login page */}
-        {/* <LotteryCardList></LotteryCardList> */}
-        {/* <h1>3 Monazos</h1>
+        <LotteryCardList></LotteryCardList>
+        {/* <h1>Marchamo 3 Monazos</h1>
         <Marchamo3Monazos></Marchamo3Monazos>
-        <h1>Nuevos Tiempos</h1>
+        <h1>Marchamo Nuevos Tiempos</h1>
         <MarchamoNuevosTiempos></MarchamoNuevosTiempos>
-        <h1>Lotto</h1>
+        <h1>Marchamo Lotto</h1>
         <MarchamoLotto></MarchamoLotto>
-        <h1>Popular</h1>
+        <h1>Marchamo Popular</h1>
         <MarchamoPopular></MarchamoPopular>
-        <h1>Nacional</h1>
+        <h1>Marchamo Nacional</h1>
         <MarchamoNacional></MarchamoNacional> */}
-        <DatosPrevios numSorteo={2596}></DatosPrevios>
+        {/* <DatosPrevios numSorteo={2596}></DatosPrevios> */}
     </div>
   );
 }
