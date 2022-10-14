@@ -243,16 +243,16 @@ namespace API
 
             modelBuilder.Entity<Marchamo>(entity =>
             {
-                entity.ToTable("marchamo");
+                entity.ToTable("marchamos");
 
-                entity.HasIndex(e => e.IdSorteo, "id_sorteo_marchamo_idx");
+                entity.HasIndex(e => e.IdSorteo, "id_Sorteo_fk_idx");
 
                 entity.Property(e => e.Id)
-                    .HasColumnType("int(11)")
+                    .HasColumnType("int(15)")
                     .HasColumnName("id");
 
                 entity.Property(e => e.IdSorteo)
-                    .HasMaxLength(45)
+                    .HasColumnType("int(15)")
                     .HasColumnName("idSorteo");
 
                 entity.Property(e => e.NumeroMarchamo)
@@ -266,6 +266,16 @@ namespace API
                 entity.Property(e => e.TipoMarchamo)
                     .HasMaxLength(45)
                     .HasColumnName("tipoMarchamo");
+
+                entity.Property(e => e.Valija)
+                    .HasMaxLength(45)
+                    .HasColumnName("valija");
+
+                entity.HasOne(d => d.IdSorteoNavigation)
+                    .WithMany(p => p.Marchamos)
+                    .HasForeignKey(d => d.IdSorteo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("id_Sortedo_Fk");
             });
 
             modelBuilder.Entity<PlanPremio>(entity =>
