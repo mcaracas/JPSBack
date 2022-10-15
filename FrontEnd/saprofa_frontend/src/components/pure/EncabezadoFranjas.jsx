@@ -1,8 +1,8 @@
 
 
-import FranjaLogo from '../../components/pure/FranjaLogo'
-import FranjaPrincipal from '../../components/pure/Franja'
-import FranjaRoja from '../../components/pure/FranjaR'
+import FranjaLogo from './FranjaLogo'
+import FranjaPrincipal from './Franja'
+import FranjaRoja from './FranjaR'
 import React from 'react';
 
 const EncabezadoFranjas = ({titulo}) => {
