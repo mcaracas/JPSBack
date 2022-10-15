@@ -19,8 +19,8 @@ const LotteryCard = ({ name, id }) => {
         }
     }
     return (
-        <div className="card p-2 m-5" style={{position: 'relative', width: '18rem', borderRadius:'5%'}}>
-            <img className="card-img-top" src={require(`./../../img/${getImg(name)}`)} width='200' height='250' alt='nombre' style={{borderRadius:'5%'}}/>
+        <div className="card p-2 m-5" style={{position: 'relative', width: '18rem', height:'18rem', borderRadius:'5%'}}>
+            <img className="card-img-top" src={require(`./../../img/${getImg(name)}`)} width='200' height='200' alt='nombre' style={{borderRadius:'5%'}}/>
             <div className="card-body">
                 <h5 className="card-title">{name}</h5>
             </div>
