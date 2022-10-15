@@ -9,7 +9,7 @@ namespace API
     {
         public DatosPreviosAdministracion()
         {
-            Datosfomularios = new HashSet<Datosfomulario>();
+            
         }
 
         public int Id { get; set; }
@@ -21,6 +21,6 @@ namespace API
         public float? CompraExcedentes { get; set; }
 
         public virtual DatosSorteo IdDatoSorteoNavigation { get; set; }
-        public virtual ICollection<Datosfomulario> Datosfomularios { get; set; }
+
     }
 }

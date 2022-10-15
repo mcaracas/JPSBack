@@ -10,7 +10,6 @@ namespace API
         public PlanPremio()
         {
             DatosSorteos = new HashSet<DatosSorteo>();
-            Datosfomularios = new HashSet<Datosfomulario>();
             PlanPremiosDetalles = new HashSet<PlanPremiosDetalle>();
         }
 
@@ -18,7 +17,7 @@ namespace API
         public string Descripcion { get; set; }
 
         public virtual ICollection<DatosSorteo> DatosSorteos { get; set; }
-        public virtual ICollection<Datosfomulario> Datosfomularios { get; set; }
+
         public virtual ICollection<PlanPremiosDetalle> PlanPremiosDetalles { get; set; }
     }
 }
