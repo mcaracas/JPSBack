@@ -1,10 +1,10 @@
 import React from 'react'
-import FranjaLogo from '../../components/pure/FranjaLogo'
-import FranjaPrincipal from '../../components/pure/Franja'
-import FranjaRoja from '../../components/pure/FranjaR'
+import FranjaLogo from '../../components/pure/header/FranjaLogo'
+import FranjaPrincipal from '../../components/pure/header/Franja'
+import FranjaRoja from '../../components/pure/header/FranjaR'
 import ContenedorLista from '../../components/container/ContenedorLista'
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas'
-import TituloPrincipal from '../../components/pure/TituloPrincipal'
+import TituloPrincipal from '../../components/pure/header/TituloPrincipal'
 
 
 
