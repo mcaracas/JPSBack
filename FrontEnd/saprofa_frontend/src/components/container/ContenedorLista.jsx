@@ -8,30 +8,30 @@ import { getRepresentante } from '../../services/axiosService';
 
 
 const ContenedorLista = () => {
-  const [items, setItems] = useState([])
+  let nombrejuez = "";
+  const [items, setItems] = useState();
   useEffect(() => {
     getRepresentante().then(res => {
-      console.log(res.data)
-      setItems(res.data)
+      if(res.status === 200){
+        setItems(res.data)
+      }else{
+        throw new Error('No se obtuvieron los datos de los representantes de la administracion');
+      }
     }).catch(err => {
-      console.log(err)
+      alert(`Algo salió mal: ${err}`);
     })
   }, [])
-  let nombrejuez = "";
-  const guardarNombre = () => {
-    nombrejuez = items[0].juez
-  }
+
   return (
     <div className="contenedor">
       {/* {items&&guardarNombre} */}
-      {console.log(nombrejuez)}
-      {items && <List items={items} titulo={"REPRESENTANTES DE GERENCIA"} />}
-      <div>
+      {items && <List items={items} titulo={"REPRESENTANTES DE GERENCIA"} juez={items[0].juez}/>}
+      {/* <div>
         <h2>JUEZ</h2>
         <ul>
           {nombrejuez}
         </ul>
-      </div>
+      </div> */}
     </div>
   )
 }
