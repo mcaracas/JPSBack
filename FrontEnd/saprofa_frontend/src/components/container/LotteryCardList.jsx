@@ -3,29 +3,6 @@ import LotteryCard from '../pure/LotteryCard';
 
 const LotteryCardList = ({lotteries}) => {
 
-    //const defaultLoteryCard;
-    const defaultLotteryCard1 = {
-        tipoLoteria : 'LN',
-        numSorteo : 4076
-    }
-    const defaultLotteryCard2 = {
-        tipoLoteria : 'LP',
-        numSorteo : 5056
-    }
-    const defaultLotteryCard3 = {
-        tipoLoteria : 'LTT',
-        numSorteo : 1776
-    }
-    const defaultLotteryCard4 = {
-        tipoLoteria : 'NT',
-        numSorteo : 3573
-    }
-    const defaultLotteryCard5 = {
-        tipoLoteria : '3M',
-        numSorteo : 2098
-    }
-
-    // const lotteryList = [defaultLotteryCard1, defaultLotteryCard2, defaultLotteryCard3, defaultLotteryCard4, defaultLotteryCard5];
     const lotteryList = lotteries;
     const [lotteryCards, setLotteryCards] = useState(lotteryList);
     useEffect(() => {
