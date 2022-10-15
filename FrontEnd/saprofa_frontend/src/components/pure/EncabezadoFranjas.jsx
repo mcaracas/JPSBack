@@ -10,7 +10,7 @@ const EncabezadoFranjas = ({titulo}) => {
         <div>
       <FranjaLogo/>
       <FranjaPrincipal/>
-      <FranjaRoja title={titulo}/>
+      <FranjaRoja titulo={titulo}/>
         </div>
     );
 }
