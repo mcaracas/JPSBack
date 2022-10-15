@@ -1,33 +1,32 @@
 import './App.css';
-import LotteryCardList from './components/container/LotteryCardList';
 import Marchamo3Monazos from './components/pure/forms/Marchamo3Monazos';
 import MarchamoLotto from './components/pure/forms/MarchamoLotto';
 import MarchamoNacional from './components/pure/forms/MarchamoNacional';
 import MarchamoNuevosTiempos from './components/pure/forms/MarchamoNuevosTiempos';
 import MarchamoPopular from './components/pure/forms/MarchamoPopular';
 import LoginPage from './pages/auth/LoginPage';
-import DatosPrevios from './pages/DatosPrevios/DatosPrevios';
-import ChooseLottery from './pages/LotteyCards/ChooseLottery';
+import DatosPrevios from './pages/DatosPrevios/DatosPreviosPage';
+import ChooseLottery from './pages/LotteyCards/ChooseLotteryPage';
+import NombreFiscalizadores from './pages/NombreFiscalizadores/NombreFiscalizadoresPage';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-        {/** @TODO: Routes */}
-        {/* <LoginPage></LoginPage> * Login page */}
-        {/* <LotteryCardList></LotteryCardList> */}
-        {/* <h1>Marchamo 3 Monazos</h1>
-        <Marchamo3Monazos></Marchamo3Monazos>
-        <h1>Marchamo Nuevos Tiempos</h1>
-        <MarchamoNuevosTiempos></MarchamoNuevosTiempos>
-        <h1>Marchamo Lotto</h1>
-        <MarchamoLotto></MarchamoLotto>
-        <h1>Marchamo Popular</h1>
-        <MarchamoPopular></MarchamoPopular>
-        <h1>Marchamo Nacional</h1>
-        <MarchamoNacional></MarchamoNacional> */}
-        {/* <DatosPrevios numSorteo={2596}></DatosPrevios> */}
-        <ChooseLottery/>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<LoginPage/>} /> {/* Root page */}
+          <Route exact path="/ChooseLottery" element={<ChooseLottery />} /> {/* Choose lottery page */}
+          <Route exact path="/DatosPrevios" element={<DatosPrevios />} /> {/* Previous data page */}
+          <Route exact path="/MarchamoPopular" element={<MarchamoPopular />} /> {/* Popular stamp page */}
+          <Route exact path="/MarchamoNacional" element={<MarchamoNacional />} /> {/* National stamp page */}
+          <Route exact path="/MarchamoLotto" element={<MarchamoLotto />} /> {/* Lotto stamp page */}
+          <Route exact path="/MarchamoNuevosTiempos" element={<MarchamoNuevosTiempos />} /> {/* New times stamp page */}
+          <Route exact path="/Marchamo3Monazos" element={<Marchamo3Monazos />} /> {/* 3 Monazos stamp page */}
+          <Route exact path="/NombreFiscalizadores" element={<NombreFiscalizadores />} /> {/* Name of the inspectors page */}
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
