@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace DatosFormulario
+namespace API
 {
     public partial class Datosfomulario
     {
