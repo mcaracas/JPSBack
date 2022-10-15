@@ -3,7 +3,7 @@ import FranjaLogo from '../../components/pure/FranjaLogo'
 import FranjaPrincipal from '../../components/pure/Franja'
 import FranjaRoja from '../../components/pure/FranjaR'
 import ContenedorLista from '../../components/container/ContenedorLista'
-import EncabezadoFranjas from '../../components/container/EncabezadoFranjas'
+import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas'
 import TituloPrincipal from '../../components/pure/TituloPrincipal'
 
 
