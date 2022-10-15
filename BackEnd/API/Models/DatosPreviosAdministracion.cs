@@ -7,6 +7,12 @@ namespace API
 {
     public partial class DatosPreviosAdministracion
     {
+        public DatosPreviosAdministracion()
+        {
+            Datosfomularios = new HashSet<Datosfomulario>();
+            Representantes = new HashSet<Representante>();
+        }
+
         public int Id { get; set; }
         public int? IdDatoSorteo { get; set; }
         public string NomFiscalizador { get; set; }
@@ -16,5 +22,7 @@ namespace API
         public float? CompraExcedentes { get; set; }
 
         public virtual DatosSorteo IdDatoSorteoNavigation { get; set; }
+        public virtual ICollection<Datosfomulario> Datosfomularios { get; set; }
+        public virtual ICollection<Representante> Representantes { get; set; }
     }
 }

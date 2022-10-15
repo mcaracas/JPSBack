@@ -10,7 +10,7 @@ const ContenedorLista = () => {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
-        axios.get('https://jsonplaceholder.typicode.com/users')
+        axios.get('https://localhost:7216/Representate')
           .then(res => {
             setItems(res.data)
     

@@ -21,6 +21,7 @@ namespace API
         public virtual DbSet<DatosFichero> DatosFicheros { get; set; }
         public virtual DbSet<DatosPreviosAdministracion> DatosPreviosAdministracions { get; set; }
         public virtual DbSet<DatosSorteo> DatosSorteos { get; set; }
+        public virtual DbSet<Datosfomulario> Datosfomularios { get; set; }
         public virtual DbSet<ListaChequeoDetalle> ListaChequeoDetalles { get; set; }
         public virtual DbSet<ListaChequeoSorteo> ListaChequeoSorteos { get; set; }
         public virtual DbSet<Marchamo> Marchamos { get; set; }
@@ -30,7 +31,7 @@ namespace API
         public virtual DbSet<RepFavorecidosUltimoAnno> RepFavorecidosUltimoAnnos { get; set; }
         public virtual DbSet<RepSorteoPorUsuario> RepSorteoPorUsuarios { get; set; }
         public virtual DbSet<RepVentasPorFecha> RepVentasPorFechas { get; set; }
-        public virtual DbSet<Representate> Representates { get; set; }
+        public virtual DbSet<Representante> Representantes { get; set; }
         public virtual DbSet<Resultado> Resultados { get; set; }
         public virtual DbSet<ResultadosBitacora> ResultadosBitacoras { get; set; }
         public virtual DbSet<TipoLoterium> TipoLoteria { get; set; }
@@ -40,7 +41,8 @@ namespace API
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySQL(Environment.GetEnvironmentVariable("MESSAGE"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseMySQL("server=proyecto-inge2022.mysql.database.azure.com;userid=saprofa;password=ProyectoInge2022!;database=proyecto_bd");
             }
         }
 
@@ -180,6 +182,37 @@ namespace API
                     .WithMany(p => p.DatosSorteos)
                     .HasForeignKey(d => d.TipoLoteria)
                     .HasConstraintName("datos_sorteo_ibfk_2");
+            });
+
+            modelBuilder.Entity<Datosfomulario>(entity =>
+            {
+                entity.ToTable("datosfomulario");
+
+                entity.HasIndex(e => e.IdDatosPrevios, "idDatosPrevios");
+
+                entity.HasIndex(e => e.IdPlanPremios, "idPlanPremios");
+
+                entity.Property(e => e.Id)
+                    .HasMaxLength(30)
+                    .HasColumnName("id");
+
+                entity.Property(e => e.IdDatosPrevios)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("idDatosPrevios");
+
+                entity.Property(e => e.IdPlanPremios)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("idPlanPremios");
+
+                entity.HasOne(d => d.IdDatosPreviosNavigation)
+                    .WithMany(p => p.Datosfomularios)
+                    .HasForeignKey(d => d.IdDatosPrevios)
+                    .HasConstraintName("idDatosPrevios");
+
+                entity.HasOne(d => d.IdPlanPremiosNavigation)
+                    .WithMany(p => p.Datosfomularios)
+                    .HasForeignKey(d => d.IdPlanPremios)
+                    .HasConstraintName("idPlanPremios");
             });
 
             modelBuilder.Entity<ListaChequeoDetalle>(entity =>
@@ -401,23 +434,11 @@ namespace API
                 entity.Property(e => e.Ventas).HasColumnName("ventas");
             });
 
-            modelBuilder.Entity<Representate>(entity =>
+            modelBuilder.Entity<Representante>(entity =>
             {
-                entity.HasNoKey();
+                entity.ToTable("representantes");
 
-                entity.ToTable("representates");
-
-                entity.HasIndex(e => e.IdDatosPrevios, "id_Datos_Previos_idx");
-
-                entity.Property(e => e.GOperaciones)
-                    .HasMaxLength(45)
-                    .HasColumnName("G_Operaciones");
-
-                entity.Property(e => e.GProduccion)
-                    .HasMaxLength(45)
-                    .HasColumnName("G_Produccion");
-
-                entity.Property(e => e.Gerencia).HasMaxLength(45);
+                entity.HasIndex(e => e.IdDatosPrevios, "id_Datos_Previos_fk_idx");
 
                 entity.Property(e => e.Id)
                     .HasColumnType("int(11)")
@@ -425,14 +446,20 @@ namespace API
 
                 entity.Property(e => e.IdDatosPrevios)
                     .HasColumnType("int(11)")
-                    .HasColumnName("id_Datos_Previos");
+                    .HasColumnName("idDatosPrevios");
 
-                entity.Property(e => e.Juez).HasMaxLength(45);
+                entity.Property(e => e.Juez)
+                    .HasMaxLength(45)
+                    .HasColumnName("juez");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(45)
+                    .HasColumnName("nombre");
 
                 entity.HasOne(d => d.IdDatosPreviosNavigation)
-                    .WithMany()
+                    .WithMany(p => p.Representantes)
                     .HasForeignKey(d => d.IdDatosPrevios)
-                    .HasConstraintName("id_Datos_Previos");
+                    .HasConstraintName("id_Datos_Previos_fk");
             });
 
             modelBuilder.Entity<Resultado>(entity =>
