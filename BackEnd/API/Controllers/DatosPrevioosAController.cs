@@ -16,14 +16,12 @@ public class DatosPreviosAController : ControllerBase
     }
 
     [HttpGet]
-        public IAsyncEnumerable<DatosPreviosAdministracion> Get()
+        public IEnumerable<DatosPreviosAdministracion> Get()
     {
         var context = new proyecto_bdContext();
-        var DatosPreviosAdministracions = context.DatosPreviosAdministracions.AsAsyncEnumerable();
+        var DatosPreviosAdministracions = context.DatosPreviosAdministracions.ToList();
         return DatosPreviosAdministracions;
     }
-
-
 
     [HttpGet("{id}")]
     public DatosPreviosAdministracion Get(int id)
@@ -32,6 +30,7 @@ public class DatosPreviosAController : ControllerBase
         var datosPreviosAdministracion = context.DatosPreviosAdministracions.FirstOrDefault(x => x.Id == id);
         return datosPreviosAdministracion;
     }
+    
 
     [HttpPost]
     public ActionResult Post([FromBody] DatosPreviosAdministracion DatosPreviosAdministracion)
