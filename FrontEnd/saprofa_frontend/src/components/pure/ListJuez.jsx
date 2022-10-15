@@ -1,7 +1,7 @@
 import React, { useDebugValue } from 'react'
 import ListItem from './List-item'
 
-const List = ({ items,titulo}) => {
+const ListJuez = ({ items,titulo}) => {
   return (
    <>
    <div>
@@ -9,7 +9,7 @@ const List = ({ items,titulo}) => {
 
     <ul>
       {items.map(item => (
-        <ListItem key={item.id} item={item.name} />
+        <ListItem key={item.id} item={item.juez} />
       ))}
     </ul>
 
@@ -20,5 +20,4 @@ const List = ({ items,titulo}) => {
 }   
 
 
-export default List
-
+export default ListJuez
