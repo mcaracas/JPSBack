@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { getDatosSorteo, getPlanPremios, getPlanPremiosDetalle, getMarchamo, getUsuario, getDatosFormularios } from './../../services/axiosService';
+import { getDatosSorteo, getPlanPremios, getPlanPremiosDetalle, getMarchamo, getUsuario, getDatosFormularios } from '../../services/axiosService';
 import PropTypes from 'prop-types';
 
 const DatosPrevios = ({ numSorteo }) => {
