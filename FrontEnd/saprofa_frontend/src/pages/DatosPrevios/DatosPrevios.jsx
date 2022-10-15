@@ -1,23 +1,18 @@
 import React, { Component, useEffect, useState } from 'react';
-import { getDatosSorteo, getPlanPremios, getPlanPremiosDetalle, getMarchamo, getUsuario } from './../../services/axiosService';
+import { getDatosSorteo, getPlanPremios, getPlanPremiosDetalle, getMarchamo, getUsuario, getDatosFormularios } from './../../services/axiosService';
 import PropTypes from 'prop-types';
 
 const DatosPrevios = ({ numSorteo }) => {
 
     useEffect(() => {
-        console.log(numSorteo)
-        getDatosSorteo(numSorteo)
-            .then((response) => {
-                console.log(response.data);
+        getDatosFormularios(1)
+            .then(response => {
+                console.log(response);
                 setDatos(response.data);
-                console.log("Datos previos: ", datos);
-            }).catch((error) => {
-                console.log(error);
-            }).finally(() => {
-                console.log("Datos previos finally: ", datos);
-            }); 
-        
-        
+            })
+            .catch(e => {
+                console.log("Error: ",e);
+            });
     }, []);
 
     const [datos, setDatos] = useState([]);

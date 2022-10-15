@@ -35,3 +35,7 @@ export function getDatosSorteo(id){
 export function getMarchamo(id){
     return APIRequest.get('/Marchamo/'+id);
 }
+
+export function getDatosFormularios(id){
+    return APIRequest.get('/DatosFormulariosA/'+id);
+}
