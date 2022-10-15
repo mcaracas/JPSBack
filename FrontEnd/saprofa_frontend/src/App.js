@@ -6,8 +6,8 @@ import MarchamoNacional from './components/pure/forms/MarchamoNacional';
 import MarchamoNuevosTiempos from './components/pure/forms/MarchamoNuevosTiempos';
 import MarchamoPopular from './components/pure/forms/MarchamoPopular';
 import LoginPage from './pages/auth/LoginPage';
-import DatosPrevios from './pages/DatosPrevios/DatosPrevios';
-import ChooseLottery from './pages/LotteyCards/ChooseLottery';
+import DatosPrevios from './pages/DatosPrevios/DatosPreviosPage';
+import ChooseLotteryPage from './pages/LotteyCards/ChooseLotteryPage';
 
 function App() {
   return (
@@ -26,7 +26,7 @@ function App() {
         <h1>Marchamo Nacional</h1>
         <MarchamoNacional></MarchamoNacional> */}
         {/* <DatosPrevios numSorteo={2596}></DatosPrevios> */}
-        <ChooseLottery/>
+        <ChooseLotteryPage/>
     </div>
   );
 }

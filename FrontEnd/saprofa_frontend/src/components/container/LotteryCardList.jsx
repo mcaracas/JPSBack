@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LotteryCard from '../pure/LotteryCard';
 
-const LotteryCardList = () => {
+const LotteryCardList = (lotteries) => {
 
     //const defaultLoteryCard;
     const defaultLotteryCard1 = {
