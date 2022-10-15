@@ -6,7 +6,7 @@ import '../../styles/login.scss';
 const LoginPage = () => {
     return (
         <div>
-            <EncabezadoFranjas titulo= {"Iniciar sesión"}></EncabezadoFranjas>
+            <EncabezadoFranjas title= {"Iniciar sesión"}></EncabezadoFranjas>
             <div className='login-card'>
                 <h3>Inicio de Sesión</h3>
                 <LoginForm></LoginForm> {/** Form component */}
