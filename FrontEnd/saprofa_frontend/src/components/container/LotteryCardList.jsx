@@ -1,35 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import LotteryCard from '../pure/LotteryCard';
 
-const LotteryCardList = (lotteries) => {
+const LotteryCardList = ({lotteries}) => {
 
     //const defaultLoteryCard;
     const defaultLotteryCard1 = {
-        name : 'Loteria Nacional',
-        id : 'LN4076'
+        tipoLoteria : 'LN',
+        numSorteo : 4076
     }
     const defaultLotteryCard2 = {
-        name : 'Loteria Popular',
-        id : 'LP5056'
+        tipoLoteria : 'LP',
+        numSorteo : 5056
     }
     const defaultLotteryCard3 = {
-        name : 'Lotto',
-        id : 'LT1776'
+        tipoLoteria : 'LTT',
+        numSorteo : 1776
     }
     const defaultLotteryCard4 = {
-        name : 'Nuevos Tiempos',
-        id : 'NT3573'
+        tipoLoteria : 'NT',
+        numSorteo : 3573
     }
     const defaultLotteryCard5 = {
-        name : '3 Monazos',
-        id : '3M2098'
+        tipoLoteria : '3M',
+        numSorteo : 2098
     }
 
-    const lotteryList = [defaultLotteryCard1, defaultLotteryCard2, defaultLotteryCard3, defaultLotteryCard4, defaultLotteryCard5];
-
+    // const lotteryList = [defaultLotteryCard1, defaultLotteryCard2, defaultLotteryCard3, defaultLotteryCard4, defaultLotteryCard5];
+    const lotteryList = lotteries;
     const [lotteryCards, setLotteryCards] = useState(lotteryList);
     useEffect(() => {
         setLotteryCards(lotteryList);
+        console.log(lotteries)
     }, []);
 
     return (
@@ -37,13 +38,12 @@ const LotteryCardList = (lotteries) => {
             <div className="row row-cols-1 row-cols-md-3 g-4">
                 { lotteryCards.map((lotteryCard, index) => {
                     return(
-                        <div className="col">
                             <LotteryCard
                             key={ index }
-                            name = { lotteryCard.name }
-                            id = { lotteryCard.id }
+                            tipoLoteria = { lotteryCard.tipoLoteria }
+                            numSorteo = { lotteryCard.numSorteo }
+                            className= 'col'
                             ></LotteryCard>
-                        </div>
                     )
                 })}
             </div>
