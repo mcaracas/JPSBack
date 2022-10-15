@@ -101,7 +101,7 @@ const MarchamoNuevosTiempos = (id) => {
                     insertMarchamo(marchamoList)
                         .then((response) => { 
                             if(response.status === 200){
-                                alert(JSON.stringify(response.data));
+                                alert('Marchamos guardados con éxito');
                             }else{
                                 throw new Error('Marchamo no insertado');
                             }

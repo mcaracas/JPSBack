@@ -20,8 +20,6 @@ const marchamoSchema = Yup.object().shape({
 });
 
 let marchamoDefault = {
-    //TODO: change this to the real idSorteo as a string, momentanly is a number because
-    // the backend is expecting a number
     idSorteo : 2,
     tipo : 'Apertura',
     valija : 'A',
@@ -84,7 +82,7 @@ const Marchamo3Monazos = (id) => {
                     insertMarchamo(marchamos)
                         .then((response) => { 
                             if(response.status === 200){
-                                alert(JSON.stringify(response.data));
+                                alert('Marchamos guardados con éxito');
                             }else{
                                 throw new Error('Marchamo no insertado');
                             }
