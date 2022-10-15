@@ -5,7 +5,7 @@ import FranjaRoja from '../../components/pure/FranjaR'
 import ContenedorLista from '../../components/container/ContenedorLista'
 import EncabezadoFranjas from '../../components/container/EncabezadoFranjas'
 import TituloPrincipal from '../../components/pure/TituloPrincipal'
-
+import ContenedorListaJuez from '../../components/container/ContenedorListaJuez'
 
 
 const NombreFiscalizadores = () => {
@@ -13,7 +13,8 @@ const NombreFiscalizadores = () => {
     <div>
       <EncabezadoFranjas titulo= {"FISCALIZADORES"}></EncabezadoFranjas>
       <ContenedorLista/>
-    </div>
+      <ContenedorListaJuez/>
+      </div>
   )
 }
 

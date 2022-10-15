@@ -1,7 +1,7 @@
 import React from 'react'
 import ListItem from './List-item'
 
-const List = ({ items,titulo }) => {
+const List = ({ items,titulo,parametro}) => {
   return (
    <>
    <div>
@@ -9,7 +9,7 @@ const List = ({ items,titulo }) => {
 
     <ul>
       {items.map(item => (
-        <ListItem key={item.id} item = {item.name} />
+        <ListItem key={item.id} item = {item.parametro} />
       ))}
     </ul>
 
