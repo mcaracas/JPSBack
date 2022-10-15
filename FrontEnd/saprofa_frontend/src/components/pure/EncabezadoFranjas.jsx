@@ -1,6 +1,6 @@
-import FranjaLogo from './FranjaLogo'
-import FranjaPrincipal from './Franja'
-import FranjaRoja from './FranjaR'
+import FranjaLogo from './header/FranjaLogo'
+import FranjaPrincipal from './header/Franja'
+import FranjaRoja from './header/FranjaR'
 import React from 'react';
 import PropTypes from 'prop-types'
 

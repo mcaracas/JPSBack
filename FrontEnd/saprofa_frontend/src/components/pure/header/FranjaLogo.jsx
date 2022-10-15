@@ -7,7 +7,7 @@ function FranjaLogo(){
 return (<header className="franjaLogo">
 
 
-<img src={require ("../../img/logo_jps.png")} alt="LOGO"/>
+<img src={require ("../../../img/logo_jps.png")} alt="LOGO"/>
 </header>
 )
 
