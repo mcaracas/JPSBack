@@ -19,23 +19,6 @@ export function getActualLotteryInfo(){
     return APIRequest.get('/DatosSorteo');
 }
 
-//RF01 - Datos Previos
-export function getPlanPremiosDetalle(id){
-    return APIRequest.get('/PlanPremiosDetalle/'+id);
-}
-
-export function getPlanPremios(id){
-    return APIRequest.get('/PlanPremios/'+id);
-}
-
-export function getDatosSorteo(id){
-    return APIRequest.get('/DatosSorteo/'+id);
-}
-
-export function getMarchamo(id){
-    return APIRequest.get('/Marchamo/'+id);
-}
-
 export function getDatosFormularios(id){
     return APIRequest.get('/DatosFormulariosA/'+id);
 }
