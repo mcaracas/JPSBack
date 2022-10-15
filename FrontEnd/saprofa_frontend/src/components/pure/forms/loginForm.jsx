@@ -1,8 +1,8 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { login } from '../../../services/axiosService';
-
+import { getHoraIngreso, login } from '../../../services/axiosService';
+import { useNavigate } from 'react-router-dom';
 /**
  * Schema for the form
  * @type {Yup.ObjectSchema<any>}
@@ -16,7 +16,7 @@ const loginSchema = Yup.object().shape({
 
 
 const LoginForm = () => {
-
+    
     /**
      * Default values for the form
      * @type {{password: string, username: string}}
@@ -24,27 +24,35 @@ const LoginForm = () => {
     const initialValues = {
         username: '',
         password: ''
-    } 
-    
+    }
+
+    const navigate = useNavigate();
 
     return (
         <div>
             <Formik
                 initialValues={initialValues}
                 validationSchema={loginSchema}
-                onSubmit={async (values) => { 
+                onSubmit={async (values) => {
                     login(values) //Using axios to make the request
                         .then((response) => {   // If login is successful
-                            //@TODO: Redirect to home page
-                            
-
+                            getHoraIngreso()    // Get the current date and time
+                                .then((response) => {
+                                    sessionStorage.setItem('HoraIngreso',response.data); // Save login time in session storage
+                                    navigate('/ChooseLottery');// Redirect to chooseLottery page
+                                })
                         }).catch((error) => {   // If login fails
-                            console.log('Error: ',error);
-                            if(error.response.status === 400){
+                            sessionStorage.removeItem('HoraIngreso'); // Remove login time from session storage
+                            console.log('Error: ', error);
+                            if (error.response.status === 401) {    // If the error is 401 (Unauthorized)
+                                console.log('Error: ', error);
+                            } else if (error.response.status === 400) { // Invalid credentials
                                 alert('Usuario o contraseña incorrectos');
+                            } else if(error.response.status === 500){   // Server error
+                                console.log('Server error:', error);
                             }
                         }
-                    );
+                        );
                 }}>
                 {({ errors, touched, isSubmitting }) => (
                     <Form>
@@ -67,7 +75,7 @@ const LoginForm = () => {
                                 <label className='lbl' htmlFor="password">Contraseña</label>
                                 <br></br>
                                 <Field name="password" type="password" id="password"
-                                    placeholder="Contraseña" 
+                                    placeholder="Contraseña"
                                     className="inp" />
                                 {/* If the password field is touched, but the
                                     text is not given */}
@@ -82,7 +90,7 @@ const LoginForm = () => {
                                 <button type="submit" className='btn'>Iniciar Sesión</button>
                                 {isSubmitting ? <p>Submitting...</p> : null}
                             </div>
-                            
+
                         </div>
                     </Form>
                 )}
