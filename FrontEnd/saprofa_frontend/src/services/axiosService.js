@@ -31,6 +31,10 @@ export function getPlanPremios(id){
     return APIRequest.get('/PlanPremios/'+id);
 }
 
+export function getRepresentante(){
+    return APIRequest.get('/Representate');
+}
+
 export function getDatosSorteo(id){
     return APIRequest.get('/DatosSorteo/'+id);
 }

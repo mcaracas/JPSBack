@@ -4,27 +4,34 @@ import ListItem from '../pure/List-item'
 import axios from 'axios';
 import List from '../pure/List'
 import { useEffect, useState } from 'react';
+import { getRepresentante } from '../../services/axiosService';
 
 
 const ContenedorLista = () => {
-
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useEffect(() => {
-        axios.get('https://localhost:7216/Representate')
-          .then(res => {
-            const persons = res.data;
-            setItems(res.data)
-    
-          })
-      }, [])
-    
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const [items, setItems] = useState([])
-
-
+  const [items, setItems] = useState([])
+  useEffect(() => {
+    getRepresentante().then(res => {
+      console.log(res.data)
+      setItems(res.data)
+    }).catch(err => {
+      console.log(err)
+    })
+  }, [])
+  let nombrejuez = "";
+  const guardarNombre = () => {
+    nombrejuez = items[0].juez
+  }
   return (
     <div className="contenedor">
-    <List items = {items} titulo = {"REPRESENTANTES DE GERENCIA"} />
+      {/* {items&&guardarNombre} */}
+      {console.log(nombrejuez)}
+      {items && <List items={items} titulo={"REPRESENTANTES DE GERENCIA"} />}
+      <div>
+        <h2>JUEZ</h2>
+        <ul>
+          {nombrejuez}
+        </ul>
+      </div>
     </div>
   )
 }

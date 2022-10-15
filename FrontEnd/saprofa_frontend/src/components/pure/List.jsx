@@ -9,7 +9,7 @@ const List = ({ items,titulo}) => {
 
     <ul>
       {items.map(item => (
-        <ListItem key={item.id} item={item.name} />
+        <ListItem key={item.id} item={item.nombre} />
       ))}
     </ul>
 
@@ -21,4 +21,3 @@ const List = ({ items,titulo}) => {
 
 
 export default List
-
