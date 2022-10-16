@@ -30,6 +30,7 @@ public class DatosPreviosAController : ControllerBase
         var datosPreviosAdministracion = context.DatosPreviosAdministracions.FirstOrDefault(x => x.Id == id);
         return datosPreviosAdministracion;
     }
+    
 
     [HttpPost]
     public ActionResult Post([FromBody] DatosPreviosAdministracion DatosPreviosAdministracion)

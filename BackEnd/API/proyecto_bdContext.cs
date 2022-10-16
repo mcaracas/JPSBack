@@ -41,7 +41,8 @@ namespace API
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySQL(Environment.GetEnvironmentVariable("MESSAGE"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseMySQL("server=proyecto-inge2022.mysql.database.azure.com;userid=saprofa;password=ProyectoInge2022!;database=proyecto_bd");
             }
         }
 
@@ -187,31 +188,37 @@ namespace API
             {
                 entity.ToTable("datosfomulario");
 
-                entity.HasIndex(e => e.IdDatosPrevios, "idDatosPrevios");
-
-                entity.HasIndex(e => e.IdPlanPremios, "idPlanPremios");
-
                 entity.Property(e => e.Id)
                     .HasMaxLength(30)
                     .HasColumnName("id");
 
-                entity.Property(e => e.IdDatosPrevios)
+                entity.Property(e => e.CompraExcedentes).HasColumnName("compra_excedentes");
+
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(200)
+                    .HasColumnName("descripcion");
+
+                entity.Property(e => e.FechaRealización).HasColumnName("Fecha_realización");
+
+                entity.Property(e => e.FraccionEntero)
                     .HasColumnType("int(11)")
-                    .HasColumnName("idDatosPrevios");
+                    .HasColumnName("Fraccion_entero");
 
-                entity.Property(e => e.IdPlanPremios)
+                entity.Property(e => e.MontoUnitario).HasColumnName("Monto_unitario");
+
+                entity.Property(e => e.NomFiscalizador)
+                    .HasMaxLength(50)
+                    .HasColumnName("nom_fiscalizador");
+
+                entity.Property(e => e.NumeroMarchamo)
+                    .HasMaxLength(45)
+                    .HasColumnName("numeroMarchamo");
+
+                entity.Property(e => e.NumeroPremio)
                     .HasColumnType("int(11)")
-                    .HasColumnName("idPlanPremios");
+                    .HasColumnName("Numero_premio");
 
-                entity.HasOne(d => d.IdDatosPreviosNavigation)
-                    .WithMany(p => p.Datosfomularios)
-                    .HasForeignKey(d => d.IdDatosPrevios)
-                    .HasConstraintName("idDatosPrevios");
-
-                entity.HasOne(d => d.IdPlanPremiosNavigation)
-                    .WithMany(p => p.Datosfomularios)
-                    .HasForeignKey(d => d.IdPlanPremios)
-                    .HasConstraintName("idPlanPremios");
+                entity.Property(e => e.Ventas).HasColumnName("ventas");
             });
 
             modelBuilder.Entity<ListaChequeoDetalle>(entity =>
