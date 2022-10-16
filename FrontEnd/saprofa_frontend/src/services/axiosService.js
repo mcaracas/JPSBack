@@ -14,6 +14,10 @@ export function getHoraIngreso(){   // Get the current date and time from the se
     return APIRequest.get('/util/FechaHoraActual');
 }
 
+export function getRepresentante(){   
+    return APIRequest.get('/representate');
+}
+
 export function insertMarchamo(marchamoList){
     return APIRequest.post('/Marchamo',marchamoList);
 }
