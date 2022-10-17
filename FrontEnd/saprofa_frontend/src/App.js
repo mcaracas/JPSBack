@@ -9,6 +9,8 @@ import DatosPrevios from './pages/DatosPrevios/DatosPreviosPage';
 import ChooseLottery from './pages/LotteyCards/ChooseLotteryPage';
 import NombreFiscalizadores from './pages/NombreFiscalizadores/NombreFiscalizadoresPage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Valija3Monazos from './components/pure/forms/Valija3Monazos';
+import ValijaNuevosTiempos from './components/pure/forms/ValijaNuevosTiempos';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
           <Route exact path="/MarchamoNuevosTiempos" element={<MarchamoNuevosTiempos />} /> {/* New times stamp page */}
           <Route exact path="/Marchamo3Monazos" element={<Marchamo3Monazos />} /> {/* 3 Monazos stamp page */}
           <Route exact path="/NombreFiscalizadores" element={<NombreFiscalizadores />} /> {/* Name of the inspectors page */}
+          <Route exact path="/Valija3Monazos" element={<Valija3Monazos />} /> {/* Name of the inspectors page */}
+          <Route exact path="/ValijaNuevosTiempos" element={<ValijaNuevosTiempos />} /> {/* Name of the inspectors page */}
         </Routes>
       </div>
     </Router>

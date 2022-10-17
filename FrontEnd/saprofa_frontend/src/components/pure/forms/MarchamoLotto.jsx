@@ -60,6 +60,7 @@ const buildMarchamoList = (values) => {
 const MarchamoLotto = (id) => {
     return (
         <div className='container'>
+            <h1>Marchamos Lotto</h1>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}
