@@ -36,6 +36,7 @@ namespace API
         public virtual DbSet<ResultadosBitacora> ResultadosBitacoras { get; set; }
         public virtual DbSet<TipoLoterium> TipoLoteria { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
+        public virtual DbSet<Parametro> Parametros { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -599,6 +600,28 @@ namespace API
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(100)
                     .HasColumnName("nombre");
+            });
+
+            modelBuilder.Entity<Parametro>(entity =>
+            {
+                entity.HasKey(e => e.IdParametro)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("parametros");
+
+                entity.Property(e => e.IdParametro)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("Id_Parametro");
+
+                entity.Property(e => e.CodigoParametro)
+                    .IsRequired()
+                    .HasMaxLength(45)
+                    .HasColumnName("Codigo_Parametro");
+
+                entity.Property(e => e.ParametroValor)
+                    .IsRequired()
+                    .HasMaxLength(45)
+                    .HasColumnName("Parametro_Valor");
             });
 
             OnModelCreatingPartial(modelBuilder);
