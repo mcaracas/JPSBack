@@ -11,6 +11,7 @@ import NombreFiscalizadores from './pages/NombreFiscalizadores/NombreFiscalizado
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Valija3Monazos from './components/pure/forms/Valija3Monazos';
 import ValijaNuevosTiempos from './components/pure/forms/ValijaNuevosTiempos';
+import InputList from './components/pure/forms/InputList';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route exact path="/NombreFiscalizadores" element={<NombreFiscalizadores />} /> {/* Name of the inspectors page */}
           <Route exact path="/Valija3Monazos" element={<Valija3Monazos />} /> {/* Name of the inspectors page */}
           <Route exact path="/ValijaNuevosTiempos" element={<ValijaNuevosTiempos />} /> {/* Name of the inspectors page */}
+          <Route exact path="/InputList" element={<InputList />} /> 
         </Routes>
       </div>
     </Router>

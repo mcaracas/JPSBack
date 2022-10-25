@@ -23,12 +23,23 @@ const pruebasSchema = Yup.object().shape(
     );
     
     
-const Valija3Monazos = () => {
+const InputList = () => {
 
     
-    const [inputs, setInputs] = useState();
+    const [inputFileds, setInputFileds] = useState([{bolita:''}]);
 
-    const pruebas = ['test1', 'test2', 'test3'];
+    // const pruebas = ['test1', 'test2', 'test3'];
+
+    const handleFormChange = (index, event) => {
+        let data = [...inputFileds];
+        data[index][event.target.name] = event.target.value;
+        setInputFileds(data);
+    }
+
+    const addFields = () => {
+        let newField = {bolita:''};
+        setInputFileds([...inputFileds, newField]);
+    }
 
     return (
         <div className='container'>
@@ -65,7 +76,26 @@ const Valija3Monazos = () => {
                                                             )
                                                         }
                                                 </th>
-                                                <td>
+                                                {
+                                                    inputFileds.map((input, index) => {
+                                                        return(
+                                                            <td key={index}>
+                                                                <div className='row'>
+                                                                    <Field  id={index} 
+                                                                            name={`prueba${index}`}
+                                                                            type='text' 
+                                                                            className='form-control col m-4' 
+                                                                            value={input.bolita}
+                                                                            onChange={event => handleFormChange(index, event)}
+                                                                    />
+                                                                    <i className='bi bi-x-square-fill col-1 me-3' style={{ color: 'red' }}/>
+                                                                </div>
+                                                            </td>
+                                                        )
+                                                    })
+                                                }
+
+                                                {/* <td>
                                                     <div className='row'>
                                                         <Field id='bolita1' name='bolita1' type='number' className='form-control col m-4'/>
                                                         <i className='bi bi-x-square-fill col-1 me-3' style={{ color: 'red' }}></i>
@@ -102,12 +132,16 @@ const Valija3Monazos = () => {
                                                                 </div>
                                                             )
                                                         }
-                                                </td>
+                                                </td> */}
                                             </tr>
                                         </tbody>
                                     </table>
                                     <div className='button-field col-1'>
-                                        <button type='button' className='btn btn-success btn-sm'>Agregar Prueba</button>
+                                        <button 
+                                            type='button' 
+                                            className='btn btn-success btn-sm'
+                                            onClick={addFields}
+                                        >Agregar Prueba</button>
                                         {isSubmitting ? <p>Submitting...</p> : null}
                                     </div>
                                 </div>
@@ -124,9 +158,9 @@ const Valija3Monazos = () => {
 };
 
 
-Valija3Monazos.propTypes = {
+InputList.propTypes = {
 
 };
 
 
-export default Valija3Monazos;
+export default InputList;
