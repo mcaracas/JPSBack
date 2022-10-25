@@ -79,7 +79,11 @@ const Valija3Monazos = () => {
                                                             )
                                                         }
                                                 </td>
-                                                <td><Field id='bolita2' name='bolita2' type='number' className='form-control'/>
+                                                <td>
+                                                <div className='row'>
+                                                    <Field id='bolita2' name='bolita2' type='number' className='form-control col m-4'/>
+                                                    <i className='bi bi-x-square-fill col-1 me-3' style={{ color: 'red' }}></i>
+                                                </div>
                                                         {
                                                             errors.bolita2 && touched.bolita2 && 
                                                             (
@@ -89,7 +93,7 @@ const Valija3Monazos = () => {
                                                             )
                                                         }
                                                 </td>
-                                                <td><Field id='bolita3' name='bolita3' type='number' className='form-control'/>
+                                                {/* <td><Field id='bolita3' name='bolita3' type='number' className='form-control'/>
                                                         {
                                                             errors.bolita3 && touched.bolita3 && 
                                                             (
@@ -98,7 +102,7 @@ const Valija3Monazos = () => {
                                                                 </div>
                                                             )
                                                         }
-                                                </td>
+                                                </td> */}
                                                 {/* <td><Field id='bolita4' name='bolita4' type='number' className='form-control'/>
                                                         {
                                                             errors.bolita4 && touched.bolita4 && 
