@@ -9,14 +9,14 @@ const InputPrueba = ({ testNum }) => {
                 errors,} ) => (
                     <td>
                         <div className='row'>
-                            <Field id={`bolita${testNum}`} name={`bolita${testNum}`} type='number' className='form-control col m-4'/>
+                            <Field id={testNum} name={testNum} type='number' className='form-control col m-4'/>
                             <i className='bi bi-x-square-fill col-1 me-3 closeX'></i>
                         </div>
                             {
                                 errors.bolita1 && touched.bolita1 && 
                                 (
                                     <div style={{color:'red'}}>
-                                        <ErrorMessage name={`bolita${testNum}`}></ErrorMessage>
+                                        <ErrorMessage name={testNum}></ErrorMessage>
                                     </div>
                                 )
                             }
