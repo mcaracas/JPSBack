@@ -26,19 +26,35 @@ const pruebasSchema = Yup.object().shape(
 const InputList = () => {
 
     
-    const [inputFileds, setInputFileds] = useState([{bolita:''}]);
+    const [inputFields, setInputFields] = useState([{bolita:''},{bolita:''},{bolita:''}]);
 
-    // const pruebas = ['test1', 'test2', 'test3'];
-
+    /**
+     * Function to write in the input fields
+     * @param {int} index 
+     * @param {event} event 
+     */
     const handleFormChange = (index, event) => {
-        let data = [...inputFileds];
+        let data = [...inputFields];
         data[index][event.target.name] = event.target.value;
-        setInputFileds(data);
+        setInputFields(data);
     }
 
+    /**
+     * Adds a new input field to the form
+     */
     const addFields = () => {
         let newField = {bolita:''};
-        setInputFileds([...inputFileds, newField]);
+        setInputFields([...inputFields, newField]);
+    }
+
+    /**
+     * Removes an input field from the form with the given index
+     * @param {int} index 
+     */
+    const removeFields = (index) => {
+        let data = [...inputFields];
+        data.splice(index,1 );
+        setInputFields(data);
     }
 
     return (
@@ -77,18 +93,21 @@ const InputList = () => {
                                                         }
                                                 </th>
                                                 {
-                                                    inputFileds.map((input, index) => {
+                                                    inputFields.map((input, index) => {
                                                         return(
                                                             <td key={index}>
                                                                 <div className='row'>
                                                                     <Field  id={index} 
-                                                                            name={`prueba${index}`}
+                                                                            name='bolita'
                                                                             type='text' 
                                                                             className='form-control col m-4' 
                                                                             value={input.bolita}
                                                                             onChange={event => handleFormChange(index, event)}
                                                                     />
-                                                                    <i className='bi bi-x-square-fill col-1 me-3' style={{ color: 'red' }}/>
+                                                                    <i 
+                                                                        className='bi bi-x-square-fill col-1 me-3 closeX'
+                                                                        onClick={() => removeFields(index)}
+                                                                    />
                                                                 </div>
                                                             </td>
                                                         )
