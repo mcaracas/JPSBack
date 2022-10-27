@@ -18,8 +18,7 @@ import InputPrueba from '../pruebas/InputPrueba';
 const pruebasSchema = Yup.object().shape(
     {
         valija : Yup.string().required('Valija requerida'),
-        bolita1 : Yup.number().required('Campo requerido'),
-        bolita2 : Yup.number().required('Campo requerido'),
+        bolita : Yup.number().required('Campo requerido'),
     }
     );
     
@@ -32,7 +31,7 @@ const InputList = () => {
      * and the value to put in the input field
      * @type {Array}
      */
-    const [inputFields, setInputFields] = useState([{bolita:''},{bolita:''},{bolita:''}]);
+    const [inputFields, setInputFields] = useState([{bolita: ''},{bolita: ''},{bolita: ''},{bolita: ''},{bolita: ''},{bolita: ''}]);
 
     /**
      * Function to write in the input fields
