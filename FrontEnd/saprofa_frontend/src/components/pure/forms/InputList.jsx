@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import '../../../styles/pruebas/pruebasForms.sass'
+import InputPrueba from '../pruebas/InputPrueba';
 
 // TODO: check props to receive and information to send to Backend
 
@@ -34,6 +35,7 @@ const InputList = () => {
      * @param {event} event 
      */
     const handleFormChange = (index, event) => {
+        console.log(index)
         let data = [...inputFields];
         data[index][event.target.name] = event.target.value;
         setInputFields(data);
@@ -95,63 +97,17 @@ const InputList = () => {
                                                 {
                                                     inputFields.map((input, index) => {
                                                         return(
-                                                            <td key={index}>
-                                                                <div className='row'>
-                                                                    <Field  id={index} 
-                                                                            name='bolita'
-                                                                            type='text' 
-                                                                            className='form-control col m-4' 
-                                                                            value={input.bolita}
-                                                                            onChange={event => handleFormChange(index, event)}
-                                                                    />
-                                                                    <i 
-                                                                        className='bi bi-x-square-fill col-1 me-3 closeX'
-                                                                        onClick={() => removeFields(index)}
-                                                                    />
-                                                                </div>
-                                                            </td>
+                                                            <InputPrueba
+                                                                key = { index }
+                                                                index = { index } 
+                                                                input = {input}
+                                                                handleFormChange = { handleFormChange }
+                                                                removeFields = { removeFields }
+                                                            />
+                                                            
                                                         )
                                                     })
                                                 }
-
-                                                {/* <td>
-                                                    <div className='row'>
-                                                        <Field id='bolita1' name='bolita1' type='number' className='form-control col m-4'/>
-                                                        <i className='bi bi-x-square-fill col-1 me-3' style={{ color: 'red' }}></i>
-                                                    </div>
-                                                        {
-                                                            errors.bolita1 && touched.bolita1 && 
-                                                            (
-                                                                <div style={{color:'red'}}>
-                                                                    <ErrorMessage name='bolita1'></ErrorMessage>
-                                                                </div>
-                                                            )
-                                                        }
-                                                </td>
-                                                <td>
-                                                <div className='row'>
-                                                    <Field id='bolita2' name='bolita2' type='number' className='form-control col m-4'/>
-                                                    <i className='bi bi-x-square-fill col-1 me-3' style={{ color: 'red' }}></i>
-                                                </div>
-                                                        {
-                                                            errors.bolita2 && touched.bolita2 && 
-                                                            (
-                                                                <div style={{color:'red'}}>
-                                                                    <ErrorMessage name='bolita2'></ErrorMessage>
-                                                                </div>
-                                                            )
-                                                        }
-                                                </td>
-                                                <td><Field id='bolita3' name='bolita3' type='number' className='form-control'/>
-                                                        {
-                                                            errors.bolita3 && touched.bolita3 && 
-                                                            (
-                                                                <div style={{color:'red'}}>
-                                                                    <ErrorMessage name='bolita3'></ErrorMessage>
-                                                                </div>
-                                                            )
-                                                        }
-                                                </td> */}
                                             </tr>
                                         </tbody>
                                     </table>
