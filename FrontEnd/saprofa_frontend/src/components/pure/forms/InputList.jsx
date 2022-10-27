@@ -26,7 +26,12 @@ const pruebasSchema = Yup.object().shape(
     
 const InputList = () => {
 
-    
+    /**
+     * An array containing objects with the property bolita
+     * bolita is the number of the bolita in the test
+     * and the value to put in the input field
+     * @type {Array}
+     */
     const [inputFields, setInputFields] = useState([{bolita:''},{bolita:''},{bolita:''}]);
 
     /**
@@ -35,7 +40,7 @@ const InputList = () => {
      * @param {event} event 
      */
     const handleFormChange = (index, event) => {
-        console.log(index)
+        console.log(inputFields)
         let data = [...inputFields];
         data[index][event.target.name] = event.target.value;
         setInputFields(data);
@@ -43,6 +48,8 @@ const InputList = () => {
 
     /**
      * Adds a new input field to the form
+     * bolita is the number shown in the test 
+     * and the value to put in the input
      */
     const addFields = () => {
         let newField = {bolita:''};
@@ -59,12 +66,24 @@ const InputList = () => {
         setInputFields(data);
     }
 
+    const checkNumberOfTests = () => {
+        if (inputFields.length % 3 !== 0) {
+            return false;
+        }
+    }
+
     return (
         <div className='container'>
             <Formik
                 initialValues={{}}
                 validationSchema={pruebasSchema}
-                onSubmit={()=>{}}
+                onSubmit={
+
+
+                    async ( values )=>{
+
+                    }
+                }
                 >
                 {({ values,
                     touched,
