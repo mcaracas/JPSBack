@@ -45,7 +45,8 @@ public class UsuarioController : ControllerBase
     public ActionResult Login([FromBody] Usuario Usuario)
     {
         var context = new proyecto_bdContext();
-        var usuario = context.Usuarios.FirstOrDefault(x => x.Id == Usuario.Id  && Utilidades.Utilidades.Decrypt(x.Clave) == Usuario.Clave);
+        var claveEncriptada = Utilidades.Utilidades.Encrypt(Usuario.Clave);
+        var usuario = context.Usuarios.FirstOrDefault(x => x.Nombre == Usuario.Nombre && x.Clave == claveEncriptada);
         if (usuario != null)
         {
             return Ok(usuario);
