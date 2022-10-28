@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using API.Utilidades;
 
 namespace API.Controllers;
 
@@ -34,6 +35,7 @@ public class UsuarioController : ControllerBase
     public ActionResult Post([FromBody] Usuario Usuario)
     {
         var context = new proyecto_bdContext();
+        Usuario.Clave = Utilidades.Utilidades.Encrypt(Usuario.Clave);
         context.Usuarios.Add(Usuario);
         context.SaveChanges();
         return Ok();
@@ -43,7 +45,7 @@ public class UsuarioController : ControllerBase
     public ActionResult Login([FromBody] Usuario Usuario)
     {
         var context = new proyecto_bdContext();
-        var usuario = context.Usuarios.FirstOrDefault(x => x.Id == Usuario.Id  && x.Clave == Usuario.Clave);
+        var usuario = context.Usuarios.FirstOrDefault(x => x.Id == Usuario.Id  && Utilidades.Utilidades.Decrypt(x.Clave) == Usuario.Clave);
         if (usuario != null)
         {
             return Ok(usuario);
