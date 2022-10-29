@@ -8,14 +8,32 @@ import InputPrueba from '../pruebas/InputPrueba';
 
 const Pruebas3MonazosForm = () => {
 
+   
     /**
-     * An array containing objects with the property bolita
-     * bolita is the number of the bolita in the test
-     * and the value to put in the input field
-     * @type {Array}
+     * Initialize an array with 6 fields, each field with an object with a bolita property
+     * indicating its index
+     * @var {bolita: object} its property bolita is the index of the field
+     * @returns {Array} Array with 6 fields, each field containing an object with a bolita property
+     * initialized empty
      */
-    const [inputFields, setInputFields] = useState([{bolita: ''},{bolita: ''},{bolita: ''},{bolita: ''},{bolita: ''},{bolita: ''}]);
-    
+    const initializeInputFields = () => {
+        let numBolita = 'bolita';
+        let inputFields = [{}];
+        for(let i = 0; i < 6; i++){
+            numBolita = `bolita${i}`;
+            inputFields[i] = {
+                [numBolita] : ''
+            }
+        }
+        // console.log(inputFields);
+        return inputFields;
+    }
+
+    /**
+     * Hook useState on inputFields
+     */
+    const [inputFields, setInputFields] = useState([{bolita0: ''},{bolita1: ''},{bolita2: ''},{bolita3: ''},{bolita4: ''},{bolita5: ''}]);
+
     /**
      * Function to write in the input fields
      * @param {int} index 
@@ -24,7 +42,10 @@ const Pruebas3MonazosForm = () => {
     const handleFormChange = (index, event) => {
         let data = [...inputFields];
         data[index][event.target.name] = event.target.value;
+        // console.log(data[index]);
+        // console.log(data);
         setInputFields(data);
+        // console.log(inputFields);
     }
 
     /**
@@ -33,7 +54,8 @@ const Pruebas3MonazosForm = () => {
      * and the value to put in the input
      */
     const addFields = () => {
-        let newField = {bolita:''};
+        let numBolita = `bolita${inputFields.length}`;
+        let newField = {[numBolita]:''};
         setInputFields([...inputFields, newField]);
     }
 
@@ -56,26 +78,45 @@ const Pruebas3MonazosForm = () => {
         return true;
     }
 
+    function checkIfAllFieldsAreFilled(numberOfFields) {
+        let emptyFields = 0;
+        for (let i = 0; i < numberOfFields.length; i++) {
+            if (numberOfFields[i].bolita === '') {
+                emptyFields++;
+            }
+        }
+        if (emptyFields > 0) {
+            alert(`Hay ${emptyFields} campos vacíos. Por favor, llene todos los campos`);
+            return false;
+        }
+        return true;
+    }
+
     return (
         <div className='container'>
             <Formik
                 initialValues={{valija:''}}
                 validate = { values => {
                     let errors = {};
+                    let numBolita;
                     if(!values.valija){
                         errors.valija = 'Valija requerida';	
                     }
 
-                    for(let i in inputFields){
-                        if(!inputFields[i].bolita){
-                            errors.bolita = 'Falta algún campo';
+                    for(let i = 0; i < inputFields.length; i++){
+                        numBolita = `bolita${i}`;
+                        inputFields[i] = {
+                            [numBolita] : ''
+                        }
+                        if(!inputFields[i][numBolita]){
+                           errors = {
+                                 ...errors,
+                                [numBolita]: 'Campo requerido',
+                           }
                         }
                     }
-
-                    if(errors.bolita){
-                       console.log(errors.bolita);
-                    }
-
+                    // console.log(errors);
+                    // console.log(inputFields);
                     return errors;
                 }}
                 onSubmit={
@@ -87,14 +128,13 @@ const Pruebas3MonazosForm = () => {
                 }
                 >
                 {({ errors, }) => (
-                        <div className='container'>
-                            <h1>Pruebas 3 Monazos</h1>
+                        <div className='container-fluid'>
                             <Form>
                                 <div className='row'>
-                                    <table className='table table-bordered align-middle col'>
+                                    <table className='table table-bordered align-middle mt-5 col'>
                                         <thead>
                                             <tr>
-                                                <th colSpan={11}>Pruebas realizadas antes del sorte<br/> Números favorecidos</th>
+                                                <th colSpan={11}>Pruebas realizadas antes del sorteo<br/> Números favorecidos</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -104,15 +144,21 @@ const Pruebas3MonazosForm = () => {
                                                     <Field 
                                                         id='valija' 
                                                         name='valija' 
-                                                        type='text' 
-                                                        className='form-control'
-                                                    />
-                                                    <ErrorMessage name='valija' component={() => {
+                                                        type='text'
+                                                        as = 'select' 
+                                                        className='form-control valija'
+                                                    >
+                                                        <option value='A' defaultValue>A</option>
+                                                        <option value='B'>B</option>
+                                                        <option value='C'>C</option>
+                                                    </Field>
+                                                    {/* <ErrorMessage name='valija' component={() => {
                                                         return <div className='error'>{errors.valija}</div>
-                                                    }}/>
+                                                    }}/> */}
                                                 </th>
                                                 {
                                                     inputFields.map((input, index) => {
+                                                        let numBolita = `bolita${index}`;
                                                         return(
                                                             <InputPrueba
                                                                 key={index}
@@ -120,7 +166,11 @@ const Pruebas3MonazosForm = () => {
                                                                 input = {input}
                                                                 handleFormChange = { handleFormChange }
                                                                 removeFields = { removeFields }
+                                                                name = {`bolita${index}`}
                                                             >
+                                                            <ErrorMessage name={`bolita${index}`} component={() => {
+                                                                return <div className='error'>{errors[numBolita]}</div>
+                                                            }}/> 
                                                             </InputPrueba>
                                                         )
                                                     })
@@ -128,10 +178,10 @@ const Pruebas3MonazosForm = () => {
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <div className='button-field col-1'>
+                                    <div className='button-field col-1 mt-5 '>
                                         <button 
                                             type='button' 
-                                            className='btn btn-success btn-sm'
+                                            className='btn btn-success'
                                             onClick={addFields}
                                         >
                                             Agregar Prueba
