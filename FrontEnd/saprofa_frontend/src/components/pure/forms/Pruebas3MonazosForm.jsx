@@ -1,29 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import * as Yup from 'yup';
 import '../../../styles/pruebas/pruebasForms.sass'
 import InputPrueba from '../pruebas/InputPrueba';
 
 // TODO: check props to receive and information to send to Backend
 
-/**
- * Validation schema for the form
- * @type {Yup.ObjectSchema}
- * valija: string, required
- * all the other fields must be number and required
- */
-
-
-const pruebasSchema = Yup.object().shape(
-    {
-        valija : Yup.string().required('Valija requerida'),
-        bolita : Yup.number().required('Campo requerido'),
-    }
-    );
-    
-    
-const InputList = () => {
+const Pruebas3MonazosForm = () => {
 
     /**
      * An array containing objects with the property bolita
@@ -32,14 +15,13 @@ const InputList = () => {
      * @type {Array}
      */
     const [inputFields, setInputFields] = useState([{bolita: ''},{bolita: ''},{bolita: ''},{bolita: ''},{bolita: ''},{bolita: ''}]);
-
+    
     /**
      * Function to write in the input fields
      * @param {int} index 
      * @param {event} event 
      */
     const handleFormChange = (index, event) => {
-        console.log(inputFields)
         let data = [...inputFields];
         data[index][event.target.name] = event.target.value;
         setInputFields(data);
@@ -65,31 +47,46 @@ const InputList = () => {
         setInputFields(data);
     }
 
-    const checkNumberOfTests = () => {
-        if (inputFields.length % 3 !== 0) {
+    function checkNumberOfTests(numberOfFields) {
+        let difference = numberOfFields.length%3;
+        if (numberOfFields.length % 3 !== 0) {
+            alert(`Las pruebas deben ir en grupos de 3. Elimine ${difference} números o agregue ${3-difference} números`);
             return false;
         }
+        return true;
     }
 
     return (
         <div className='container'>
             <Formik
-                initialValues={{}}
-                validationSchema={pruebasSchema}
+                initialValues={{valija:''}}
+                validate = { values => {
+                    let errors = {};
+                    if(!values.valija){
+                        errors.valija = 'Valija requerida';	
+                    }
+
+                    for(let i in inputFields){
+                        if(!inputFields[i].bolita){
+                            errors.bolita = 'Falta algún campo';
+                        }
+                    }
+
+                    if(errors.bolita){
+                       console.log(errors.bolita);
+                    }
+
+                    return errors;
+                }}
                 onSubmit={
-
-
-                    async ( values )=>{
-
+                    (values) => {
+                        console.log(values);
+                        console.log('Form submitted');
+                        alert('Form submitted');
                     }
                 }
                 >
-                {({ values,
-                    touched,
-                    errors,
-                    isSubmitting,
-                    handleChange,
-                    handleBlur }) => (
+                {({ errors, }) => (
                         <div className='container'>
                             <h1>Pruebas 3 Monazos</h1>
                             <Form>
@@ -102,27 +99,29 @@ const InputList = () => {
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <th>Valija <br/><Field id='valija' name='valija' type='text' className='form-control'/>
-                                                        {
-                                                            errors.valija && touched.valija && 
-                                                            (
-                                                                <div style={{color:'red'}}>
-                                                                    <ErrorMessage name='valija'></ErrorMessage>
-                                                                </div>
-                                                            )
-                                                        }
+                                                <th>
+                                                    <label htmlFor='valija'>Valija</label>
+                                                    <Field 
+                                                        id='valija' 
+                                                        name='valija' 
+                                                        type='text' 
+                                                        className='form-control'
+                                                    />
+                                                    <ErrorMessage name='valija' component={() => {
+                                                        return <div className='error'>{errors.valija}</div>
+                                                    }}/>
                                                 </th>
                                                 {
                                                     inputFields.map((input, index) => {
                                                         return(
                                                             <InputPrueba
-                                                                key = { index }
+                                                                key={index}
                                                                 index = { index } 
                                                                 input = {input}
                                                                 handleFormChange = { handleFormChange }
                                                                 removeFields = { removeFields }
-                                                            />
-                                                            
+                                                            >
+                                                            </InputPrueba>
                                                         )
                                                     })
                                                 }
@@ -134,13 +133,13 @@ const InputList = () => {
                                             type='button' 
                                             className='btn btn-success btn-sm'
                                             onClick={addFields}
-                                        >Agregar Prueba</button>
-                                        {isSubmitting ? <p>Submitting...</p> : null}
+                                        >
+                                            Agregar Prueba
+                                        </button>
                                     </div>
                                 </div>
                                 <div className='button-field'>
-                                    <button type="submit" className='btn'>Registrar Pruebas</button>
-                                    {isSubmitting ? <p>Submitting...</p> : null}
+                                    <button type="submit" className='btn'>Registrar Pruebas</button>                                    
                                 </div>
                             </Form>
                         </div>
@@ -151,9 +150,4 @@ const InputList = () => {
 };
 
 
-InputList.propTypes = {
-
-};
-
-
-export default InputList;
+export default Pruebas3MonazosForm;
