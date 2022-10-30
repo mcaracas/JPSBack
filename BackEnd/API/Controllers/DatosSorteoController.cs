@@ -31,6 +31,17 @@ public class DatosSorteoController : ControllerBase
         return datosSorteo;
     }
 
+    [HttpGet]
+    [Route("SorteoActual")]
+    public IEnumerable<DatosSorteo> GetSorteoActual()
+    {
+        var context = new proyecto_bdContext();
+        var date = DateTime.Now;
+        var datosSorteo2 = context.DatosSorteos.ToList();
+        var datosSorteo = context.DatosSorteos.Where(x => x.FechaHora > date.AddHours(-2) && x.FechaHora < date.AddHours(2));
+        return datosSorteo;
+    }
+
     [HttpPost]
     public ActionResult Post([FromBody] DatosSorteo DatosSorteo)
     {

@@ -368,11 +368,16 @@ namespace API
 
             modelBuilder.Entity<Prueba>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.IdPrueba)
+                    .HasName("PRIMARY");
 
                 entity.ToTable("pruebas");
 
                 entity.HasIndex(e => e.IdDatoSorteo, "id_dato_sorteo");
+
+                entity.Property(e => e.IdPrueba)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_prueba");
 
                 entity.Property(e => e.Bolita)
                     .HasMaxLength(1)
@@ -386,11 +391,6 @@ namespace API
                 entity.Property(e => e.Numero)
                     .HasMaxLength(3)
                     .HasColumnName("numero");
-
-                entity.HasOne(d => d.IdDatoSorteoNavigation)
-                    .WithMany()
-                    .HasForeignKey(d => d.IdDatoSorteo)
-                    .HasConstraintName("pruebas_ibfk_1");
             });
 
             modelBuilder.Entity<RepFavorecidosUltimoAnno>(entity =>
