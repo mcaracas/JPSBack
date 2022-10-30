@@ -30,7 +30,8 @@ function App() {
           <Route exact path="/NombreFiscalizadores" element={<NombreFiscalizadores />} /> {/* Name of the inspectors page */}
           <Route exact path="/Valija3Monazos" element={<Valija3Monazos />} /> {/* Name of the inspectors page */}
           <Route exact path="/ValijaNuevosTiempos" element={<ValijaNuevosTiempos />} /> {/* Name of the inspectors page */}
-          <Route exact path="/InputList" element={<InputList />} /> 
+          <Route exact path="/Pruebas3Monazos" element={<Pruebas3Monazos />} />
+          <Route exact path="/PruebasLotto" element={<PruebasLottoPage />} /> 
         </Routes>
       </div>
     </Router>
