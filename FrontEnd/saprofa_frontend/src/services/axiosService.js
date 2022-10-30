@@ -23,7 +23,7 @@ export function insertMarchamo(marchamoList){
 }
 
 export function getActualLotteryInfo(){
-    return APIRequest.get('/DatosSorteo');
+    return APIRequest.get('/DatosSorteo/SorteoActual');
 }
 
 export function getDatosFormularios(id){
