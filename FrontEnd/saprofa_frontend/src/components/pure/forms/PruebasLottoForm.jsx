@@ -7,28 +7,26 @@ import InputPrueba from '../pruebas/InputPrueba';
 
 // TODO: check props to receive and information to send to Backend
 
-/**
- * Validation schema for the form
- * @type {Yup.ObjectSchema}
- * valija: string, required
- * all the other fields must be number and required
- */
-
-const pruebasSchema = Yup.object().shape({
-    valija: Yup.string().required('Valija requerida'),
-    bolita: Yup.number().required('Campo requerido')
-});
-
-
 const InputList = () => {
-
+    const initializeInputFields = () => {
+        let numBolita = 'bolita';
+        let inputFields = [{}];
+        for(let i = 0; i < 6; i++){
+            numBolita = `bolita${i}`;
+            inputFields[i] = {
+                [numBolita] : ''
+            }
+        }
+        // console.log(inputFields);
+        return inputFields;
+    }
     /**
      * An array containing objects with the property bolita
      * bolita is the number of the bolita in the test
      * and the value to put in the input field
      * @type {Array}
      */
-    const [inputFields, setInputFields] = useState([{ bolita: '' }, { bolita: '' }, { bolita: '' }, { bolita: '' }, { bolita: '' }]);
+    const [inputFields, setInputFields] = useState(initializeInputFields());
 
     /**
      * Function to write in the input fields
@@ -36,7 +34,7 @@ const InputList = () => {
      * @param {event} event 
      */
     const handleFormChange = (index, event) => {
-        console.log(inputFields)
+        console.log("Inputs: ",inputFields)
         let data = [...inputFields];
         data[index][event.target.name] = event.target.value;
         setInputFields(data);
@@ -62,29 +60,29 @@ const InputList = () => {
         setInputFields(data);
     }
 
-    const checkNumberOfTests = () => {
-        if (inputFields.length % 3 !== 0) {
-            return false;
-        }
-    }
 
     return (
         <div className='container'>
             <Formik
                 initialValues={{}}
 
-                validate={(values) => {
-                    let err = {};
-                    if (!values.valija) {
-                        err.valija = 'Valija requerida';
-                    }
-                    // if(!values.bolita) {
-                    //     err.bolita = 'Campo requerido';
-                    // }
+                // validate={(values) => {
+                //     let err = {};
+                //     if (!values.valija) {
+                //         err.valija = 'Valija requerida';
+                //     }
+                //     // if(!values.bolita) {
+                //     //     err.bolita = 'Campo requerido';
+                //     // }
 
-                    return err;
-                }}
+                //     return err;
+                // }}
                 onSubmit={(values) => {
+                    const data = {
+                        'Valija':values,
+                        'Bolitas':inputFields
+                    }
+                    console.log("Datos a enviar: ", data);
                     console.log('Form submitted');
                 }}>
                 {({ values, touched,
