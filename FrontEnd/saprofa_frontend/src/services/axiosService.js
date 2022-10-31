@@ -29,3 +29,7 @@ export function getActualLotteryInfo(){
 export function getDatosFormularios(id){
     return APIRequest.get('/DatosFormulariosA/'+id);
 }
+
+export function insertPrueba(prueba){
+    return APIRequest.post('/Pruebas',prueba);
+}
