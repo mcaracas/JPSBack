@@ -25,7 +25,6 @@ const Pruebas3MonazosForm = () => {
                 [numBolita] : ''
             }
         }
-        // console.log(inputFields);
         return inputFields;
     }
 
@@ -42,10 +41,7 @@ const Pruebas3MonazosForm = () => {
     const handleFormChange = (index, event) => {
         let data = [...inputFields];
         data[index][event.target.name] = event.target.value;
-        // console.log(data[index]);
-        // console.log(data);
         setInputFields(data);
-        // console.log(inputFields);
     }
 
     /**
@@ -105,21 +101,23 @@ const Pruebas3MonazosForm = () => {
 
                     for(let i = 0; i < inputFields.length; i++){
                         numBolita = `bolita${i}`;
-                        inputFields[i] = {
-                            [numBolita] : ''
-                        }
                         if(!inputFields[i][numBolita]){
                            errors = {
                                  ...errors,
                                 [numBolita]: 'Campo requerido',
                            }
                         }
+                        if(inputFields[i][numBolita] > 7 || inputFields[i][numBolita] < 0){
+                            errors = {
+                                ...errors,
+                                [numBolita]: 'Debe ser un número entre 0 y 7',
+                            }
+                        }
                     }
-                    // console.log(errors);
-                    // console.log(inputFields);
                     return errors;
                 }}
                 onSubmit={
+                    
                     (values) => {
                         console.log(values);
                         console.log('Form submitted');
@@ -152,9 +150,9 @@ const Pruebas3MonazosForm = () => {
                                                         <option value='B'>B</option>
                                                         <option value='C'>C</option>
                                                     </Field>
-                                                    {/* <ErrorMessage name='valija' component={() => {
+                                                    <ErrorMessage name='valija' component={() => {
                                                         return <div className='error'>{errors.valija}</div>
-                                                    }}/> */}
+                                                    }}/>
                                                 </th>
                                                 {
                                                     inputFields.map((input, index) => {
@@ -166,11 +164,12 @@ const Pruebas3MonazosForm = () => {
                                                                 input = {input}
                                                                 handleFormChange = { handleFormChange }
                                                                 removeFields = { removeFields }
-                                                                name = {`bolita${index}`}
+                                                                name = {numBolita}
+                                                                errorMsg = {errors[numBolita]}
                                                             >
-                                                            <ErrorMessage name={`bolita${index}`} component={() => {
+                                                            {/* <ErrorMessage name={`bolita${index}`} component={() => {
                                                                 return <div className='error'>{errors[numBolita]}</div>
-                                                            }}/> 
+                                                            }}/>  */}
                                                             </InputPrueba>
                                                         )
                                                     })

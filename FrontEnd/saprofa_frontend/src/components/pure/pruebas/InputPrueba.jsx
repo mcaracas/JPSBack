@@ -2,16 +2,7 @@ import React from 'react';
 import { Field, ErrorMessage } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
 
-const InputPrueba = ({ index, input, handleFormChange, removeFields, name }) => {
-
-    function validate(value){
-        let error;
-        console.log(value);
-        if (!value) {
-            error = 'Campo requerido';
-        }
-        return error;
-    }
+const InputPrueba = ({ index, input, handleFormChange, removeFields, name, errorMsg }) => {
 
     return (
         <td key={index}>
@@ -21,7 +12,6 @@ const InputPrueba = ({ index, input, handleFormChange, removeFields, name }) => 
                         type='text' 
                         className='form-control col' 
                         // value={input[name]}
-                        validate={ validate }
                         onChange={event => handleFormChange(index, event)}
                 />
                 <i 
@@ -30,7 +20,7 @@ const InputPrueba = ({ index, input, handleFormChange, removeFields, name }) => 
                 />
             </div>
             <ErrorMessage name={name} component={() => {
-                return <div className='error'>{"Campo Requerido"}</div>
+                return <div className='error'>{errorMsg}</div>
             }}/> 
         </td>
     );
