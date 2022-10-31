@@ -11,11 +11,10 @@ namespace API
         {
             DatosSorteos = new HashSet<DatosSorteo>();
         }
-
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Clave { get; set; }
-
+        public string Usuario1 { get; set; }
         public virtual ICollection<DatosSorteo> DatosSorteos { get; set; }
     }
 }

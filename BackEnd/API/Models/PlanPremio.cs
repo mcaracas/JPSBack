@@ -17,7 +17,6 @@ namespace API
         public string Descripcion { get; set; }
 
         public virtual ICollection<DatosSorteo> DatosSorteos { get; set; }
-
         public virtual ICollection<PlanPremiosDetalle> PlanPremiosDetalles { get; set; }
     }
 }

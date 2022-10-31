@@ -25,6 +25,7 @@ namespace API
         public virtual DbSet<ListaChequeoDetalle> ListaChequeoDetalles { get; set; }
         public virtual DbSet<ListaChequeoSorteo> ListaChequeoSorteos { get; set; }
         public virtual DbSet<Marchamo> Marchamos { get; set; }
+        public virtual DbSet<Parametro> Parametros { get; set; }
         public virtual DbSet<PlanPremio> PlanPremios { get; set; }
         public virtual DbSet<PlanPremiosDetalle> PlanPremiosDetalles { get; set; }
         public virtual DbSet<Prueba> Pruebas { get; set; }
@@ -36,7 +37,6 @@ namespace API
         public virtual DbSet<ResultadosBitacora> ResultadosBitacoras { get; set; }
         public virtual DbSet<TipoLoterium> TipoLoteria { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
-        public virtual DbSet<Parametro> Parametros { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -137,8 +137,6 @@ namespace API
 
                 entity.ToTable("datos_sorteo");
 
-                entity.HasIndex(e => e.IdUsuario, "id_usuario");
-
                 entity.HasIndex(e => e.PlanPremios, "plan_premios");
 
                 entity.HasIndex(e => e.TipoLoteria, "tipo_loteria");
@@ -167,11 +165,6 @@ namespace API
                 entity.Property(e => e.TipoLoteria)
                     .HasMaxLength(10)
                     .HasColumnName("tipo_loteria");
-
-                entity.HasOne(d => d.IdUsuarioNavigation)
-                    .WithMany(p => p.DatosSorteos)
-                    .HasForeignKey(d => d.IdUsuario)
-                    .HasConstraintName("datos_sorteo_ibfk_1");
 
                 entity.HasOne(d => d.PlanPremiosNavigation)
                     .WithMany(p => p.DatosSorteos)
@@ -317,6 +310,28 @@ namespace API
                     .HasConstraintName("id_Sortedo_Fk");
             });
 
+            modelBuilder.Entity<Parametro>(entity =>
+            {
+                entity.HasKey(e => e.IdParametro)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("parametros");
+
+                entity.Property(e => e.IdParametro)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("Id_Parametro");
+
+                entity.Property(e => e.CodigoParametro)
+                    .IsRequired()
+                    .HasMaxLength(45)
+                    .HasColumnName("Codigo_Parametro");
+
+                entity.Property(e => e.ParametroValor)
+                    .IsRequired()
+                    .HasMaxLength(45)
+                    .HasColumnName("Parametro_Valor");
+            });
+
             modelBuilder.Entity<PlanPremio>(entity =>
             {
                 entity.HasKey(e => e.IdPlan)
@@ -368,11 +383,16 @@ namespace API
 
             modelBuilder.Entity<Prueba>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.IdPrueba)
+                    .HasName("PRIMARY");
 
                 entity.ToTable("pruebas");
 
                 entity.HasIndex(e => e.IdDatoSorteo, "id_dato_sorteo");
+
+                entity.Property(e => e.IdPrueba)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_prueba");
 
                 entity.Property(e => e.Bolita)
                     .HasMaxLength(1)
@@ -388,7 +408,7 @@ namespace API
                     .HasColumnName("numero");
 
                 entity.HasOne(d => d.IdDatoSorteoNavigation)
-                    .WithMany()
+                    .WithMany(p => p.Pruebas)
                     .HasForeignKey(d => d.IdDatoSorteo)
                     .HasConstraintName("pruebas_ibfk_1");
             });
@@ -600,28 +620,10 @@ namespace API
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(100)
                     .HasColumnName("nombre");
-            });
 
-            modelBuilder.Entity<Parametro>(entity =>
-            {
-                entity.HasKey(e => e.IdParametro)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("parametros");
-
-                entity.Property(e => e.IdParametro)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("Id_Parametro");
-
-                entity.Property(e => e.CodigoParametro)
-                    .IsRequired()
+                entity.Property(e => e.Usuario1)
                     .HasMaxLength(45)
-                    .HasColumnName("Codigo_Parametro");
-
-                entity.Property(e => e.ParametroValor)
-                    .IsRequired()
-                    .HasMaxLength(45)
-                    .HasColumnName("Parametro_Valor");
+                    .HasColumnName("usuario");
             });
 
             OnModelCreatingPartial(modelBuilder);

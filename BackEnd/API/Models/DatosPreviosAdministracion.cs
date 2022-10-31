@@ -10,7 +10,6 @@ namespace API
         public DatosPreviosAdministracion()
         {
             Representantes = new HashSet<Representante>();
-            
         }
 
         public int Id { get; set; }
@@ -22,8 +21,6 @@ namespace API
         public float? CompraExcedentes { get; set; }
 
         public virtual DatosSorteo IdDatoSorteoNavigation { get; set; }
- 
         public virtual ICollection<Representante> Representantes { get; set; }
-
     }
 }
