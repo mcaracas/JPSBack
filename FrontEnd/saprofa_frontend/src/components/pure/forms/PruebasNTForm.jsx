@@ -3,24 +3,19 @@ import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
 import InputPrueba from '../pruebas/InputPrueba';
-import { insertPrueba } from '../../../services/axiosService';
 
-// TODO: check props to receive and information to send to Backend
-
-const Pruebas3MonazosForm = () => {
-
-   
-    /**
+const PruebasNTForm = () => {
+      /**
      * Initialize an array with 6 fields, each field with an object with a bolita property
      * indicating its index
      * @var {bolita: object} its property bolita is the index of the field
      * @returns {Array} Array with 6 fields, each field containing an object with a bolita property
      * initialized empty
      */
-    const initializeInputFields = () => {
+       const initializeInputFields = () => {
         let numBolita = 'bolita';
         let inputFields = [{}];
-        for(let i = 0; i < 6; i++){
+        for(let i = 0; i < 5; i++){
             numBolita = `bolita${i}`;
             inputFields[i] = {
                 [numBolita] : ''
@@ -39,7 +34,7 @@ const Pruebas3MonazosForm = () => {
      * @param {int} index 
      * @param {event} event 
      */
-    const handleFormChange = (index, event) => {
+     const handleFormChange = (index, event) => {
         let data = [...inputFields];
         data[index][event.target.name] = event.target.value;
         setInputFields(data);
@@ -66,28 +61,6 @@ const Pruebas3MonazosForm = () => {
         setInputFields(data);
     }
 
-    function checkNumberOfTests(numberOfFields) {
-        let difference = numberOfFields.length%3;
-        if (numberOfFields.length % 3 !== 0) {
-            alert(`Las pruebas deben ir en grupos de 3. Elimine ${difference} números o agregue ${3-difference} números`);
-            return false;
-        }
-        return true;
-    }
-
-    function checkIfAllFieldsAreFilled(numberOfFields) {
-        let emptyFields = 0;
-        for (let i = 0; i < numberOfFields.length; i++) {
-            if (numberOfFields[i].bolita === '') {
-                emptyFields++;
-            }
-        }
-        if (emptyFields > 0) {
-            alert(`Hay ${emptyFields} campos vacíos. Por favor, llene todos los campos`);
-            return false;
-        }
-        return true;
-    }
 
     return (
         <div className='container'>
@@ -103,46 +76,25 @@ const Pruebas3MonazosForm = () => {
                     for(let i = 0; i < inputFields.length; i++){
                         numBolita = `bolita${i}`;
                         if(!inputFields[i][numBolita]){
-                           errors = {
-                                 ...errors,
+                            errors = {
+                                    ...errors,
                                 [numBolita]: 'Campo requerido',
-                           }
+                            }
                         }
-                        if(inputFields[i][numBolita] > 7 || inputFields[i][numBolita] < 0){
+                        if(inputFields[i][numBolita] > 9 || inputFields[i][numBolita] < 0){
                             errors = {
                                 ...errors,
-                                [numBolita]: 'Debe ser un número entre 0 y 7',
+                                [numBolita]: 'Debe ser un número entre 0 y 9',
                             }
                         }
                     }
                     return errors;
                 }}
                 onSubmit={
-                    async (values)=>{
-                    let data = {
-                        id_prueba : 0,
-                        id_dato_sorteo : 152,
-                        numero: '',
-                        bolita: '', //Roja o blanca
-                    }
-                    let numBolita = '';
-                    for( let i = 0; i < inputFields.length; i++){
-                        numBolita = `bolita${i}`;
-                        data = {
-                            ...data,
-                            numero: values[numBolita],
-                        }
-                        insertPrueba(data)
-                            .then((response) => { 
-                                if(response.status === 200){
-                                    alert('Prueba guardada con éxito');
-                                }else{
-                                    throw new Error('Prueba no insertada');
-                                }
-                            }).catch((error) => { 
-                                alert(`Algo salió mal: ${error}`);
-                            })
-                        }
+                    (values) => {
+                        console.log(values);
+                        console.log('Form submitted');
+                        alert('Form submitted');
                     }
                 }
                 >
@@ -217,7 +169,6 @@ const Pruebas3MonazosForm = () => {
             </Formik>
         </div>
     );
-};
+}
 
-
-export default Pruebas3MonazosForm;
+export default PruebasNTForm;

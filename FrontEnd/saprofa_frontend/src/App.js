@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Valija3Monazos from './components/pure/forms/Valija3Monazos';
 import ValijaNuevosTiempos from './components/pure/forms/ValijaNuevosTiempos';
 import Pruebas3MonazosPage from './pages/Pruebas/Pruebas3MonazosPage';
+import PruebasNTPage from './pages/Pruebas/PruebasNTPage';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route exact path="/Valija3Monazos" element={<Valija3Monazos />} /> {/* Name of the inspectors page */}
           <Route exact path="/ValijaNuevosTiempos" element={<ValijaNuevosTiempos />} /> {/* Name of the inspectors page */}
           <Route exact path="/Pruebas3Monazos" element={<Pruebas3MonazosPage />} /> 
+          <Route exact path="/PruebasNuevosTiempos" element={<PruebasNTPage />} /> 
         </Routes>
       </div>
     </Router>
