@@ -8,10 +8,10 @@ const InputPrueba = ({ index, input, handleFormChange, removeFields, name, error
         <td key={index}>
             <div className='row'>
                 <Field  id={index} 
-                        name={`bolita${index}`}
+                        name={name}
                         type='text' 
                         className='form-control col' 
-                        // value={input[name]}
+                        value={input[name]}
                         onChange={event => handleFormChange(index, event)}
                 />
                 <i 
