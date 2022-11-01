@@ -2,8 +2,8 @@ import React from "react"
 import './franjaR.scss'
 import PropTypes from 'prop-types'
 
-function FranjaRoja({title}){
-return <header className="franjaR">{title}</header>
+function FranjaRoja({ title }) {
+    return <header className="franjaR">{title}</header>
 }
 
 FranjaRoja.propTypes = {
