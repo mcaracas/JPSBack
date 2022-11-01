@@ -31,14 +31,20 @@ public class UsuarioController : ControllerBase
         return usuario;
     }
 
-    [HttpPost]
-    public ActionResult Post([FromBody] Usuario Usuario)
+    [HttpPost, Route("[action]", Name = "Register")]
+    public ActionResult Register([FromBody] Usuario Usuario)
     {
         var context = new proyecto_bdContext();
         Usuario.Clave = Utilidades.Utilidades.Encrypt(Usuario.Clave);
+        if (Usuario != null){
+        Usuario.DatosSorteos = null;
         context.Usuarios.Add(Usuario);
         context.SaveChanges();
-        return Ok();
+        return Ok(); 
+        }
+        else{
+        return BadRequest();
+        }
     }
 
     [HttpPost, Route("[action]", Name = "Login")]
@@ -46,7 +52,7 @@ public class UsuarioController : ControllerBase
     {
         var context = new proyecto_bdContext();
         var claveEncriptada = Utilidades.Utilidades.Encrypt(Usuario.Clave);
-        var usuario = context.Usuarios.FirstOrDefault(x => x.Nombre == Usuario.Nombre && x.Clave == claveEncriptada);
+        var usuario = context.Usuarios.FirstOrDefault(x => x.Usuario1 == Usuario.Usuario1  && x.Clave == Usuario.Clave);
         if (usuario != null)
         {
             return Ok(usuario);
@@ -56,6 +62,7 @@ public class UsuarioController : ControllerBase
             return BadRequest();
         }
     }
+
 
     [HttpPut("{id}")]
         [HttpPut]

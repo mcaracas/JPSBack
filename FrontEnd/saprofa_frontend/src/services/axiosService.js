@@ -5,9 +5,17 @@ import APIRequest from "../utils/config/axios.config";
  * @returns post request
  */
 export function login(values) {
-    const data ={"id": values.username, 
-    "clave": values.password.toString()}
+    const data ={"nombre": values.username.toString().trim(), 
+    "clave": values.password.toString().trim()}
     return APIRequest.post('/usuario/login',data);
+}
+
+export function register(values) {
+    return APIRequest.post('/usuario/Register',{
+        contentType: 'application/json; charset=utf-8',
+        "nombre": values.name.toString().trim(),
+        "clave": values.password.toString().trim(),
+        "usuario1": values.username.toString().trim()});
 }
 
 export function getHoraIngreso(){   // Get the current date and time from the server
@@ -23,9 +31,13 @@ export function insertMarchamo(marchamoList){
 }
 
 export function getActualLotteryInfo(){
-    return APIRequest.get('/DatosSorteo');
+    return APIRequest.get('/DatosSorteo/SorteoActual');
 }
 
 export function getDatosFormularios(id){
     return APIRequest.get('/DatosFormulariosA/'+id);
+}
+
+export function insertPrueba(prueba){
+    return APIRequest.post('/Prueba',prueba);
 }

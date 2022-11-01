@@ -11,7 +11,12 @@ import { useNavigate } from 'react-router-dom';
  */
 const loginSchema = Yup.object().shape({
     username: Yup.string().required('Debe ingresar el nombre de usuario'),
-    password: Yup.string().min(8, 'La contraseña debe tener un mínimo de 8 caracteres').required('Debe ingresar la contraseña')
+    password: Yup.string().min(8, 'La contraseña debe tener un mínimo de 8 caracteres')
+    .matches(/[0-9]/, 'La clave requiere como mínimo un número')
+    .matches(/[a-z]/, 'La clave requiere una letra minúscula')
+    .matches(/[A-Z]/, 'La clave requiere una letra mayúscula')
+    .matches(/[^\w]/, 'La clave requiere un caracter especial')
+    .required('Debe ingresar la contraseña, recuerde la contraseña contiene al menos una letra mayúscula, una minúscula, un número y un cáracter especial.'),
 });
 
 
@@ -60,8 +65,8 @@ const LoginForm = () => {
                             <div className='username-field'>
                                 <label className='lbl' htmlFor="username">Usuario</label>
                                 <br></br>
-                                <Field name="username" type="number" id="username"
-                                    placeholder="Numero de Cédula o Residencia"
+                                <Field name="username" type="string" id="username"
+                                    placeholder="Número de Cédula o Residencia"
                                     className="inp" />
                                 {/* If the username field is touched, but the 
                                     text is not given */}

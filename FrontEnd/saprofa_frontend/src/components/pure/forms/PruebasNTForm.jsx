@@ -3,24 +3,19 @@ import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
 import InputPrueba from '../pruebas/InputPrueba';
-import { insertPrueba } from '../../../services/axiosService';
 
-// TODO: check props to receive and information to send to Backend
-
-const Pruebas3MonazosForm = () => {
-
-   
-    /**
+const PruebasNTForm = () => {
+      /**
      * Initialize an array with 6 fields, each field with an object with a bolita property
      * indicating its index
      * @var {bolita: object} its property bolita is the index of the field
      * @returns {Array} Array with 6 fields, each field containing an object with a bolita property
      * initialized empty
      */
-    const initializeInputFields = () => {
+       const initializeInputFields = () => {
         let numBolita = 'bolita';
         let inputFields = [{}];
-        for(let i = 0; i < 6; i++){
+        for(let i = 0; i < 5; i++){
             numBolita = `bolita${i}`;
             inputFields[i] = {
                 [numBolita] : ''
@@ -34,22 +29,16 @@ const Pruebas3MonazosForm = () => {
      */
     const [inputFields, setInputFields] = useState(initializeInputFields());
 
-    const [valija, setValija] = useState('');
-
     /**
      * Function to write in the input fields
      * @param {int} index 
      * @param {event} event 
      */
-    const handleFormChange = (index, event) => {
+     const handleFormChange = (index, event) => {
         let data = [...inputFields];
         data[index][event.target.name] = event.target.value;
         setInputFields(data);
     }
-
-    // const handleValijaChange = (event) => {
-    //     setValija(event.target.value.toUpperCase());
-    // }
 
     /**
      * Adds a new input field to the form
@@ -73,29 +62,6 @@ const Pruebas3MonazosForm = () => {
     }
 
 
-    function checkNumberOfTests(numberOfFields) {
-        let difference = numberOfFields.length%3;
-        if (numberOfFields.length % 3 !== 0) {
-            alert(`Las pruebas deben ir en grupos de 3. Elimine ${difference} números o agregue ${3-difference} números`);
-            return false;
-        }
-        return true;
-    }
-
-    function checkIfAllFieldsAreFilled(numberOfFields) {
-        let emptyFields = 0;
-        for (let i = 0; i < numberOfFields.length; i++) {
-            if (numberOfFields[i].bolita === '') {
-                emptyFields++;
-            }
-        }
-        if (emptyFields > 0) {
-            alert(`Hay ${emptyFields} campos vacíos. Por favor, llene todos los campos`);
-            return false;
-        }
-        return true;
-    }
-
     return (
         <div className='container'>
             <Formik
@@ -103,72 +69,32 @@ const Pruebas3MonazosForm = () => {
                 validate = { values => {
                     let errors = {};
                     let numBolita;
-                    values.valija.toUpperCase();
                     if(!values.valija){
                         errors.valija = 'Valija requerida';	
-                    } else if( values.valija !== 'A' && values.valija !== 'B' && values.valija !== 'C'){
-                        errors.valija = 'Valija debe ser A, B o C';
                     }
 
                     for(let i = 0; i < inputFields.length; i++){
                         numBolita = `bolita${i}`;
-                        values[numBolita] = inputFields[i][numBolita];
                         if(!inputFields[i][numBolita]){
-                           errors = {
-                                 ...errors,
+                            errors = {
+                                    ...errors,
                                 [numBolita]: 'Campo requerido',
-                           }
+                            }
                         }
-                        else if(inputFields[i][numBolita] > 9 || inputFields[i][numBolita] < 0){
+                        if(inputFields[i][numBolita] > 9 || inputFields[i][numBolita] < 0){
                             errors = {
                                 ...errors,
                                 [numBolita]: 'Debe ser un número entre 0 y 9',
                             }
                         }
-                        //  else if (isNaN(inputFields[i][numBolita]) && inputFields[i][numBolita] !== 'N/A') {
-                        //     errors = {
-                        //         ...errors,
-                        //         [numBolita]: 'Debe ser un número o N/A',
-                        //     }
-                        // }
-
                     }
-                    console.log(values);
                     return errors;
                 }}
                 onSubmit={
-                    async (values)=>{
+                    (values) => {
                         console.log(values);
-                        let sent = true;
-                        let data = {
-                            id_dato_sorteo : 152,
-                            numero: '',
-                            bolita: '', //Roja o blanca
-                        }
-                        let numBolita = '';
-                        for( let i = 0; i < inputFields.length; i++){
-                            numBolita = `bolita${i}`;
-                            data = {
-                                ...data,
-                                numero: values[numBolita],
-                            }
-                            console.log(values);
-                            insertPrueba(data)
-                                .then((response) => { 
-                                    if(response.status === 200){
-                                        // alert('Prueba guardada con éxito');
-                                    }else{
-                                        sent = false;
-                                        throw new Error('Prueba no insertada');
-                                    }
-                                }).catch((error) => { 
-                                    sent = false;
-                                    alert(`Algo salió mal: ${error}`);
-                                })
-                            }
-                        if(sent){
-                            alert('Pruebas guardadas con éxito');
-                        }
+                        console.log('Form submitted');
+                        alert('Form submitted');
                     }
                 }
                 >
@@ -186,7 +112,17 @@ const Pruebas3MonazosForm = () => {
                                             <tr>
                                                 <th>
                                                     <label htmlFor='valija'>Valija</label>
-                                                    <Field id='valija' name='valija' type='text' className='form-control'/>
+                                                    <Field 
+                                                        id='valija' 
+                                                        name='valija' 
+                                                        type='text'
+                                                        as = 'select' 
+                                                        className='form-control valija'
+                                                    >
+                                                        <option value='A' defaultValue>A</option>
+                                                        <option value='B'>B</option>
+                                                        <option value='C'>C</option>
+                                                    </Field>
                                                     <ErrorMessage name='valija' component={() => {
                                                         return <div className='error'>{errors.valija}</div>
                                                     }}/>
@@ -233,7 +169,6 @@ const Pruebas3MonazosForm = () => {
             </Formik>
         </div>
     );
-};
+}
 
-
-export default Pruebas3MonazosForm;
+export default PruebasNTForm;
