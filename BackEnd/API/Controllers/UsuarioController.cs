@@ -52,7 +52,7 @@ public class UsuarioController : ControllerBase
     {
         var context = new proyecto_bdContext();
         var claveEncriptada = Utilidades.Utilidades.Encrypt(Usuario.Clave);
-        var usuario = context.Usuarios.FirstOrDefault(x => x.Usuario1 == Usuario.Usuario1  && x.Clave == Usuario.Clave);
+        var usuario = context.Usuarios.FirstOrDefault(x => x.Usuario1 == Usuario.Usuario1  && x.Clave == claveEncriptada);
         if (usuario != null)
         {
             return Ok(usuario);
