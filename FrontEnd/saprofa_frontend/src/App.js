@@ -13,13 +13,14 @@ import Valija3Monazos from './components/pure/forms/Valija3Monazos';
 import ValijaNuevosTiempos from './components/pure/forms/ValijaNuevosTiempos';
 import Pruebas3MonazosPage from './pages/Pruebas/Pruebas3MonazosPage';
 import PruebasNTPage from './pages/Pruebas/PruebasNTPage';
-
+import RegisterPage from './pages/auth/RegisterPage';
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
           <Route path="/" element={<LoginPage/>} /> {/* Root page */}
+          <Route path="/Register" element={<RegisterPage/>} />
           <Route exact path="/ChooseLottery" element={<ChooseLottery />} /> {/* Choose lottery page */}
           <Route exact path="/DatosPrevios" element={<DatosPrevios />} /> {/* Previous data page */}
           <Route exact path="/MarchamoPopular" element={<MarchamoPopular />} /> {/* Popular stamp page */}
