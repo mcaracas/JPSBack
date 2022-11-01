@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
 import InputPrueba from '../pruebas/InputPrueba';
+import { insertPrueba } from '../../../services/axiosService';
 
 const PruebasNTForm = () => {
       /**
@@ -36,7 +37,8 @@ const PruebasNTForm = () => {
      */
      const handleFormChange = (index, event) => {
         let data = [...inputFields];
-        data[index][event.target.name] = event.target.value;
+        //sets the value of the input field to uppercase
+        data[index][event.target.name] = event.target.value.toUpperCase();
         setInputFields(data);
     }
 
@@ -69,32 +71,70 @@ const PruebasNTForm = () => {
                 validate = { values => {
                     let errors = {};
                     let numBolita;
+                    values.valija = values.valija.toUpperCase();
                     if(!values.valija){
                         errors.valija = 'Valija requerida';	
+                    } else if( values.valija !== 'A' && values.valija !== 'B' && values.valija !== 'C'){
+                        errors.valija = 'Valija debe ser A, B o C';
                     }
 
                     for(let i = 0; i < inputFields.length; i++){
                         numBolita = `bolita${i}`;
+                        // sets the value of the input field to values object
+                        values[numBolita] = inputFields[i][numBolita];
                         if(!inputFields[i][numBolita]){
-                            errors = {
-                                    ...errors,
+                           errors = {
+                                 ...errors,
                                 [numBolita]: 'Campo requerido',
-                            }
+                           }
                         }
-                        if(inputFields[i][numBolita] > 9 || inputFields[i][numBolita] < 0){
+                        else if(inputFields[i][numBolita] > 99 || inputFields[i][numBolita] < 0){
                             errors = {
                                 ...errors,
-                                [numBolita]: 'Debe ser un número entre 0 y 9',
+                                [numBolita]: 'Debe ser un número entre 00 y 99',
+                            }
+                        } else if (isNaN(inputFields[i][numBolita]) && inputFields[i][numBolita] !== 'N/A') {
+                            errors = {
+                                ...errors,
+                                [numBolita]: 'Debe ser un número o N/A',
                             }
                         }
                     }
                     return errors;
                 }}
                 onSubmit={
-                    (values) => {
+                    async (values)=>{
                         console.log(values);
-                        console.log('Form submitted');
-                        alert('Form submitted');
+                        let sent = true;
+                        let data = {
+                            id_dato_sorteo : 152,
+                            numero: '',
+                            bolita: '', //Roja o blanca
+                        }
+                        let numBolita = '';
+                        for( let i = 0; i < inputFields.length; i++){
+                            numBolita = `bolita${i}`;
+                            data = {
+                                ...data,
+                                numero: values[numBolita],
+                            }
+                            console.log(values);
+                            insertPrueba(data)
+                                .then((response) => { 
+                                    if(response.status === 200){
+                                        // alert('Prueba guardada con éxito');
+                                    }else{
+                                        sent = false;
+                                        throw new Error('Prueba no insertada');
+                                    }
+                                }).catch((error) => { 
+                                    sent = false;
+                                    alert(`Algo salió mal: ${error}`);
+                                })
+                            }
+                        if(sent){
+                            alert('Pruebas guardadas con éxito');
+                        }
                     }
                 }
                 >
@@ -112,17 +152,7 @@ const PruebasNTForm = () => {
                                             <tr>
                                                 <th>
                                                     <label htmlFor='valija'>Valija</label>
-                                                    <Field 
-                                                        id='valija' 
-                                                        name='valija' 
-                                                        type='text'
-                                                        as = 'select' 
-                                                        className='form-control valija'
-                                                    >
-                                                        <option value='A' defaultValue>A</option>
-                                                        <option value='B'>B</option>
-                                                        <option value='C'>C</option>
-                                                    </Field>
+                                                    <Field id='valija' name='valija' type='text' className='form-control'/>
                                                     <ErrorMessage name='valija' component={() => {
                                                         return <div className='error'>{errors.valija}</div>
                                                     }}/>
@@ -140,9 +170,6 @@ const PruebasNTForm = () => {
                                                                 name = {numBolita}
                                                                 errorMsg = {errors[numBolita]}
                                                             >
-                                                            {/* <ErrorMessage name={`bolita${index}`} component={() => {
-                                                                return <div className='error'>{errors[numBolita]}</div>
-                                                            }}/>  */}
                                                             </InputPrueba>
                                                         )
                                                     })

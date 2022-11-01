@@ -125,12 +125,12 @@ const Pruebas3MonazosForm = () => {
                                 [numBolita]: 'Debe ser un número entre 0 y 9',
                             }
                         }
-                        //  else if (isNaN(inputFields[i][numBolita]) && inputFields[i][numBolita] !== 'N/A') {
-                        //     errors = {
-                        //         ...errors,
-                        //         [numBolita]: 'Debe ser un número o N/A',
-                        //     }
-                        // }
+                         else if (isNaN(inputFields[i][numBolita]) && inputFields[i][numBolita] !== 'N/A') {
+                            errors = {
+                                ...errors,
+                                [numBolita]: 'Debe ser un número o N/A',
+                            }
+                        }
 
                     }
                     console.log(values);
@@ -204,10 +204,7 @@ const Pruebas3MonazosForm = () => {
                                                                 name = {numBolita}
                                                                 errorMsg = {errors[numBolita]}
                                                             >
-                                                            {/* <ErrorMessage name={`bolita${index}`} component={() => {
-                                                                return <div className='error'>{errors[numBolita]}</div>
-                                                            }}/>  */}
-                                                            </InputPrueba>
+                                                           </InputPrueba>
                                                         )
                                                     })
                                                 }
