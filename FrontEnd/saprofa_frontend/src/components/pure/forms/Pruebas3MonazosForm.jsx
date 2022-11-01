@@ -69,11 +69,10 @@ const Pruebas3MonazosForm = () => {
         setInputFields(data);
     }
 
-
     function checkNumberOfTests(numberOfFields) {
         let difference = numberOfFields.length%3;
         if (numberOfFields.length % 3 !== 0) {
-            alert(`Las pruebas deben ir en grupos de 3. Elimine ${difference} números o agregue ${3-difference} números`);
+            alert(`Las pruebas deben ir en grupos de 3. Elimine ${difference} pruebas o agregue ${3-difference} pruebas`);
             return false;
         }
         return true;
@@ -86,6 +85,7 @@ const Pruebas3MonazosForm = () => {
                 validate = { values => {
                     let errors = {};
                     let numBolita;
+                    checkNumberOfTests(inputFields);
                     values.valija = values.valija.toUpperCase();
                     if(!values.valija){
                         errors.valija = 'Valija requerida';	
