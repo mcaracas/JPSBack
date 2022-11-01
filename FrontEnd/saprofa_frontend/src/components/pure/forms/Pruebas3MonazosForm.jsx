@@ -43,13 +43,10 @@ const Pruebas3MonazosForm = () => {
      */
     const handleFormChange = (index, event) => {
         let data = [...inputFields];
-        data[index][event.target.name] = event.target.value;
+        //sets the value of the input field to uppercase
+        data[index][event.target.name] = event.target.value.toUpperCase();
         setInputFields(data);
     }
-
-    // const handleValijaChange = (event) => {
-    //     setValija(event.target.value.toUpperCase());
-    // }
 
     /**
      * Adds a new input field to the form
@@ -82,20 +79,6 @@ const Pruebas3MonazosForm = () => {
         return true;
     }
 
-    function checkIfAllFieldsAreFilled(numberOfFields) {
-        let emptyFields = 0;
-        for (let i = 0; i < numberOfFields.length; i++) {
-            if (numberOfFields[i].bolita === '') {
-                emptyFields++;
-            }
-        }
-        if (emptyFields > 0) {
-            alert(`Hay ${emptyFields} campos vacíos. Por favor, llene todos los campos`);
-            return false;
-        }
-        return true;
-    }
-
     return (
         <div className='container'>
             <Formik
@@ -103,7 +86,7 @@ const Pruebas3MonazosForm = () => {
                 validate = { values => {
                     let errors = {};
                     let numBolita;
-                    values.valija.toUpperCase();
+                    values.valija = values.valija.toUpperCase();
                     if(!values.valija){
                         errors.valija = 'Valija requerida';	
                     } else if( values.valija !== 'A' && values.valija !== 'B' && values.valija !== 'C'){
@@ -112,6 +95,7 @@ const Pruebas3MonazosForm = () => {
 
                     for(let i = 0; i < inputFields.length; i++){
                         numBolita = `bolita${i}`;
+                        // sets the value of the input field to values object
                         values[numBolita] = inputFields[i][numBolita];
                         if(!inputFields[i][numBolita]){
                            errors = {
