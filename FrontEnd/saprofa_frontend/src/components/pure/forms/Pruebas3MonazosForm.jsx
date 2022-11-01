@@ -112,6 +112,7 @@ const Pruebas3MonazosForm = () => {
 
                     for(let i = 0; i < inputFields.length; i++){
                         numBolita = `bolita${i}`;
+                        values[numBolita] = inputFields[i][numBolita];
                         if(!inputFields[i][numBolita]){
                            errors = {
                                  ...errors,
