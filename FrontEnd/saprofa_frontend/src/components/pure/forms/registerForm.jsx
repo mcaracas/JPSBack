@@ -43,7 +43,7 @@ const RegisterForm = () => {
                 onSubmit={async (values) => {
                     try {
                         await register(values) //Using axios to make the request
-                        navigate('/Login'); // Redirect to login page
+                        navigate('/'); // Redirect to login page
                     } catch (error) {
                         if (error.response.status === 401) {    // If the error is 401 (Unauthorized)
                             console.log('Error: ', error);
