@@ -31,5 +31,5 @@ export function getDatosFormularios(id){
 }
 
 export function insertPrueba(prueba){
-    return APIRequest.post('/Pruebas',prueba);
+    return APIRequest.post('/Prueba',prueba);
 }
