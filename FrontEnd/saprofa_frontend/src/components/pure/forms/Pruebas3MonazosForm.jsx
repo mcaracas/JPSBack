@@ -34,6 +34,8 @@ const Pruebas3MonazosForm = () => {
      */
     const [inputFields, setInputFields] = useState(initializeInputFields());
 
+    const [valija, setValija] = useState('');
+
     /**
      * Function to write in the input fields
      * @param {int} index 
@@ -44,6 +46,10 @@ const Pruebas3MonazosForm = () => {
         data[index][event.target.name] = event.target.value;
         setInputFields(data);
     }
+
+    // const handleValijaChange = (event) => {
+    //     setValija(event.target.value.toUpperCase());
+    // }
 
     /**
      * Adds a new input field to the form
@@ -65,6 +71,7 @@ const Pruebas3MonazosForm = () => {
         data.splice(index,1 );
         setInputFields(data);
     }
+
 
     function checkNumberOfTests(numberOfFields) {
         let difference = numberOfFields.length%3;
@@ -96,52 +103,71 @@ const Pruebas3MonazosForm = () => {
                 validate = { values => {
                     let errors = {};
                     let numBolita;
+                    values.valija.toUpperCase();
                     if(!values.valija){
                         errors.valija = 'Valija requerida';	
+                    } else if( values.valija !== 'A' && values.valija !== 'B' && values.valija !== 'C'){
+                        errors.valija = 'Valija debe ser A, B o C';
                     }
 
                     for(let i = 0; i < inputFields.length; i++){
                         numBolita = `bolita${i}`;
+                        values[numBolita] = inputFields[i][numBolita];
                         if(!inputFields[i][numBolita]){
                            errors = {
                                  ...errors,
                                 [numBolita]: 'Campo requerido',
                            }
                         }
-                        if(inputFields[i][numBolita] > 7 || inputFields[i][numBolita] < 0){
+                        else if(inputFields[i][numBolita] > 9 || inputFields[i][numBolita] < 0){
                             errors = {
                                 ...errors,
-                                [numBolita]: 'Debe ser un número entre 0 y 7',
+                                [numBolita]: 'Debe ser un número entre 0 y 9',
                             }
                         }
+                        //  else if (isNaN(inputFields[i][numBolita]) && inputFields[i][numBolita] !== 'N/A') {
+                        //     errors = {
+                        //         ...errors,
+                        //         [numBolita]: 'Debe ser un número o N/A',
+                        //     }
+                        // }
+
                     }
+                    console.log(values);
                     return errors;
                 }}
                 onSubmit={
                     async (values)=>{
-                    let data = {
-                        id_prueba : 0,
-                        id_dato_sorteo : 152,
-                        numero: '',
-                        bolita: '', //Roja o blanca
-                    }
-                    let numBolita = '';
-                    for( let i = 0; i < inputFields.length; i++){
-                        numBolita = `bolita${i}`;
-                        data = {
-                            ...data,
-                            numero: values[numBolita],
+                        console.log(values);
+                        let sent = true;
+                        let data = {
+                            id_dato_sorteo : 152,
+                            numero: '',
+                            bolita: '', //Roja o blanca
                         }
-                        insertPrueba(data)
-                            .then((response) => { 
-                                if(response.status === 200){
-                                    alert('Prueba guardada con éxito');
-                                }else{
-                                    throw new Error('Prueba no insertada');
-                                }
-                            }).catch((error) => { 
-                                alert(`Algo salió mal: ${error}`);
-                            })
+                        let numBolita = '';
+                        for( let i = 0; i < inputFields.length; i++){
+                            numBolita = `bolita${i}`;
+                            data = {
+                                ...data,
+                                numero: values[numBolita],
+                            }
+                            console.log(values);
+                            insertPrueba(data)
+                                .then((response) => { 
+                                    if(response.status === 200){
+                                        // alert('Prueba guardada con éxito');
+                                    }else{
+                                        sent = false;
+                                        throw new Error('Prueba no insertada');
+                                    }
+                                }).catch((error) => { 
+                                    sent = false;
+                                    alert(`Algo salió mal: ${error}`);
+                                })
+                            }
+                        if(sent){
+                            alert('Pruebas guardadas con éxito');
                         }
                     }
                 }
@@ -160,17 +186,7 @@ const Pruebas3MonazosForm = () => {
                                             <tr>
                                                 <th>
                                                     <label htmlFor='valija'>Valija</label>
-                                                    <Field 
-                                                        id='valija' 
-                                                        name='valija' 
-                                                        type='text'
-                                                        as = 'select' 
-                                                        className='form-control valija'
-                                                    >
-                                                        <option value='A' defaultValue>A</option>
-                                                        <option value='B'>B</option>
-                                                        <option value='C'>C</option>
-                                                    </Field>
+                                                    <Field id='valija' name='valija' type='text' className='form-control'/>
                                                     <ErrorMessage name='valija' component={() => {
                                                         return <div className='error'>{errors.valija}</div>
                                                     }}/>
