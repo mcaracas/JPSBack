@@ -3,15 +3,12 @@ import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
 import InputPrueba from '../pruebas/InputPrueba';
-import { insertPrueba } from '../../../services/axiosService';
+import { insertListaPrueba, insertPrueba } from '../../../services/axiosService';
 
-// TODO: check props to receive and information to send to Backend
-
-const Pruebas3MonazosForm = () => {
-
+const Pruebas3MonazosForm = ({IdDatoSorteo}) => {
 
     /**
-     * Initialize an array with 6 fields, each field with an object with a bolita property
+     * Initialize an array with 5 fields, each field with an object with a bolita property
      * indicating its index
      * @var {bolita: object} its property bolita is the index of the field
      * @returns {Array} Array with 6 fields, each field containing an object with a bolita property
@@ -34,8 +31,6 @@ const Pruebas3MonazosForm = () => {
      */
     const [inputFields, setInputFields] = useState(initializeInputFields());
 
-    const [valija, setValija] = useState('');
-
     /**
      * Function to write in the input fields
      * @param {int} index 
@@ -46,10 +41,6 @@ const Pruebas3MonazosForm = () => {
         data[index][event.target.name] = event.target.value.toUpperCase();
         setInputFields(data);
     }
-
-    // const handleValijaChange = (event) => {
-    //     setValija(event.target.value.toUpperCase());
-    // }
 
     /**
      * Adds a new input field to the form
@@ -80,27 +71,33 @@ const Pruebas3MonazosForm = () => {
                     let errors = {};
                     let numBolita;
                     values.valija = values.valija.toUpperCase();
+                    // Check if the valija is empty
                     if (!values.valija) {
                         errors.valija = 'Valija requerida';
-                    } else if (values.valija !== 'A' && values.valija !== 'B' && values.valija !== 'C') {
+                    }
+                    // If the valija is diferent from (A,B,C)
+                    else if (values.valija !== 'A' && values.valija !== 'B' && values.valija !== 'C') {
                         errors.valija = 'Valija debe ser A, B o C';
                     }
 
                     for (let i = 0; i < inputFields.length; i++) {
                         numBolita = `bolita${i}`;
                         values[numBolita] = inputFields[i][numBolita];
+                        //If the field is empty
                         if (!inputFields[i][numBolita]) {
                             errors = {
                                 ...errors,
                                 [numBolita]: 'Campo requerido',
                             }
                         }
+                        //If the field is not a number between 0 and 99
                         else if (inputFields[i][numBolita] > 99 || inputFields[i][numBolita] < 0) {
                             errors = {
                                 ...errors,
                                 [numBolita]: 'Debe ser un número entre 00 y 99',
                             }
                         }
+                        //If the field is a string and not N/A
                         else if (isNaN(inputFields[i][numBolita]) && inputFields[i][numBolita] !== 'N/A') {
                             errors = {
                                 ...errors,
@@ -109,42 +106,32 @@ const Pruebas3MonazosForm = () => {
                         }
 
                     }
-                    console.log(values);
                     return errors;
                 }}
                 onSubmit={
                     async (values) => {
-                        console.log("Datos: ",values);
-                        // let sent = true;
-                        // let data = {
-                        //     id_dato_sorteo: 152,
-                        //     numero: '',
-                        //     bolita: '', //Roja o blanca
-                        // }
-                        // let numBolita = '';
-                        // for (let i = 0; i < inputFields.length; i++) {
-                        //     numBolita = `bolita${i}`;
-                        //     data = {
-                        //         ...data,
-                        //         numero: values[numBolita],
-                        //     }
-                        //     console.log(values);
-                        //     insertPrueba(data)
-                        //         .then((response) => {
-                        //             if (response.status === 200) {
-                        //                 // alert('Prueba guardada con éxito');
-                        //             } else {
-                        //                 sent = false;
-                        //                 throw new Error('Prueba no insertada');
-                        //             }
-                        //         }).catch((error) => {
-                        //             sent = false;
-                        //             alert(`Algo salió mal: ${error}`);
-                        //         })
-                        // }
-                        // if (sent) {
-                        //     alert('Pruebas guardadas con éxito');
-                        // }
+                        let data = [];
+                        let numBolita = '';
+                        // Create an array with the values of the input fields
+                        for (let i = 0; i < inputFields.length; i++) {
+                            numBolita = `bolita${i}`;
+                            data[i] = {
+                                IdDatoSorteo: IdDatoSorteo,
+                                numero: values[numBolita],
+                            }
+                        }
+                        // Insert the data in the database
+                        insertListaPrueba(data)
+                            .then((response) => {
+                                if (response.status === 200) {
+                                    alert('Prueba guardada con éxito');
+                                    //TODO: Redirect to the other page?
+                                } else {
+                                    throw new Error('Prueba no insertada');
+                                }
+                            }).catch((error) => {
+                                alert(`Algo salió mal: ${error}`);
+                            })
                     }
                 }
             >
@@ -178,11 +165,7 @@ const Pruebas3MonazosForm = () => {
                                                             handleFormChange={handleFormChange}
                                                             removeFields={removeFields}
                                                             name={numBolita}
-                                                            errorMsg={errors[numBolita]}
-                                                        >
-                                                            {/* <ErrorMessage name={`bolita${index}`} component={() => {
-                                                                return <div className='error'>{errors[numBolita]}</div>
-                                                            }}/>  */}
+                                                            errorMsg={errors[numBolita]}>
                                                         </InputPrueba>
                                                     )
                                                 })
