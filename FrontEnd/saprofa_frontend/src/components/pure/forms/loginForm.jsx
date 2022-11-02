@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { getHoraIngreso, login } from '../../../services/axiosService';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 /**
  * Schema for the form
  * @type {Yup.ObjectSchema<any>}
@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
  * password: required, string, 8 caracters minimum
  */
 const loginSchema = Yup.object().shape({
-    username: Yup.string().required('Debe ingresar el nombre de usuario'),
+    username: Yup.string().required('Debe ingresar el número de cédula o residencia'),
     password: Yup.string().min(8, 'La contraseña debe tener un mínimo de 8 caracteres')
     .matches(/[0-9]/, 'La clave requiere como mínimo un número')
     .matches(/[a-z]/, 'La clave requiere una letra minúscula')
@@ -63,10 +63,10 @@ const LoginForm = () => {
                     <Form>
                         <div className="form-group">
                             <div className='username-field'>
-                                <label className='lbl' htmlFor="username">Usuario</label>
+                                <label className='lbl' htmlFor="username">Cédula</label>
                                 <br></br>
                                 <Field name="username" type="string" id="username"
-                                    placeholder="Número de Cédula o Residencia"
+                                    placeholder="L0XXXXXXXXX"
                                     className="inp" />
                                 {/* If the username field is touched, but the 
                                     text is not given */}
@@ -100,6 +100,9 @@ const LoginForm = () => {
                     </Form>
                 )}
             </Formik>
+            <div className='mt-3'>
+                <Link to='/Register' className='link'>¿No tienes una cuenta? Registrarse</Link>
+            </div>
         </div>
     );
 }
