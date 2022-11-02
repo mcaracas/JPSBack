@@ -1,32 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import * as Yup from 'yup';
 import '../../../styles/pruebas/pruebasForms.sass'
 import InputPrueba from '../pruebas/InputPrueba';
+import { insertPrueba } from '../../../services/axiosService';
 
 // TODO: check props to receive and information to send to Backend
 
-const InputList = () => {
+const Pruebas3MonazosForm = () => {
+
+
+    /**
+     * Initialize an array with 6 fields, each field with an object with a bolita property
+     * indicating its index
+     * @var {bolita: object} its property bolita is the index of the field
+     * @returns {Array} Array with 6 fields, each field containing an object with a bolita property
+     * initialized empty
+     */
     const initializeInputFields = () => {
         let numBolita = 'bolita';
         let inputFields = [{}];
-        for(let i = 0; i < 6; i++){
+        for (let i = 0; i < 5; i++) {
             numBolita = `bolita${i}`;
             inputFields[i] = {
-                [numBolita] : ''
+                [numBolita]: ''
             }
         }
-        // console.log(inputFields);
         return inputFields;
     }
+
     /**
-     * An array containing objects with the property bolita
-     * bolita is the number of the bolita in the test
-     * and the value to put in the input field
-     * @type {Array}
+     * Hook useState on inputFields
      */
     const [inputFields, setInputFields] = useState(initializeInputFields());
+
+    const [valija, setValija] = useState('');
 
     /**
      * Function to write in the input fields
@@ -34,11 +42,14 @@ const InputList = () => {
      * @param {event} event 
      */
     const handleFormChange = (index, event) => {
-        console.log("Inputs: ",inputFields)
         let data = [...inputFields];
         data[index][event.target.name] = event.target.value;
         setInputFields(data);
     }
+
+    // const handleValijaChange = (event) => {
+    //     setValija(event.target.value.toUpperCase());
+    // }
 
     /**
      * Adds a new input field to the form
@@ -46,7 +57,8 @@ const InputList = () => {
      * and the value to put in the input
      */
     const addFields = () => {
-        let newField = { bolita: '' };
+        let numBolita = `bolita${inputFields.length}`;
+        let newField = { [numBolita]: '' };
         setInputFields([...inputFields, newField]);
     }
 
@@ -61,37 +73,110 @@ const InputList = () => {
     }
 
 
+    function checkNumberOfTests(numberOfFields) {
+        let difference = numberOfFields.length % 3;
+        if (numberOfFields.length % 3 !== 0) {
+            alert(`Las pruebas deben ir en grupos de 3. Elimine ${difference} números o agregue ${3 - difference} números`);
+            return false;
+        }
+        return true;
+    }
+
+    function checkIfAllFieldsAreFilled(numberOfFields) {
+        let emptyFields = 0;
+        for (let i = 0; i < numberOfFields.length; i++) {
+            if (numberOfFields[i].bolita === '') {
+                emptyFields++;
+            }
+        }
+        if (emptyFields > 0) {
+            alert(`Hay ${emptyFields} campos vacíos. Por favor, llene todos los campos`);
+            return false;
+        }
+        return true;
+    }
+
     return (
         <div className='container'>
             <Formik
-                initialValues={{}}
-
-                // validate={(values) => {
-                //     let err = {};
-                //     if (!values.valija) {
-                //         err.valija = 'Valija requerida';
-                //     }
-                //     // if(!values.bolita) {
-                //     //     err.bolita = 'Campo requerido';
-                //     // }
-
-                //     return err;
-                // }}
-                onSubmit={(values) => {
-                    const data = {
-                        'Valija':values,
-                        'Bolitas':inputFields
+                initialValues={{ valija: '' }}
+                validate={values => {
+                    let errors = {};
+                    let numBolita;
+                    values.valija.toUpperCase();
+                    if (!values.valija) {
+                        errors.valija = 'Valija requerida';
+                    } else if (values.valija !== 'A' && values.valija !== 'B' && values.valija !== 'C') {
+                        errors.valija = 'Valija debe ser A, B o C';
                     }
-                    console.log("Datos a enviar: ", data);
-                    console.log('Form submitted');
-                }}>
-                {({ values, touched,
-                    errors, isSubmitting, handleSubmit,
-                    handleChange }) => (
-                    <div className='container'>
-                        <Form onSubmit={handleSubmit}>
+
+                    for (let i = 0; i < inputFields.length; i++) {
+                        numBolita = `bolita${i}`;
+                        values[numBolita] = inputFields[i][numBolita];
+                        if (!inputFields[i][numBolita]) {
+                            errors = {
+                                ...errors,
+                                [numBolita]: 'Campo requerido',
+                            }
+                        }
+                        else if (inputFields[i][numBolita] > 99 || inputFields[i][numBolita] < 0) {
+                            errors = {
+                                ...errors,
+                                [numBolita]: 'Debe ser un número entre 00 y 99',
+                            }
+                        }
+                        else if (isNaN(inputFields[i][numBolita]) && inputFields[i][numBolita] !== 'N/A') {
+                            errors = {
+                                ...errors,
+                                [numBolita]: 'Debe ser un número o N/A',
+                            }
+                        }
+
+                    }
+                    console.log(values);
+                    return errors;
+                }}
+                onSubmit={
+                    async (values) => {
+                        console.log(values);
+                        let sent = true;
+                        let data = {
+                            id_dato_sorteo: 152,
+                            numero: '',
+                            bolita: '', //Roja o blanca
+                        }
+                        let numBolita = '';
+                        for (let i = 0; i < inputFields.length; i++) {
+                            numBolita = `bolita${i}`;
+                            data = {
+                                ...data,
+                                numero: values[numBolita],
+                            }
+                            console.log(values);
+                            insertPrueba(data)
+                                .then((response) => {
+                                    if (response.status === 200) {
+                                        // alert('Prueba guardada con éxito');
+                                    } else {
+                                        sent = false;
+                                        throw new Error('Prueba no insertada');
+                                    }
+                                }).catch((error) => {
+                                    sent = false;
+                                    alert(`Algo salió mal: ${error}`);
+                                })
+                        }
+                        if (sent) {
+                            alert('Pruebas guardadas con éxito');
+                        }
+                    }
+                }
+            >
+                {({ errors, }) => (
+                    <div className='container-fluid'>
+                        <Form>
                             <div className='row'>
-                                <table className='table table-bordered align-middle col'>
+                                <table className='table table-bordered align-middle mt-5 col'>
                                     <thead>
                                         <tr>
                                             <th colSpan={11}>Pruebas realizadas antes del sorteo<br /> Números favorecidos</th>
@@ -99,41 +184,48 @@ const InputList = () => {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <th>Valija <br />
+                                            <th>
+                                                <label htmlFor='valija'>Valija</label>
                                                 <Field id='valija' name='valija' type='text' className='form-control' />
-                                                <ErrorMessage name='valija' component={
-                                                    ({ children }) => <div className='text-danger'>{children}</div>
-                                                } />
+                                                <ErrorMessage name='valija' component={() => {
+                                                    return <div className='error'>{errors.valija}</div>
+                                                }} />
                                             </th>
-                                            {inputFields.map((input, index) => {
-                                                return (
-                                                    <InputPrueba
-                                                        key={index}
-                                                        index={index}
-                                                        input={input}
-                                                        handleFormChange={handleFormChange}
-                                                        removeFields={removeFields} />
-
-
-                                                )
-                                            }
-                                            )
+                                            {
+                                                inputFields.map((input, index) => {
+                                                    let numBolita = `bolita${index}`;
+                                                    return (
+                                                        <InputPrueba
+                                                            key={index}
+                                                            index={index}
+                                                            input={input}
+                                                            handleFormChange={handleFormChange}
+                                                            removeFields={removeFields}
+                                                            name={numBolita}
+                                                            errorMsg={errors[numBolita]}
+                                                        >
+                                                            {/* <ErrorMessage name={`bolita${index}`} component={() => {
+                                                                return <div className='error'>{errors[numBolita]}</div>
+                                                            }}/>  */}
+                                                        </InputPrueba>
+                                                    )
+                                                })
                                             }
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div className='button-field col-1'>
+                                <div className='button-field col-1 mt-5 '>
                                     <button
                                         type='button'
-                                        className='btn btn-success btn-sm'
+                                        className='btn btn-success'
                                         onClick={addFields}
-                                    >Agregar Prueba</button>
-                                    {isSubmitting ? <p>Submitting...</p> : null}
+                                    >
+                                        Agregar Prueba
+                                    </button>
                                 </div>
                             </div>
                             <div className='button-field'>
                                 <button type="submit" className='btn'>Registrar Pruebas</button>
-                                {isSubmitting ? <p>Submitting...</p> : null}
                             </div>
                         </Form>
                     </div>
@@ -144,9 +236,4 @@ const InputList = () => {
 };
 
 
-InputList.propTypes = {
-
-};
-
-
-export default InputList;
+export default Pruebas3MonazosForm;
