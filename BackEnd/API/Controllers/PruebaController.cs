@@ -40,6 +40,18 @@ public class PruebaController : ControllerBase
         return Ok();
     }
 
+    [HttpPost("ListaPruebas")]
+    public ActionResult PostList([FromBody] List<Prueba> Pruebas)
+    {
+        foreach (var Prueba in Pruebas)
+        {
+            var context = new proyecto_bdContext();
+            context.Pruebas.Add(Prueba);
+            context.SaveChanges();
+        }
+        return Ok();
+    }
+
 
 
 

@@ -166,6 +166,11 @@ namespace API
                     .HasMaxLength(10)
                     .HasColumnName("tipo_loteria");
 
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.DatosSorteos)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("datos_sorteo_ibfk_1");
+
                 entity.HasOne(d => d.PlanPremiosNavigation)
                     .WithMany(p => p.DatosSorteos)
                     .HasForeignKey(d => d.PlanPremios)

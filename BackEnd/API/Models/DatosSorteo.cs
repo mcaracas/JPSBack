@@ -30,5 +30,7 @@ namespace API
         public virtual ICollection<Marchamo> Marchamos { get; set; }
         public virtual ICollection<Prueba> Pruebas { get; set; }
         public virtual ICollection<Resultado> Resultados { get; set; }
+
+        public virtual Usuario IdUsuarioNavigation { get; set; }
     }
 }

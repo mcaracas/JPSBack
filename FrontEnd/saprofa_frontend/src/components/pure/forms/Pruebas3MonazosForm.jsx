@@ -43,13 +43,10 @@ const Pruebas3MonazosForm = () => {
      */
     const handleFormChange = (index, event) => {
         let data = [...inputFields];
-        data[index][event.target.name] = event.target.value;
+        //sets the value of the input field to uppercase
+        data[index][event.target.name] = event.target.value.toUpperCase();
         setInputFields(data);
     }
-
-    // const handleValijaChange = (event) => {
-    //     setValija(event.target.value.toUpperCase());
-    // }
 
     /**
      * Adds a new input field to the form
@@ -72,25 +69,10 @@ const Pruebas3MonazosForm = () => {
         setInputFields(data);
     }
 
-
     function checkNumberOfTests(numberOfFields) {
         let difference = numberOfFields.length%3;
         if (numberOfFields.length % 3 !== 0) {
-            alert(`Las pruebas deben ir en grupos de 3. Elimine ${difference} números o agregue ${3-difference} números`);
-            return false;
-        }
-        return true;
-    }
-
-    function checkIfAllFieldsAreFilled(numberOfFields) {
-        let emptyFields = 0;
-        for (let i = 0; i < numberOfFields.length; i++) {
-            if (numberOfFields[i].bolita === '') {
-                emptyFields++;
-            }
-        }
-        if (emptyFields > 0) {
-            alert(`Hay ${emptyFields} campos vacíos. Por favor, llene todos los campos`);
+            alert(`Las pruebas deben ir en grupos de 3. Elimine ${difference} pruebas o agregue ${3-difference} pruebas`);
             return false;
         }
         return true;
@@ -103,7 +85,8 @@ const Pruebas3MonazosForm = () => {
                 validate = { values => {
                     let errors = {};
                     let numBolita;
-                    values.valija.toUpperCase();
+                    checkNumberOfTests(inputFields);
+                    values.valija = values.valija.toUpperCase();
                     if(!values.valija){
                         errors.valija = 'Valija requerida';	
                     } else if( values.valija !== 'A' && values.valija !== 'B' && values.valija !== 'C'){
@@ -112,6 +95,7 @@ const Pruebas3MonazosForm = () => {
 
                     for(let i = 0; i < inputFields.length; i++){
                         numBolita = `bolita${i}`;
+                        // sets the value of the input field to values object
                         values[numBolita] = inputFields[i][numBolita];
                         if(!inputFields[i][numBolita]){
                            errors = {
@@ -125,12 +109,12 @@ const Pruebas3MonazosForm = () => {
                                 [numBolita]: 'Debe ser un número entre 0 y 9',
                             }
                         }
-                        //  else if (isNaN(inputFields[i][numBolita]) && inputFields[i][numBolita] !== 'N/A') {
-                        //     errors = {
-                        //         ...errors,
-                        //         [numBolita]: 'Debe ser un número o N/A',
-                        //     }
-                        // }
+                         else if (isNaN(inputFields[i][numBolita]) && inputFields[i][numBolita] !== 'N/A') {
+                            errors = {
+                                ...errors,
+                                [numBolita]: 'Debe ser un número o N/A',
+                            }
+                        }
 
                     }
                     console.log(values);
@@ -204,10 +188,7 @@ const Pruebas3MonazosForm = () => {
                                                                 name = {numBolita}
                                                                 errorMsg = {errors[numBolita]}
                                                             >
-                                                            {/* <ErrorMessage name={`bolita${index}`} component={() => {
-                                                                return <div className='error'>{errors[numBolita]}</div>
-                                                            }}/>  */}
-                                                            </InputPrueba>
+                                                           </InputPrueba>
                                                         )
                                                     })
                                                 }

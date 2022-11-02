@@ -10,6 +10,8 @@ const RegisterPage = () => {
             <div className='login-card'>
                 <h3>Registro de Usuario</h3>
                 <RegisterForm></RegisterForm>
+                <div className='mt-3'>
+                </div>
             </div>
         </div>
     );
