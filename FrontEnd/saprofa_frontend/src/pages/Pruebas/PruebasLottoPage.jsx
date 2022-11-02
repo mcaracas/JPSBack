@@ -8,7 +8,7 @@ const PruebasLottoPage = () => {
             <div className='row mt-5'></div>
             <div className='row mt-5'></div>
             <div className='mt-2'>
-                <PruebasLottoForm></PruebasLottoForm>
+                <PruebasLottoForm IdDatoSorteo={152}></PruebasLottoForm>
             </div>
 
         </div>
