@@ -2,7 +2,9 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { register } from '../../../services/axiosService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getParametero } from '../../../services/axiosService';
 /**
  * Schema for the form
  * @type {Yup.ObjectSchema<any>}
@@ -10,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
  * password: required, string, 8 caracters minimum
  */
 const registerSchema = Yup.object().shape({
-    username: Yup.string().required('Debe ingresar el nombre de usuario'),
+    username: Yup.string().required('Debe ingresar el número de cédula o residencia'),
     name: Yup.string().required('Debe ingresar su nombre'),
     password: Yup.string().min(8, 'La contraseña debe tener un mínimo de 8 caracteres')
         .matches(/[0-9]/, 'La clave requiere como mínimo un número')
@@ -32,7 +34,18 @@ const RegisterForm = () => {
         password: '',
         confirmPassword: ''
     }
-
+    const [item, setItem] = useState();         
+    useEffect(() => {
+        getParametero().then(res => {
+            if (res.status === 200) {
+                setItem(res.data)
+            } else {
+                throw new Error('No se obtuvo la nomenclatura');
+            }
+        }).catch(err => {
+            alert(`Algo salió mal: ${err}`);
+        })
+    }, [])
     const navigate = useNavigate();
 
     return (
@@ -42,6 +55,7 @@ const RegisterForm = () => {
                 validationSchema={registerSchema}
                 onSubmit={async (values) => {
                     try {
+                        values.username = item.parametroValor + values.username;
                         await register(values) //Using axios to make the request
                         navigate('/'); // Redirect to login page
                     } catch (error) {
@@ -58,18 +72,23 @@ const RegisterForm = () => {
                     <Form>
                         <div className="form-group">
                             <div className='username-field'>
-                                <label className='lbl' htmlFor="username">Usuario</label>
+                                <label className='lbl' htmlFor="username">Cédula</label>
                                 <br></br>
-                                <Field name="username" type="string" id="username"
-                                    placeholder="Digite el usuario a digitar"
-                                    className="inp" />
-                                {/* If the username field is touched, but the 
-                                    text is not given */}
-                                {errors.username && touched.username && (
-                                    <div style={{ color: "red" }}>
-                                        <ErrorMessage name="username" />
-                                    </div>
-                                )}
+                                <div className='d-flex'>
+                                    {item && <p className='mt-2' style={{'font-weight':'bold'}}>{item.parametroValor} </p>}
+                                    <div className='col'>
+                                        <Field name="username" type="string" id="username"
+                                            placeholder="Digite el número de cédula o residencia"
+                                            className="inp" />
+                                        {/* If the username field is touched, but the 
+                                            text is not given */}
+                                        {errors.username && touched.username && (
+                                            <div style={{ color: "red" }}>
+                                                <ErrorMessage name="username" />
+                                        </div>
+                                         )}
+                                     </div>
+                                </div>
                             </div>
                             <div className='name-field'>
                                 <label className='lbl' htmlFor="name">Nombre</label>
@@ -122,6 +141,13 @@ const RegisterForm = () => {
                     </Form>
                 )}
             </Formik>
+            <div className='mt-3'>
+                <Link to='/'>¿Ya tienes una cuenta? Inicia sesión</Link>
+
+            </div>
+            <div className='mt-3'>
+                
+            </div>
         </div>
     );
 }

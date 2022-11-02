@@ -11,11 +11,16 @@ export function login(values) {
 }
 
 export function register(values) {
+    console.log(values);
     return APIRequest.post('/usuario/Register',{
         contentType: 'application/json; charset=utf-8',
         "nombre": values.name.toString().trim(),
         "clave": values.password.toString().trim(),
         "usuario1": values.username.toString().trim()});
+}
+
+export function getParametero() {
+    return APIRequest.get('/Parametro/login');
 }
 
 export function getHoraIngreso(){   // Get the current date and time from the server
