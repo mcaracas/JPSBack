@@ -46,3 +46,7 @@ export function getDatosFormularios(id){
 export function insertPrueba(prueba){
     return APIRequest.post('/Prueba',prueba);
 }
+
+export function getPlanPremios(id){
+    return APIRequest.get('/PlanPremios/id_plan?select='+id);
+}
