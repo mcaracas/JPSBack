@@ -16,8 +16,7 @@ const InputPrueba = ({ index, input, handleFormChange, removeFields, name, error
                 />
                 <i 
                     className='bi bi-x-square-fill col-2 closeX'
-                    onClick={() => removeFields(index)}
-                />
+                    onClick={() => removeFields(index)}                />
             </div>
             <ErrorMessage name={name} component={() => {
                 return <div className='error'>{errorMsg}</div>

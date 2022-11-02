@@ -47,6 +47,10 @@ export function insertPrueba(prueba){
     return APIRequest.post('/Prueba',prueba);
 }
 
+export function insertListaPrueba(Lista){
+    return APIRequest.post('/Prueba/ListaPruebas',Lista);
+}
+
 export function getPlanPremios(id){
     return APIRequest.get('/PlanPremiosDetalle/'+id);
 }
