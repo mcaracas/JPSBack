@@ -48,5 +48,5 @@ export function insertPrueba(prueba){
 }
 
 export function getPlanPremios(id){
-    return APIRequest.get('/PlanPremios/id_plan?select='+id);
+    return APIRequest.get('/PlanPremiosDetalle/'+id);
 }
