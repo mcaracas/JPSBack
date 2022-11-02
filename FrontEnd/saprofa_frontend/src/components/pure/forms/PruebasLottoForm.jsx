@@ -43,7 +43,7 @@ const Pruebas3MonazosForm = () => {
      */
     const handleFormChange = (index, event) => {
         let data = [...inputFields];
-        data[index][event.target.name] = event.target.value;
+        data[index][event.target.name] = event.target.value.toUpperCase();
         setInputFields(data);
     }
 
@@ -72,30 +72,6 @@ const Pruebas3MonazosForm = () => {
         setInputFields(data);
     }
 
-
-    function checkNumberOfTests(numberOfFields) {
-        let difference = numberOfFields.length % 3;
-        if (numberOfFields.length % 3 !== 0) {
-            alert(`Las pruebas deben ir en grupos de 3. Elimine ${difference} números o agregue ${3 - difference} números`);
-            return false;
-        }
-        return true;
-    }
-
-    function checkIfAllFieldsAreFilled(numberOfFields) {
-        let emptyFields = 0;
-        for (let i = 0; i < numberOfFields.length; i++) {
-            if (numberOfFields[i].bolita === '') {
-                emptyFields++;
-            }
-        }
-        if (emptyFields > 0) {
-            alert(`Hay ${emptyFields} campos vacíos. Por favor, llene todos los campos`);
-            return false;
-        }
-        return true;
-    }
-
     return (
         <div className='container'>
             <Formik
@@ -103,7 +79,7 @@ const Pruebas3MonazosForm = () => {
                 validate={values => {
                     let errors = {};
                     let numBolita;
-                    values.valija.toUpperCase();
+                    values.valija = values.valija.toUpperCase();
                     if (!values.valija) {
                         errors.valija = 'Valija requerida';
                     } else if (values.valija !== 'A' && values.valija !== 'B' && values.valija !== 'C') {
@@ -138,37 +114,37 @@ const Pruebas3MonazosForm = () => {
                 }}
                 onSubmit={
                     async (values) => {
-                        console.log(values);
-                        let sent = true;
-                        let data = {
-                            id_dato_sorteo: 152,
-                            numero: '',
-                            bolita: '', //Roja o blanca
-                        }
-                        let numBolita = '';
-                        for (let i = 0; i < inputFields.length; i++) {
-                            numBolita = `bolita${i}`;
-                            data = {
-                                ...data,
-                                numero: values[numBolita],
-                            }
-                            console.log(values);
-                            insertPrueba(data)
-                                .then((response) => {
-                                    if (response.status === 200) {
-                                        // alert('Prueba guardada con éxito');
-                                    } else {
-                                        sent = false;
-                                        throw new Error('Prueba no insertada');
-                                    }
-                                }).catch((error) => {
-                                    sent = false;
-                                    alert(`Algo salió mal: ${error}`);
-                                })
-                        }
-                        if (sent) {
-                            alert('Pruebas guardadas con éxito');
-                        }
+                        console.log("Datos: ",values);
+                        // let sent = true;
+                        // let data = {
+                        //     id_dato_sorteo: 152,
+                        //     numero: '',
+                        //     bolita: '', //Roja o blanca
+                        // }
+                        // let numBolita = '';
+                        // for (let i = 0; i < inputFields.length; i++) {
+                        //     numBolita = `bolita${i}`;
+                        //     data = {
+                        //         ...data,
+                        //         numero: values[numBolita],
+                        //     }
+                        //     console.log(values);
+                        //     insertPrueba(data)
+                        //         .then((response) => {
+                        //             if (response.status === 200) {
+                        //                 // alert('Prueba guardada con éxito');
+                        //             } else {
+                        //                 sent = false;
+                        //                 throw new Error('Prueba no insertada');
+                        //             }
+                        //         }).catch((error) => {
+                        //             sent = false;
+                        //             alert(`Algo salió mal: ${error}`);
+                        //         })
+                        // }
+                        // if (sent) {
+                        //     alert('Pruebas guardadas con éxito');
+                        // }
                     }
                 }
             >
