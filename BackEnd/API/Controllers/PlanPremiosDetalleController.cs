@@ -23,13 +23,14 @@ public class PlanPremiosDetalleController : ControllerBase
         return PlanPremiosDetalle;
     }
 
-    [HttpGet("{id}")]   
-    public PlanPremiosDetalle Get(int id)
+    [HttpGet("{id}")]
+    public IEnumerable<PlanPremiosDetalle> GetbyId(int id)
     {
         var context = new proyecto_bdContext();
-        var planPremiosDetalle = context.PlanPremiosDetalles.FirstOrDefault(x => x.IdPlan == id);
-        return planPremiosDetalle;
+        var PlanPremiosDetalle = context.PlanPremiosDetalles.Where(x => x.IdPlan == id);
+        return PlanPremiosDetalle;
     }
+
 
     [HttpPost]
     public ActionResult Post([FromBody] PlanPremiosDetalle PlanPremiosDetalle)
