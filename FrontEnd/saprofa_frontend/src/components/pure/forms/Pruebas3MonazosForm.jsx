@@ -5,9 +5,8 @@ import '../../../styles/pruebas/pruebasForms.sass'
 import InputPrueba from '../pruebas/InputPrueba';
 import { insertPrueba, insertListaPrueba } from '../../../services/axiosService';
 
-// TODO: check props to receive and information to send to Backend
 
-const Pruebas3MonazosForm = () => {
+const Pruebas3MonazosForm = ({IdDatoSorteo}) => {
 
    
     /**
@@ -86,15 +85,15 @@ const Pruebas3MonazosForm = () => {
      * The list of tests is sent to the backend
      * @returns {Array} an array of objects with the id of the lottery and the number of the bolita of the test     
      */
-    const testListSubmit = () => {
+    const testListSubmit = (values) => {
         const list = [];
 
-        //TODO: change this to the proper numSorteo
-        const idDatoSorteo = 152;
+        const idDatoSorteo = IdDatoSorteo;
         let numBolita = '';
         for (let i = 0; i < inputFields.length; i++){
             numBolita = `bolita${i}`;
             list.push({
+                valija : values.valija,
                 idDatoSorteo: idDatoSorteo,
                 numero: inputFields[i][numBolita],
             });
@@ -152,7 +151,7 @@ const Pruebas3MonazosForm = () => {
                         console.log(values);
                         let sent = true;
                         
-                        const listToSubmit = testListSubmit();
+                        const listToSubmit = testListSubmit(values);
                         
                         insertListaPrueba(listToSubmit)
                             .then((response) => { 

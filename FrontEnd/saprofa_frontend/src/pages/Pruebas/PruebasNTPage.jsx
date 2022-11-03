@@ -6,7 +6,7 @@ const PruebasNTPage = () => {
     return (
         <div>
             <EncabezadoFranjas title={"Pruebas Nuevos Tiempos y Nuevos Tiempos Reventados"}/>
-            <PruebasNTForm/>
+            <PruebasNTForm IdDatoSorteo={150}/>
         </div>
     );
 }
