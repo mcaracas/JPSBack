@@ -412,6 +412,10 @@ namespace API
                     .HasMaxLength(3)
                     .HasColumnName("numero");
 
+                entity.Property(e => e.Valija)
+                    .HasMaxLength(5)
+                    .HasColumnName("valija");
+
                 entity.HasOne(d => d.IdDatoSorteoNavigation)
                     .WithMany(p => p.Pruebas)
                     .HasForeignKey(d => d.IdDatoSorteo)
