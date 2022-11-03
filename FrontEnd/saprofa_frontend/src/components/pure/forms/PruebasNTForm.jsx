@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
 import InputPrueba from '../pruebas/InputPrueba';
-import { insertPrueba } from '../../../services/axiosService';
+import { insertPrueba, insertListaPrueba } from '../../../services/axiosService';
 
 const PruebasNTForm = () => {
       /**
@@ -63,6 +63,39 @@ const PruebasNTForm = () => {
         setInputFields(data);
     }
 
+    /**
+     * The tests have to be in group of five
+     * @param {int} numberOfFields 
+     * @returns {int} the number of fields left over from forming groups of five
+     */
+     function checkNumberOfTests(numberOfFields) {
+        let difference = numberOfFields.length%5;
+        if (numberOfFields.length % 5 !== 0) {
+            return difference;
+        }
+        return 0;
+    }
+
+    /**
+     * The list of tests is sent to the backend
+     * @returns {Array} an array of objects with the id of the lottery and the number of the bolita of the test     
+     */
+    const testListSubmit = () => {
+        const list = [];
+
+        //TODO: change this to the proper numSorteo
+        const idDatoSorteo = 151;
+        let numBolita = '';
+        for (let i = 0; i < inputFields.length; i++){
+            numBolita = `bolita${i}`;
+            list.push({
+                idDatoSorteo: idDatoSorteo,
+                numero: inputFields[i][numBolita],
+            });
+        }
+        return list;
+    }
+
 
     return (
         <div className='container'>
@@ -71,6 +104,10 @@ const PruebasNTForm = () => {
                 validate = { values => {
                     let errors = {};
                     let numBolita;
+                    let numberOfFields = checkNumberOfTests(inputFields);
+                    if(numberOfFields !== 0){
+                        alert(`Las pruebas deben ir en grupos de 5. Elimine ${numberOfFields} pruebas o agregue ${5-numberOfFields} pruebas`);
+                    }
                     values.valija = values.valija.toUpperCase();
                     if(!values.valija){
                         errors.valija = 'Valija requerida';	
@@ -106,35 +143,24 @@ const PruebasNTForm = () => {
                     async (values)=>{
                         console.log(values);
                         let sent = true;
-                        let data = {
-                            id_dato_sorteo : 152,
-                            numero: '',
-                            bolita: '', //Roja o blanca
-                        }
-                        let numBolita = '';
-                        for( let i = 0; i < inputFields.length; i++){
-                            numBolita = `bolita${i}`;
-                            data = {
-                                ...data,
-                                numero: values[numBolita],
-                            }
-                            console.log(values);
-                            insertPrueba(data)
-                                .then((response) => { 
-                                    if(response.status === 200){
-                                        // alert('Prueba guardada con éxito');
-                                    }else{
-                                        sent = false;
-                                        throw new Error('Prueba no insertada');
-                                    }
-                                }).catch((error) => { 
+                        const listToSubmit = testListSubmit();
+                        
+                        insertListaPrueba(listToSubmit)
+                            .then((response) => { 
+                                if(response.status === 200){
+                                    // alert('Prueba guardada con éxito');
+                                }else{
                                     sent = false;
-                                    alert(`Algo salió mal: ${error}`);
-                                })
-                            }
-                        if(sent){
-                            alert('Pruebas guardadas con éxito');
-                        }
+                                    throw new Error('Prueba no insertada');
+                                }
+                            }).catch((error) => { 
+                                sent = false;
+                                alert(`Algo salió mal: ${error}`);
+                            }).finally(() => {
+                                if(sent){
+                                    alert('Pruebas guardadas con éxito');
+                                }
+                            })
                     }
                 }
                 >

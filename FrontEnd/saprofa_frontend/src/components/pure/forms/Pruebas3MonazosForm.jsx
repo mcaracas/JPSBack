@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
 import InputPrueba from '../pruebas/InputPrueba';
-import { insertPrueba } from '../../../services/axiosService';
+import { insertPrueba, insertListaPrueba } from '../../../services/axiosService';
 
 // TODO: check props to receive and information to send to Backend
 
@@ -69,13 +69,38 @@ const Pruebas3MonazosForm = () => {
         setInputFields(data);
     }
 
+    /**
+     * The tests have to be in group of three
+     * @param {int} numberOfFields 
+     * @returns {int} the number of fields left over from forming groups of three
+     */
     function checkNumberOfTests(numberOfFields) {
         let difference = numberOfFields.length%3;
         if (numberOfFields.length % 3 !== 0) {
-            alert(`Las pruebas deben ir en grupos de 3. Elimine ${difference} pruebas o agregue ${3-difference} pruebas`);
-            return false;
+            return difference;
         }
-        return true;
+        return 0;
+    }
+
+    /**
+     * The list of tests is sent to the backend
+     * @returns {Array} an array of objects with the id of the lottery and the number of the bolita of the test     
+     */
+    const testListSubmit = () => {
+        const list = [];
+
+        //TODO: change this to the proper numSorteo
+        const idDatoSorteo = 152;
+        let numBolita = '';
+        for (let i = 0; i < inputFields.length; i++){
+            numBolita = `bolita${i}`;
+            list.push({
+                idDatoSorteo: idDatoSorteo,
+                numero: inputFields[i][numBolita],
+            });
+        }
+        console.log(list)
+        return list;
     }
 
     return (
@@ -85,7 +110,10 @@ const Pruebas3MonazosForm = () => {
                 validate = { values => {
                     let errors = {};
                     let numBolita;
-                    checkNumberOfTests(inputFields);
+                    let numberOfFields = checkNumberOfTests(inputFields);
+                    if(numberOfFields !== 0){
+                        alert(`Las pruebas deben ir en grupos de 3. Elimine ${numberOfFields} pruebas o agregue ${3-numberOfFields} pruebas`);
+                    }
                     values.valija = values.valija.toUpperCase();
                     if(!values.valija){
                         errors.valija = 'Valija requerida';	
@@ -117,42 +145,31 @@ const Pruebas3MonazosForm = () => {
                         }
 
                     }
-                    console.log(values);
                     return errors;
                 }}
                 onSubmit={
                     async (values)=>{
                         console.log(values);
                         let sent = true;
-                        let data = {
-                            id_dato_sorteo : 152,
-                            numero: '',
-                            bolita: '', //Roja o blanca
-                        }
-                        let numBolita = '';
-                        for( let i = 0; i < inputFields.length; i++){
-                            numBolita = `bolita${i}`;
-                            data = {
-                                ...data,
-                                numero: values[numBolita],
-                            }
-                            console.log(values);
-                            insertPrueba(data)
-                                .then((response) => { 
-                                    if(response.status === 200){
-                                        // alert('Prueba guardada con éxito');
-                                    }else{
-                                        sent = false;
-                                        throw new Error('Prueba no insertada');
-                                    }
-                                }).catch((error) => { 
+                        
+                        const listToSubmit = testListSubmit();
+                        
+                        insertListaPrueba(listToSubmit)
+                            .then((response) => { 
+                                if(response.status === 200){
+                                    // alert('Prueba guardada con éxito');
+                                }else{
                                     sent = false;
-                                    alert(`Algo salió mal: ${error}`);
-                                })
-                            }
-                        if(sent){
-                            alert('Pruebas guardadas con éxito');
-                        }
+                                    throw new Error('Prueba no insertada');
+                                }
+                            }).catch((error) => { 
+                                sent = false;
+                                alert(`Algo salió mal: ${error}`);
+                            }).finally(() => {
+                                if(sent){
+                                    alert('Pruebas guardadas con éxito');
+                                }
+                            })
                     }
                 }
                 >
