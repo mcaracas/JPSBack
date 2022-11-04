@@ -63,6 +63,19 @@ const Pruebas3MonazosForm = ({IdDatoSorteo}) => {
         setInputFields(data);
     }
 
+     /**
+     * The tests have to be in group of five
+     * @param {int} numberOfFields 
+     * @returns {int} the number of fields left over from forming groups of five
+     */
+      function checkNumberOfTests(numberOfFields) {
+        let difference = numberOfFields.length%5;
+        if (numberOfFields.length % 5 !== 0) {
+            return difference;
+        }
+        return 0;
+    }
+
     return (
         <div className='container'>
             <Formik
@@ -70,7 +83,12 @@ const Pruebas3MonazosForm = ({IdDatoSorteo}) => {
                 validate={values => {
                     let errors = {};
                     let numBolita;
+                    let numberOfFields = checkNumberOfTests(inputFields);
                     values.valija = values.valija.toUpperCase();
+                    // Check if there are groups of 5 tests
+                    if(numberOfFields !== 0){
+                        alert(`Las pruebas deben ir en grupos de 5. Elimine ${numberOfFields} pruebas o agregue ${5-numberOfFields} pruebas`);
+                    }
                     // Check if the valija is empty
                     if (!values.valija) {
                         errors.valija = 'Valija requerida';
@@ -116,8 +134,9 @@ const Pruebas3MonazosForm = ({IdDatoSorteo}) => {
                         for (let i = 0; i < inputFields.length; i++) {
                             numBolita = `bolita${i}`;
                             data[i] = {
+                                valija: values.valija,
                                 IdDatoSorteo: IdDatoSorteo,
-                                numero: values[numBolita],
+                                numero: values[numBolita]
                             }
                         }
                         // Insert the data in the database
@@ -135,7 +154,7 @@ const Pruebas3MonazosForm = ({IdDatoSorteo}) => {
                     }
                 }
             >
-                {({ errors, }) => (
+                {({ errors, isSubmitting}) => (
                     <div className='container-fluid'>
                         <Form>
                             <div className='row'>
@@ -185,7 +204,9 @@ const Pruebas3MonazosForm = ({IdDatoSorteo}) => {
                             </div>
                             <div className='button-field'>
                                 <button type="submit" className='btn'>Registrar Pruebas</button>
+                                {isSubmitting ? <p>Submitting...</p> : null}
                             </div>
+
                         </Form>
                     </div>
                 )}
