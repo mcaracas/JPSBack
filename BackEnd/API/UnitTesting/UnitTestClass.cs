@@ -59,7 +59,7 @@ namespace API.UnitTesting
         {
             var context = new proyecto_bdContext();
             var result = context.Pruebas.ToList();
-            Assert.NotNull(result);
+            Assert.NotEmpty(result);
         }
 
         [Fact]
