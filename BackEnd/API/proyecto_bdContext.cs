@@ -42,7 +42,7 @@ namespace API
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySQL(Environment.GetEnvironmentVariable("MESSAGE"));
+                optionsBuilder.UseMySQL("server=proyecto-inge2022.mysql.database.azure.com;userid=saprofa;password=ProyectoInge2022!;database=proyecto_bd");
             }
         }
 
