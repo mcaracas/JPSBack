@@ -101,8 +101,12 @@ const LoginForm = () => {
                 )}
             </Formik>
             <div className='mt-3'>
+                <Link to='/ForgotPasswordPage' className='link'>¿Olvidaste tu contraseña?</Link>
+            </div>
+            <div className='mt-3'>
                 <Link to='/Register' className='link'>¿No tienes una cuenta? Registrarse</Link>
             </div>
+
         </div>
     );
 }
