@@ -17,6 +17,7 @@ import PruebasNTPage from './pages/Pruebas/PruebasNTPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import PlanPremiosPage from './pages/PlanPremios/PlanPremiosPage';
 import LoteriaFisicapage from './pages/Resultados/LoteriaFisicapage';
+import DatosParticipantesPage from './pages/DatosParticipantes/DatosParticipantesPage';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route exact path="/PruebasNuevosTiempos" element={<PruebasNTPage />} /> 
           <Route exact path="/PlanPremios" element={<PlanPremiosPage />} />
           <Route exact path="/ResultadosLoteriaFisica" element={<LoteriaFisicapage/>} />
+          <Route exact path="/DatosParticipantesPage" element={<DatosParticipantesPage/>} />
         </Routes>
       </div>
     </Router>
