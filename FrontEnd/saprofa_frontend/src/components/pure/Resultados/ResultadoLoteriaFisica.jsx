@@ -4,7 +4,7 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
 import PlanPremios from '../PlanPremios';
 
-const ResultadoLoteriaFisica = () => {
+const ResultadoLoteriaFisica = ({ num_sorteo, tipo_loteria }) => {
     const [resultados, setResultados] = useState([]);
 
     const numeroRef = useRef('');
