@@ -54,3 +54,8 @@ export function insertListaPrueba(Lista){
 export function getPlanPremios(id){
     return APIRequest.get('/PlanPremiosDetalle/'+id);
 }
+
+export function getDatosParticipantes(id){
+    //TODO: check name of endpoint
+    return APIRequest.get('/DatosParticipantes/'+id);
+}
