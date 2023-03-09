@@ -8,8 +8,6 @@ const tipoLoteria = lottery.tipoLoteria;
 const idSorteo = `${tipoLoteria}${numSorteo}`;
 
 const LoteriaFisicapage = () => {
-    const num_sorteo = sessionStorage.getItem('num_sorteo');
-    const tipo_loteria = sessionStorage.getItem('tipo_loteria');
     // TODO: change num_sorteo and tipo_loteria to the values from the session storage
     return (
         <div>
