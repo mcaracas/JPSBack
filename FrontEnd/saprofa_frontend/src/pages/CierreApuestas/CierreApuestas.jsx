@@ -28,11 +28,16 @@ const onAceptar = (e) => {
     <div>
         <section className="cierreApuestas">
         <EncabezadoFranjas title= {"Cierre de las apuestas"}></EncabezadoFranjas>       
+            <hr/>
+            <h5>Monto total:</h5>
+            {datos}
+            <hr/>
+            <h6>¿Es correcto?</h6>
             <input onChange= {handleCheck} type="checkbox" name="nombre" id="nombre" />
             <hr/>
-            {datos}
-            <input disabled={checked? "disabled" : ""} onChange={manejarCambiodatos} type="text" />
-            <button disabled={checked? "disabled" : ""} onClick={onAceptar}>Aceptar</button>
+            <h6>En caso de error digite el monto correcto</h6>
+            <input className="lbl" disabled={checked? "disabled" : ""} onChange={manejarCambiodatos} type="text" />
+            <button className="boton" disabled={checked? "disabled" : ""} onClick={onAceptar}>Aceptar</button>
         </section>
 
     </div>
