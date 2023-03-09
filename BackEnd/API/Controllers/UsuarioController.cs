@@ -90,7 +90,7 @@ public class UsuarioController : ControllerBase
     public void UpdatePassword(string username)
     {
         var context = new proyecto_bdContext();
-        var usuarioUpdate = context.Usuarios.FirstOrDefault(x => x.Usuario1 == "L0Andrés123");
+        var usuarioUpdate = context.Usuarios.FirstOrDefault(x => x.Usuario1 == username);
         ConfirmEmail generateMail = new ConfirmEmail();
         var code = "L0-" + Guid.NewGuid().ToString();
         generateMail.Page_Load("cabezasvizcaino@gmail.com", code, "Su contraseña es:");
