@@ -23,15 +23,15 @@ public class UsuarioController : ControllerBase
         return Usuarios;
     }
 
-/*
-    [HttpGet("{id}")]
-    public Usuario Get(int id)
-    {
-        var context = new proyecto_bdContext();
-        var usuario = context.Usuarios.FirstOrDefault(x => x.Id == id);
-        return usuario;
-    }
-*/
+    /*
+        [HttpGet("{id}")]
+        public Usuario Get(int id)
+        {
+            var context = new proyecto_bdContext();
+            var usuario = context.Usuarios.FirstOrDefault(x => x.Id == id);
+            return usuario;
+        }
+    */
 
     [HttpPost, Route("[action]", Name = "Register")]
     public ActionResult Register([FromBody] Usuario Usuario)
@@ -67,39 +67,43 @@ public class UsuarioController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{username}")]
     public string GetMail(string username)
     {
         var context = new proyecto_bdContext();
         var usuario = context.Usuarios.FirstOrDefault(x => x.Usuario1 == username);
-        try
+
+        if (usuario == null)
+        {
+            return "No se encontró el usuario";
+        }
+        else
         {
             ConfirmEmail generateMail = new ConfirmEmail();
             var code = "L0-" + Guid.NewGuid().ToString();
             generateMail.Page_Load("cabezasvizcaino@gmail.com", code, "Su código de recuperación es:");
             return code;
         }
-        catch
-        {
-            return "";
-        }
-
     }
 
-    [HttpPut("{id}")]
-    public void UpdatePassword(string username)
+    [HttpPut("{username}")]
+    public IActionResult UpdatePassword(string username)
     {
         var context = new proyecto_bdContext();
-        var usuarioUpdate = context.Usuarios.FirstOrDefault(x => x.Usuario1 == "L0Andrés123");
-        ConfirmEmail generateMail = new ConfirmEmail();
-        var code = "L0-" + Guid.NewGuid().ToString();
-        generateMail.Page_Load("cabezasvizcaino@gmail.com", code, "Su contraseña es:");
+        var usuarioUpdate = context.Usuarios.FirstOrDefault(x => x.Usuario1 == username);
         if (usuarioUpdate == null)
         {
-            return;
+            return NotFound();
         }
-        usuarioUpdate.Clave = Utilidades.Utilidades.Encrypt(code.ToString());
-        context.SaveChanges();
+        else
+        {
+            ConfirmEmail generateMail = new ConfirmEmail();
+            var code = "L0-" + Guid.NewGuid().ToString();
+            generateMail.Page_Load("cabezasvizcaino@gmail.com", code, "Su contraseña es:");
+            usuarioUpdate.Clave = Utilidades.Utilidades.Encrypt(code.ToString());
+            context.SaveChanges();
+        }
+        return NoContent();
     }
 
     [HttpPut]
