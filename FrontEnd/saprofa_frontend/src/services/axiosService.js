@@ -23,13 +23,11 @@ export function register(values) {
 }
 
 export function getMail(username) {
-    return APIRequest.get('/usuario/getMail', username);
+    return APIRequest.get(`/Usuario/` + username);
 }
 
 export function updatePassword(username) {
-    return APIRequest.put('/usuario/updatePassword', {
-        "usuario1": username.toString().trim()
-    });
+    return APIRequest.put(`/Usuario/${username}`, { "usuario1": username });
 }
 
 export function getParametero() {

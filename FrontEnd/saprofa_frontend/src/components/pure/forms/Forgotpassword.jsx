@@ -32,8 +32,13 @@ const ForgotPassword = () => {
                 onSubmit={
                     async (values) => {
                         try {
-                            const response = await getMail(values);
-                            navigate('/ConfirmationCodeModal', { state: { code: response.data, username: values.username } });
+                            const response = await getMail(values.username);
+                            if (response.data === 'No se encontró el usuario') {
+                                alert('No se encontró el usuario');
+                                navigate('/');
+                            } else {
+                                navigate('/ConfirmationCodeModal', { state: { code: response.data, username: values.username } });
+                            }
                         } catch (error) {
                             if (error.response.status === 500) {
                                 console.log('Server error:', error);
