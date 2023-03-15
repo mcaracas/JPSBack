@@ -65,3 +65,7 @@ export function insertListaPrueba(Lista) {
 export function getPlanPremios(id) {
     return APIRequest.get('/PlanPremiosDetalle/' + id);
 }
+
+export function postResultadosLotto(resultado) {
+   return APIRequest.post('/Resultado', resultado);
+}
