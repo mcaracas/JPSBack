@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { postResultadosLotto } from '../../../services/axiosService';
+
 
 const ResultadosLotto = () => {
 
@@ -8,27 +10,60 @@ const ResultadosLotto = () => {
     const [resultados, setResultados] = useState([]);
 
     const agregarResultado = (values) => {
-        console.log('resultados:', resultados);
         setResultados([...resultados, {
             numero: values.numero.value
         }]);
     }
+    
+    const removeFields = (index) => {
+        let data = [...resultados];
+        data.splice(index, 1);
+        setResultados(data);
+    }
 
     const validateNumber = (numero) => {
+        //If the number is empty
         if (!numero) {
             return 'El número es requerido';
         }
+        //If the given input is not a number
         else if (isNaN(numero)) {
-            return 'El número debe ser un número';
+            return 'El resultado debe ser un número';
         }
+        //If the number has more or less than 2 digits
         else if (numero.length !== 2) {
             return 'El número debe tener 2 dígitos';
         }
-        else if (numero < 0 || numero > 40 ) {
+        //If the number is not between 0 and 40
+        else if (numero < 0 || numero > 40) {
             return 'El número debe estar entre 0 y 40';
         }
+        //If the number is already in the list
+        for (let i = 0; i < resultados.length; i++) {
+            if (resultados[i].numero === numero) {
+                return 'El número ya se encuentra registrado';
+            }
+        }
+        //If there are 5 numbers already
+        if (resultados.length === 5) {
+            return 'Ya se han registrado los 5 números';
+        }
+
         return '';
     }
+
+    async function handleSubmit(){
+        postResultadosLotto(resultados)
+            .then((response) => {
+                console.log('Response: ', response);
+            }
+            ).catch((error) => {
+                console.log('Error: ', error);
+            }
+            );
+    }
+
+
 
     return (
         <div className="container">
@@ -36,18 +71,22 @@ const ResultadosLotto = () => {
                 initialValues={{
                     numero: ''
                 }}
-                onSubmit={(values) => {
-                    console.log('values:', values);
+                onSubmit={(values, { resetForm }) => {
+
+                    agregarResultado({ numero: numeroRef.current })
+                    resetForm({ numero: '' });
+
                 }}
             >
                 {({ errors, touched }) => (
                     <div className="container-fluid">
-                        <Form>
+                        <Form >
                             <div className="row">
                                 <table className="table table-bordered align-middle mt-5 col">
                                     <thead>
                                         <tr>
-                                            <th colSpan={2}>Resultados del Sorteo<br /> Números favorecidos</th>
+                                            <th colSpan={2}>Resultados del Sorteo de Lotto
+                                                <br /> Números favorecidos</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -61,6 +100,7 @@ const ResultadosLotto = () => {
                                                     className="form-control input-form-control"
                                                     validate={validateNumber}
                                                     innerRef={numeroRef}
+                                                    autoFocus
                                                 />
                                                 <ErrorMessage name="numero" component={() => {
                                                     return (
@@ -80,15 +120,75 @@ const ResultadosLotto = () => {
                                                     </div> :
                                                     <div className='button-field col-2 ms-3 '>
                                                         <button
-                                                            type='button'
-                                                            className='btn btn-success'
-                                                            onClick={() => 
-                                                                agregarResultado({numero: numeroRef.current})
-                                                            }
-                                                        >
+                                                            type='submit'
+                                                            className='btn btn-success'>
                                                             Agregar Resultado
                                                         </button>
                                                     </div>}
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div>
+                                <table className='table align-middle mt-5 col'>
+                                    <thead>
+                                        <tr>
+                                            <th colSpan={3}>Resultados Agregados</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>Número</th>
+                                        </tr>
+                                        {resultados.map((resultado, index) => {
+                                            return (
+                                                <tr key={index}>
+                                                    <td>{resultado.numero}</td>
+                                                    <td>
+                                                        <div className="container">
+                                                            <div className="row justify-content-center">
+                                                                <div className="col-12 col-md-6 d-flex justify-content-end align-items-start">
+                                                                    <i className='bi bi-x-square-fill closeX' onClick={() => removeFields(index)} />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })}
+                                        <tr>
+                                            <th>
+                                                <div className='container'>
+                                                    <div className='row justify-content-center'>
+                                                        {resultados.length === 5 ?
+                                                            <div className='button-field col-2 ms-3 '>
+                                                                <button
+                                                                    type='submit'
+                                                                    className='btn btn-success'
+                                                                    onClick={handleSubmit}
+                                                                    // onSubmit={async () => {
+                                                                    //     alert('Resultados', resultados);
+                                                                    //     postResultadosLotto(resultados).then((response) => {
+                                                                    //         console.log('Response', response);
+                                                                    //     }).catch((error) => {
+                                                                    //         console.log('Error', error);
+                                                                    //     })
+                                                                    // }}
+                                                                >
+                                                                    Guardar Resultados
+                                                                </button>
+                                                            </div> :
+                                                            <div className='button-field col-2 ms-3 '>
+                                                                <button
+                                                                    type='button'
+                                                                    className='btn btn-success'
+                                                                    disabled> Guardar Resultados
+                                                                </button>
+                                                            </div>}
+                                                    </div>
+                                                </div>
                                             </th>
                                         </tr>
                                     </tbody>
@@ -98,6 +198,7 @@ const ResultadosLotto = () => {
                     </div>
                 )}
             </Formik>
+
         </div >
     );
 }
