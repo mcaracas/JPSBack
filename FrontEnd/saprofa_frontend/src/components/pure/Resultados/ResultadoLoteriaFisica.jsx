@@ -14,8 +14,6 @@ console.log('idPlanPremios:', idPlanPremios);
 const ResultadoLoteriaFisica = ({ idSorteo }) => {
     const [resultados, setResultados] = useState([]);
     const [resultado, setResultado] = useState({});
-    const [numero, setNumero] = useState('');
-    const [serie, setSerie] = useState('');
     
     const formRef = useRef(null);
 
