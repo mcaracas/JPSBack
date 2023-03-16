@@ -1,5 +1,6 @@
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import React from 'react'
+import './VerificaMontosAcumulados.scss'
 
 const VerificaMontosAcumulados = () => {
     const [datos, setDatos] = React.useState("Probando");
@@ -27,10 +28,10 @@ const VerificaMontosAcumulados = () => {
     
       return (
         <div>
-            <section className="cierreApuestas">
-            <EncabezadoFranjas title= {"Cierre de las apuestas"}></EncabezadoFranjas>       
+            <section className="verificaAcumulado">
+            <EncabezadoFranjas title= {"Verificar monto de acumulado"}></EncabezadoFranjas>       
                 <hr/>
-                <h5>Monto total:</h5>
+                <h5>Monto acumulado:</h5>
                 {datos}
                 <br />
                 <br />
