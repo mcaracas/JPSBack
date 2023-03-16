@@ -57,5 +57,14 @@ export function getPlanPremios(id){
 
 export function getDatosParticipantes(id){
     //TODO: check name of endpoint
-    return APIRequest.get('/DatosParticipantes/'+id);
+    // return APIRequest.get('/DatosParticipantes/'+id);`
+    return {
+        GOperaciones : 'Gerente de Ops',
+        GProduccionYComercializacion : 'Gerente de Produccion',
+        Gerencia : 'Gerente',
+        Juez : 'Juez',
+        PresentadorDelSorteo : 'Presentador',
+        Prompter : 'Prompter',
+        EquipoDeComputo : 'Equipo de computo'
+    }
 }
