@@ -103,3 +103,9 @@ export function getDatosParticipantes(id){
 export function insertDatosAdministracion(datos){
     return APIRequest.post('/Representate',datos);
 }
+//get -> rellenar los campos en el formulario
+export function getPremioFromAdministracion(id){
+    return APIRequest.get('/Premio/'+id);
+}
+
+//post -> mandar la tabla con resultados a insertar en la BD
