@@ -19,6 +19,7 @@ import PlanPremiosPage from './pages/PlanPremios/PlanPremiosPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import ConfirmationCodeModal from './components/pure/forms/ConfirmationCodeModal';
 import LoteriaFisicapage from './pages/Resultados/LoteriaFisicapage';
+import ConclusionesRecomendacionesPage from './pages/ConclusionesRecomendaciones/ConclusionesRecomendacionesPage';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route exact path="/ForgotPasswordPage" element={<ForgotPasswordPage />} />
           <Route exact path="/ConfirmationCodeModal" element={<ConfirmationCodeModal />} />
           <Route exact path="/ResultadosLoteriaFisica" element={<LoteriaFisicapage/>} />
+          <Route exact path="/ConclusionesRecomendaciones" element={<ConclusionesRecomendacionesPage/>} />
         </Routes>
       </div>
     </Router>
