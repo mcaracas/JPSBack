@@ -14,6 +14,7 @@ namespace API
             Marchamos = new HashSet<Marchamo>();
             Pruebas = new HashSet<Prueba>();
             Resultados = new HashSet<Resultado>();
+            ActaDeFiscalizacions = new HashSet<ActaDeFiscalizacion>();
         }
 
         public int IdInterno { get; set; }
@@ -30,6 +31,7 @@ namespace API
         public virtual ICollection<Marchamo> Marchamos { get; set; }
         public virtual ICollection<Prueba> Pruebas { get; set; }
         public virtual ICollection<Resultado> Resultados { get; set; }
+        public virtual ICollection<ActaDeFiscalizacion> ActaDeFiscalizacions { get; set; }
 
         public virtual Usuario IdUsuarioNavigation { get; set; }
     }

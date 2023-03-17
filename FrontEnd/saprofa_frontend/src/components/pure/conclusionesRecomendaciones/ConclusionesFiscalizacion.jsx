@@ -1,6 +1,8 @@
 import React from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { actaFiscalizacion } from '../../../services/axiosService';
 import * as Yup from 'yup';
+
 /**
 * @type {Yup.ObjectSchema<any>}
  */
@@ -10,26 +12,19 @@ const getFirma = () => {
 }
 
 const validationSchema = Yup.object().shape({
-    procesosConformeEstablecido: Yup.boolean().oneOf([true], 'Debe seleccionar una opción'),
+    procesosConformeEstablecido: Yup.boolean(),
     otrasObservaciones: Yup.string().when('procesosConformeEstablecido', {
-        is: false,
-        then: Yup.string().required('Debe proporcionar observaciones')
+        is: true,
+        then: Yup.string().required('Este campo es obligatorio'),
+        otherwise: Yup.string().nullable(),
     }),
-    detalles: Yup.string().when('procesosConformeEstablecido', {
-        is: false,
-        then: Yup.string().required('Debe proporcionar detalles')
-    }),
-    recomendaciones: Yup.boolean(),
-    resultadosSorteo: Yup.string().when('recomendaciones', {
-        is: false,
-        then: Yup.string().required('Debe proporcionar resultados')
-    })
 });
 
 
 const handleSubmit = async (values) => {
     try {
         // Call an API or perform some asynchronous action here
+        await actaFiscalizacion(values);
         console.log(values);
         // Display success message
         alert('Form submitted successfully!');
@@ -56,17 +51,17 @@ const ConclusionesFiscalizacion = () => {
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
-                {({ isSubmitting }) => (
+                {({ isSubmitting, errors }) => (
                     <Form>
                         <h5>Conclusiones de la fiscalización</h5>
                         <label>
                             Los procesos se realizaron conforme lo establecido:
                             <Field type="checkbox" name="procesosConformeEstablecido" value="si" />
                         </label>
-
                         <label>
                             Otras:
                             <Field type="text" name="otrasObservaciones" />
+                            <ErrorMessage name="otrasObservaciones" />
                         </label>
 
                         <h6>Detallar:</h6>

@@ -638,18 +638,24 @@ namespace API
 
             modelBuilder.Entity<ActaDeFiscalizacion>(entity =>
             {
-                entity.HasKey(e => e.IdSorteo)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
-
+                
                 entity.ToTable("acta_de_fiscalizacion");
 
-                entity.Property(e => e.IdSorteo)
+                entity.HasIndex(e => e.IdDatoSorteo, "id_dato_sorteo");
+
+                entity.Property(e => e.Id)
                     .HasColumnType("int(11)")
-                    .HasColumnName("id_sorteo");
+                    .HasColumnName("id");
 
                 entity.Property(e => e.ConclusionesDetalle)
                     .HasMaxLength(500)
                     .HasColumnName("conclusiones_detalle");
+
+                entity.Property(e => e.IdDatoSorteo)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_dato_sorteo");
 
                 entity.Property(e => e.OtrasConclusiones)
                     .HasMaxLength(85)
@@ -666,6 +672,11 @@ namespace API
                 entity.Property(e => e.RecomendacionDetalle)
                     .HasMaxLength(500)
                     .HasColumnName("recomendacion_detalle");
+                
+                entity.HasOne(d => d.IdDatoSorteoNavigation)
+                    .WithMany(p => p.ActaDeFiscalizacions)
+                    .HasForeignKey(d => d.IdDatoSorteo)
+                    .HasConstraintName("acta_ibfk_1");
             });
 
             OnModelCreatingPartial(modelBuilder);
