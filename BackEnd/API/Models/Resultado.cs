@@ -11,7 +11,6 @@ namespace API
         public string SeriePremio { get; set; }
         public bool? Verificado { get; set; }
         public bool? VerificaAcumulado { get; set; }
-
         public virtual DatosSorteo IdDatoSorteoNavigation { get; set; }
         public virtual PlanPremiosDetalle NumPremioPlanNavigation { get; set; }
     }
