@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { postResultadosLotto } from '../../../services/axiosService';
+import { postResultadosElectronica } from '../../../services/axiosService';
+import PropTypes from 'prop-types'
 
 
-const ResultadosLotto = () => {
+const ResultadosLotto = ({ numSorteo, idInterno }) => {
 
-    const numeroRef = useRef('');
+    const numeroRef = useRef("");
 
     const [resultados, setResultados] = useState([]);
 
@@ -14,7 +15,7 @@ const ResultadosLotto = () => {
             numero: values.numero.value
         }]);
     }
-    
+
     const removeFields = (index) => {
         let data = [...resultados];
         data.splice(index, 1);
@@ -52,16 +53,34 @@ const ResultadosLotto = () => {
         return '';
     }
 
-    async function handleSubmit(){
-        postResultadosLotto(resultados)
-            .then((response) => {
-                console.log('Response: ', response);
-            }
-            ).catch((error) => {
-                console.log('Error: ', error);
-            }
-            );
+    async function handleSubmit() {
+        try {
+            const promises = resultados.map(async (resultado) => {
+                const data = {
+                    "IdDatoSorteo": idInterno,
+                    "NumeroPremioPlan": null,
+                    "NumFavorecido": resultado.numero.replace(/'/g, '"'),
+                    "Verificado": false,
+                    "VerificaAcumulado": false
+                };
+
+                const response = await postResultadosElectronica(data);
+                return response;
+            });
+
+            await Promise.all(promises);
+
+            // Display success message to the user
+            alert("Resultados guardados correctamente");
+            // Reload the page
+            //window.location.reload();
+
+        } catch (error) {
+            console.error("Something went wrong:", error);
+            alert("Ingreso de resultados fallido. Intente de nuevo.");
+        }
     }
+
 
 
 
@@ -69,12 +88,12 @@ const ResultadosLotto = () => {
         <div className="container">
             <Formik
                 initialValues={{
-                    numero: ''
+                    numero: ""
                 }}
                 onSubmit={(values, { resetForm }) => {
 
                     agregarResultado({ numero: numeroRef.current })
-                    resetForm({ numero: '' });
+                    resetForm({ numero: "" });
 
                 }}
             >
@@ -85,7 +104,7 @@ const ResultadosLotto = () => {
                                 <table className="table table-bordered align-middle mt-5 col">
                                     <thead>
                                         <tr>
-                                            <th colSpan={2}>Resultados del Sorteo de Lotto
+                                            <th colSpan={2}>Resultados del Sorteo de Lotto No. {numSorteo}
                                                 <br /> Números favorecidos</th>
                                         </tr>
                                     </thead>
@@ -168,14 +187,6 @@ const ResultadosLotto = () => {
                                                                     type='submit'
                                                                     className='btn btn-success'
                                                                     onClick={handleSubmit}
-                                                                    // onSubmit={async () => {
-                                                                    //     alert('Resultados', resultados);
-                                                                    //     postResultadosLotto(resultados).then((response) => {
-                                                                    //         console.log('Response', response);
-                                                                    //     }).catch((error) => {
-                                                                    //         console.log('Error', error);
-                                                                    //     })
-                                                                    // }}
                                                                 >
                                                                     Guardar Resultados
                                                                 </button>
@@ -201,6 +212,11 @@ const ResultadosLotto = () => {
 
         </div >
     );
+}
+
+ResultadosLotto.propTypes = {
+    numSorteo: PropTypes.number.isRequired,
+    idInterno: PropTypes.number.isRequired
 }
 
 export default ResultadosLotto;
