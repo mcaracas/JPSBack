@@ -57,14 +57,19 @@ export function getPlanPremios(id){
 
 export function getDatosParticipantes(id){
     //TODO: check name of endpoint
-    // return APIRequest.get('/DatosParticipantes/'+id);`
-    return {
-        GOperaciones : 'Gerente de Ops',
-        GProduccionYComercializacion : 'Gerente de Produccion',
-        Gerencia : 'Gerente',
-        Juez : 'Juez',
-        PresentadorDelSorteo : 'Presentador',
-        Prompter : 'Prompter',
-        EquipoDeComputo : 'Equipo de computo'
-    }
+    return APIRequest.get(`/Representate`);
+    // return {
+    //     id_datos_previos: 1,
+    //     gerente_operaciones : 'Gerente de Ops',
+    //     gerente_produccion : 'Gerente de Produccion',
+    //     gerencia : 'Gerente',
+    //     juez : 'Juez',
+    //     presentador : 'Presentador',
+    //     prompter : 'Prompter',
+    //     equipo_computo : 'Equipo de computo'
+    // }
+}
+
+export function insertDatosAdministracion(datos){
+    return APIRequest.post('/Representate',datos);
 }

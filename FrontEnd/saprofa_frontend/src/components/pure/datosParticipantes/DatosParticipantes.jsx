@@ -1,8 +1,11 @@
 import { Formik, Field, Form } from 'formik';
 import { useState, useRef } from 'react';
-import { getDatosParticipantes } from '../../../services/axiosService';
+import { getDatosParticipantes, insertDatosAdministracion } from '../../../services/axiosService';
+
+const idDatosPrevios = sessionStorage.getItem('lottery.')
 
 const initialValues = {
+  id : '',
   GOperaciones: '',
   GProduccionYComercializacion: '',
   Gerencia: '',
@@ -20,12 +23,24 @@ const DatosParticipantes = ({ num_sorteo, tipo_loteria }) => {
   const formRef = useRef(null);
 
   const obtenerDatosAdministracion = async (idSorteo) => {
-    // TODO: check the value returned by the endpoint
     try{
-      const datos = getDatosParticipantes(1);
-      setFormData({...datos});
+      // TODO: wait for the endpoint to receive the idSorteo, meanhile is receiving all data
+      const response = await getDatosParticipantes(1);
+      const datos = response.data[6];
+      const datosMapeados = {
+        // id: datos.id_datos_previos, has to be added by session storage
+        GOperaciones: datos.gerenteOperaciones,
+        GProduccionYComercializacion: datos.gerenteProduccion,
+        Gerencia: datos.gerencia,
+        Juez: datos.juez,
+        PresentadorDelSorteo: datos.presentador,
+        Prompter: datos.prompter,
+        EquipoDeComputo: datos.equipoComputo ,
+      };
+      console.log("datosMapeados: ",datosMapeados);
+      setFormData({...datosMapeados});
       if (datos) {
-          const formValues = { ...datos };
+          const formValues = { ...datosMapeados };
           formRef.current.setValues(formValues);
       }
     } catch (error) {
@@ -42,8 +57,15 @@ const DatosParticipantes = ({ num_sorteo, tipo_loteria }) => {
       <Formik
         initialValues={formData}
         onSubmit={(values) => {
-          //Todo: check the endpoint
-          // insertDatosAdministracion(values, getIdSorteo());
+          insertDatosAdministracion({
+            gerenteOperaciones : values.GOperaciones,
+            gerenteProduccion :  values.GProduccionYComercializacion,
+            gerencia : values.Gerencia,
+            juez : values.Juez,
+            presentador : values.PresentadorDelSorteo,
+            prompter : values.Prompter,
+            equipoComputo : values.EquipoDeComputo,
+        });
           console.log(values);
         }}
         innerRef={formRef}
@@ -86,7 +108,7 @@ const DatosParticipantes = ({ num_sorteo, tipo_loteria }) => {
                 <div className='col-2'>
                   <div className="col-12 col-md-6 d-flex flex-column justify-content-between">
                     <button className="btn mt-5 mb-5" type="button" onClick={()=>obtenerDatosAdministracion(getIdSorteo())}>Obtener Participantes</button>
-                    <button className="btn mt-5 mb-5" type="submit">Registar Datos de Participantes</button>
+                    <button className="btn mt-5 mb-5" type="submit" oncClick={()=>{insertDatosAdministracion()}}>Registar Datos de Participantes</button>
                   </div>
                 </div>
               </div>
