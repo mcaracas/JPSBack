@@ -8,16 +8,20 @@ import ResultadosNT from '../../components/pure/Resultados/ResultadosNT';
 const LoteriaElectronicaPage = () => {
 
     // @TODO: Get the type of lottery from the session storage
-    //const tipoSorteo = sessionStorage.getItem("")
+    let tipoSorteo = "3M";
 
-    let tipoSorteo = "LTT";
+    //@TODO: Get numeroSorteo from the session storage
+    let numeroSorteo = 3362;
+
+    //@TODO: Get idInterno from the session storage
+    let idInterno = 10;
 
     return (
         <div>
             <EncabezadoFranjas title={"Resultados lotería electrónica"}></EncabezadoFranjas>
-            {tipoSorteo === "LTT" ? <ResultadosLotto /> :
-                tipoSorteo === "3M" ? <Resultados3M /> :
-                    tipoSorteo === "NT" ? <ResultadosNT /> : null}
+            {tipoSorteo === "LTT" ? <ResultadosLotto numSorteo={numeroSorteo} idInterno={idInterno}/> :
+                tipoSorteo === "3M" ? <Resultados3M numSorteo={numeroSorteo} idInterno={idInterno}/> :
+                    tipoSorteo === "NT" ? <ResultadosNT numSorteo={numeroSorteo} idInterno={idInterno} /> : null}
         </div>
     );
 }
