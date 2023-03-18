@@ -471,25 +471,48 @@ namespace API
 
             modelBuilder.Entity<Representante>(entity =>
             {
+                entity.HasKey(e => e.Id)
+                    .HasName("PRIMARY");
+
                 entity.ToTable("representantes");
 
-                entity.HasIndex(e => e.IdDatosPrevios, "id_Datos_Previos_fk_idx");
+                entity.HasIndex(e => e.IdDatosPrevios, "id_datos_previos");
 
                 entity.Property(e => e.Id)
                     .HasColumnType("int(11)")
                     .HasColumnName("id");
 
+                entity.Property(e => e.EquipoComputo)
+                    .HasMaxLength(45)
+                    .HasColumnName("equipo_computo");
+
+                entity.Property(e => e.Gerencia)
+                    .HasMaxLength(45)
+                    .HasColumnName("gerencia");
+
+                entity.Property(e => e.GerenteOperaciones)
+                    .HasMaxLength(45)
+                    .HasColumnName("gerente_operaciones");
+
+                entity.Property(e => e.GerenteProduccion)
+                    .HasMaxLength(45)
+                    .HasColumnName("gerente_produccion");
+
                 entity.Property(e => e.IdDatosPrevios)
                     .HasColumnType("int(11)")
-                    .HasColumnName("idDatosPrevios");
+                    .HasColumnName("id_datos_previos");
 
                 entity.Property(e => e.Juez)
                     .HasMaxLength(45)
                     .HasColumnName("juez");
 
-                entity.Property(e => e.Nombre)
+                entity.Property(e => e.Presentador)
                     .HasMaxLength(45)
-                    .HasColumnName("nombre");
+                    .HasColumnName("presentador");
+
+                entity.Property(e => e.Prompter)
+                    .HasMaxLength(45)
+                    .HasColumnName("prompter");
 
                 entity.HasOne(d => d.IdDatosPreviosNavigation)
                     .WithMany(p => p.Representantes)
