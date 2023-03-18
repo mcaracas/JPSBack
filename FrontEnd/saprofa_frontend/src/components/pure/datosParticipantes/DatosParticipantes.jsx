@@ -23,15 +23,7 @@ const DatosParticipantes = ({ num_sorteo, tipo_loteria }) => {
     // TODO: check the value returned by the endpoint
     try{
       const datos = getDatosParticipantes(1);
-      setFormData({
-        GOperaciones: datos.GOperaciones,
-        GProduccionYComercializacion: datos.GProduccionYComercializacion,
-        Gerencia: datos.Gerencia,
-        Juez: datos.Juez,
-        PresentadorDelSorteo: datos.PresentadorDelSorteo,
-        Prompter: datos.Prompter,
-        EquipoDeComputo: datos.EquipoDeComputo,
-      });
+      setFormData({...datos});
       if (datos) {
           const formValues = { ...datos };
           formRef.current.setValues(formValues);
@@ -50,6 +42,8 @@ const DatosParticipantes = ({ num_sorteo, tipo_loteria }) => {
       <Formik
         initialValues={formData}
         onSubmit={(values) => {
+          //Todo: check the endpoint
+          // insertDatosAdministracion(values, getIdSorteo());
           console.log(values);
         }}
         innerRef={formRef}
