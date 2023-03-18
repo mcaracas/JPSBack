@@ -22,6 +22,32 @@ export function register(values) {
     });
 }
 
+export function actaFiscalizacion(values) {
+    console.log(values.recomendaciones);
+
+    if (values.procesosConformeEstablecido === false) {
+        values.procesosConformeEstablecido = "";
+    } else {
+        values.procesosConformeEstablecido = "Si";
+    }
+
+    if (values.recomendaciones === false) {
+        values.recomendaciones = "";
+    } else {
+        values.recomendaciones = "Ninguna";
+    }
+
+    return APIRequest.post('/ActaDeFiscalizacion', {
+        contentType: 'application/json; charset=utf-8',
+        "idDatoSorteo": "1",                                //FALTA QUE ESTO LO SAQUE DE LA SESION
+        "protocolo": values.procesosConformeEstablecido,
+        "otrasConclusiones": values.otrasObservaciones,
+        "conclusionesDetalle": values.detalles,
+        "recomendacion": values.recomendaciones,
+        "recomendacionDetalle": values.resultadosSorteo
+    });
+}
+
 export function getMail(username) {
     return APIRequest.get(`/Usuario/` + username);
 }
