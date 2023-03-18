@@ -77,5 +77,33 @@ namespace API.UnitTesting
             var pruebas = context.Pruebas.Where(x => x.IdDatoSorteo == 99999996).ToList();
             Assert.Empty(pruebas);
         }
+
+
+        //Pruebas de Resultado
+        [Fact]
+        public void PassingResultadoGetTest()
+        {
+            var context = new proyecto_bdContext();
+            var result = context.Resultados.ToList();
+            Assert.NotEmpty(result);
+        }
+
+        [Fact]
+        public void PassingResultadoSorteoGet()
+        {
+            var context = new proyecto_bdContext();
+            var resultados = context.Resultados.Where(x => x.IdDatoSorteo == 1).ToList();
+            Assert.NotEmpty(resultados);
+        }
+
+        [Fact]
+        public void FailingResultadoSorteoGet()
+        {
+            var context = new proyecto_bdContext();
+            var resultados = context.Resultados.Where(x => x.IdDatoSorteo == 99999996).ToList();
+            Assert.Empty(resultados);
+        }
+
+        
     }
 }
