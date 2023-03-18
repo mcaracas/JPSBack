@@ -66,6 +66,6 @@ export function getPlanPremios(id) {
     return APIRequest.get('/PlanPremiosDetalle/' + id);
 }
 
-export function postResultadosLotto(resultado) {
+export function postResultadosElectronica(resultado) {
    return APIRequest.post('/Resultado', resultado);
 }
