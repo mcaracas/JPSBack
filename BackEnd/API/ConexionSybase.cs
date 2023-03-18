@@ -15,17 +15,18 @@ public class ConexionSybase
       connStr = "Provider=ASEOLEDB;Data Source=DESKTOP-G368AIS:5000;Catalog=master;User Id=sa;Password=root123;"; 
       OleDbConnection conn = new OleDbConnection(connStr); //create connection
       conn.Open(); //open connection
-      OleDbCommand myCommand = new OleDbCommand("select * from resultados where id_dato_sorteo = " + predicate.ToString(), conn); //create command
+      OleDbCommand myCommand = new OleDbCommand("select * from resultados where IdDatoSorteo = " + predicate.ToString(), conn); //create command
       OleDbDataReader myReader = myCommand.ExecuteReader(); //execute command and get data reader object 
       Resultado resultado = new Resultado(); //create result object
           while (myReader.Read()) //read data from data reader object
             {
-                resultado.IdResultado = (int)myReader["id_resultado"]; //get id_resultado from data reader object and cast it to int
-                resultado.NumPremioPlan = (int)myReader["num_premio_plan"]; //get num_premio_plan from data reader object and cast it to int 
-                resultado.IdDatoSorteo = (int)myReader["id_dato_sorteo"]; //get id_dato_sorteo from data reader object and cast it to int 
-                resultado.NumFavorecido = (string)myReader["num_favorecido"];
-                resultado.SeriePremio = (string)myReader["serie_premio"];
-                resultado.Verificado = (bool)myReader["verificado"];
+                resultado.IdResultado = (int)myReader["IdResultado"]; //get id_resultado from data reader object and cast it to int
+                resultado.NumeroResultado = (int)myReader["NumeroResultado"]; //get numero_resultado from data reader object and cast it to int
+                resultado.NumPremioPlan = (int)myReader["NumPremioPlan"]; //get num_premio_plan from data reader object and cast it to int 
+                resultado.IdDatoSorteo = (int)myReader["IdDatoSorteo"]; //get id_dato_sorteo from data reader object and cast it to int 
+                resultado.NumFavorecido = (string)myReader["NumFavorecido"];
+                resultado.SeriePremio = (string)myReader["SeriePremio"];
+                resultado.Verificado = (bool)myReader["Verificado"];
             }
       conn.Close(); //close connection
       return resultado;   //return result object

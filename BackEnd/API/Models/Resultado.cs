@@ -8,6 +8,8 @@ namespace API
     public partial class Resultado
     {
         public int IdResultado { get; set; }
+
+        public int NumeroResultado { get; set; }
         public int? NumPremioPlan { get; set; }
         public int? IdDatoSorteo { get; set; }
         public string NumFavorecido { get; set; }
