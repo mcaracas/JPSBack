@@ -27,7 +27,7 @@ public class RepresentateController : ControllerBase
     public Representante Get(int id)
     {
         var context = new proyecto_bdContext();
-        var representante = context.Representantes.FirstOrDefault(x => x.IdDatosPrevios == id);
+        var representante = context.Representantes.FirstOrDefault(x => x.Id == id);
         return representante;
     }
 

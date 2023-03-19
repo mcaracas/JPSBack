@@ -88,6 +88,18 @@ export function insertListaPrueba(Lista) {
     return APIRequest.post('/Prueba/ListaPruebas', Lista);
 }
 
-export function getPlanPremios(id) {
-    return APIRequest.get('/PlanPremiosDetalle/' + id);
+export function getPlanPremios(id){
+    return APIRequest.get('/PlanPremiosDetalle/'+id);
+}
+
+export function getDatosPrevios(id){
+    return APIRequest.get('/DatosPreviosA/'+id);
+}
+
+export function getDatosParticipantes(id){
+    return APIRequest.get(`/Representate`);
+}
+
+export function insertDatosAdministracion(datos){
+    return APIRequest.post('/Representate',datos);
 }

@@ -129,12 +129,12 @@ const ResultadoLoteriaFisica = () => {
                                         </button>
                                     </div>
                                 </div>
-                                <div className='button-field'>
-                                    <button type="submit" className='btn'>Registrar Resultados</button>                                    
-                                </div>
-                            </Form>
-                        </div>
-                    )}
+                            <div className='button-field'>
+                                <button type="submit" className='btn'>Registrar Resultados</button>
+                            </div>
+                        </Form>
+                    </div>
+                )}
             </Formik>
             <div>
                 <table className='table align-middle mt-5 col'>

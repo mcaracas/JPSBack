@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const DatosPrevios = ({ numSorteo }) => {
 
     useEffect(() => {
-        getDatosFormularios('LN3360')
+        getDatosFormularios(numSorteo)
             .then(response => {
                 console.log(response.data);
                 setDatos(response.data);

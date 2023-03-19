@@ -22,6 +22,7 @@ import LoteriaFisicapage from './pages/Resultados/LoteriaFisicapage';
 import ConclusionesRecomendacionesPage from './pages/ConclusionesRecomendaciones/ConclusionesRecomendacionesPage';
 import CierreApuestas from './pages/CierreApuestas/CierreApuestas';
 import VerificaMontosAcumulados from './pages/VerificaMontosAcumulados/VerificaMontosAcumulados';
+import DatosParticipantesPage from './pages/DatosParticipantes/DatosParticipantesPage';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
           <Route exact path="/ConclusionesRecomendaciones" element={<ConclusionesRecomendacionesPage/>} />
           <Route exact path="/CierreApuestas" element={<CierreApuestas />} />
           <Route exact path="/VerificaMontosAcumulados" element={<VerificaMontosAcumulados />} />
+          <Route exact path="/DatosParticipantesPage" element={<DatosParticipantesPage/>} />
         </Routes>
       </div>
     </Router>
