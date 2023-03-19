@@ -50,4 +50,12 @@ public class ListaChequeoSorteoController : ControllerBase
         ListaChequeoSorteoUpdate.Id = listaChequeoSorteo.Id;
         context.SaveChanges();
     }
+    [HttpDelete("{id}")]    
+    public void Delete(int id)
+    {
+        var context = new proyecto_bdContext();
+        var listaChequeoSorteo = context.ListaChequeoSorteos.FirstOrDefault(x => x.Id == id);
+        context.ListaChequeoSorteos.Remove(listaChequeoSorteo);
+        context.SaveChanges();
+    }
 }

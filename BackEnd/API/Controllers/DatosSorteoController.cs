@@ -23,11 +23,22 @@ public class DatosSorteoController : ControllerBase
         return DatosSorteos;
     }
 
-    [HttpGet("{id}")]
-    public DatosSorteo Get(int id)
+    [HttpGet("{num_sorteo}")]
+    public DatosSorteo Get(int num_sorteo)
     {
         var context = new proyecto_bdContext();
-        var datosSorteo = context.DatosSorteos.FirstOrDefault(x => x.IdInterno == id);
+        var datosSorteo = context.DatosSorteos.FirstOrDefault(x => x.NumSorteo == num_sorteo);
+        return datosSorteo;
+    }
+
+    [HttpGet]
+    [Route("SorteoActual")]
+    public IEnumerable<DatosSorteo> GetSorteoActual()
+    {
+        var context = new proyecto_bdContext();
+        var date = DateTime.Now;
+        var datosSorteo2 = context.DatosSorteos.ToList();
+        var datosSorteo = context.DatosSorteos.Where(x => x.FechaHora > date.AddHours(-2) && x.FechaHora < date.AddHours(2));
         return datosSorteo;
     }
 

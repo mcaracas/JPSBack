@@ -16,36 +16,36 @@ public class RepresentateController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<Representate> Get()
+    public IEnumerable<Representante> Get()
     {
         var context = new proyecto_bdContext();
-        var Representantes = context.Representates.ToList();
+        var Representantes = context.Representantes.ToList();
         return Representantes;
     }
 
     [HttpGet("{id}")]
-    public Representate Get(int id)
+    public Representante Get(int id)
     {
         var context = new proyecto_bdContext();
-        var representante = context.Representates.FirstOrDefault(x => x.IdDatosPrevios == id);
+        var representante = context.Representantes.FirstOrDefault(x => x.IdDatosPrevios == id);
         return representante;
     }
 
     [HttpPost]
-    public ActionResult Post([FromBody] Representate Representante)
+    public ActionResult Post([FromBody] Representante Representante)
     {
         var context = new proyecto_bdContext();
-        context.Representates.Add(Representante);
+        context.Representantes.Add(Representante);
         context.SaveChanges();
         return Ok();
     }
 
     [HttpPut("{id}")]
     [HttpPut]
-    public void UpdateRepresentante(Representate representante)
+    public void UpdateRepresentante(Representante representante)
     {
         var context = new proyecto_bdContext();
-        var RepresentanteUpdate = context.Representates.FirstOrDefault(x => x.Id == representante.Id);
+        var RepresentanteUpdate = context.Representantes.FirstOrDefault(x => x.Id == representante.Id);
         RepresentanteUpdate.Id = representante.Id;
         context.SaveChanges();
     }

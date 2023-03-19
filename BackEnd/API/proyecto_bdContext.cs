@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+
 #nullable disable
 
 namespace API
@@ -18,16 +21,18 @@ namespace API
         public virtual DbSet<DatosFichero> DatosFicheros { get; set; }
         public virtual DbSet<DatosPreviosAdministracion> DatosPreviosAdministracions { get; set; }
         public virtual DbSet<DatosSorteo> DatosSorteos { get; set; }
+        public virtual DbSet<Datosfomulario> Datosfomularios { get; set; }
         public virtual DbSet<ListaChequeoDetalle> ListaChequeoDetalles { get; set; }
         public virtual DbSet<ListaChequeoSorteo> ListaChequeoSorteos { get; set; }
         public virtual DbSet<Marchamo> Marchamos { get; set; }
+        public virtual DbSet<Parametro> Parametros { get; set; }
         public virtual DbSet<PlanPremio> PlanPremios { get; set; }
         public virtual DbSet<PlanPremiosDetalle> PlanPremiosDetalles { get; set; }
         public virtual DbSet<Prueba> Pruebas { get; set; }
         public virtual DbSet<RepFavorecidosUltimoAnno> RepFavorecidosUltimoAnnos { get; set; }
         public virtual DbSet<RepSorteoPorUsuario> RepSorteoPorUsuarios { get; set; }
         public virtual DbSet<RepVentasPorFecha> RepVentasPorFechas { get; set; }
-        public virtual DbSet<Representate> Representates { get; set; }
+        public virtual DbSet<Representante> Representantes { get; set; }
         public virtual DbSet<Resultado> Resultados { get; set; }
         public virtual DbSet<ResultadosBitacora> ResultadosBitacoras { get; set; }
         public virtual DbSet<TipoLoterium> TipoLoteria { get; set; }
@@ -37,7 +42,7 @@ namespace API
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySQL(Environment.GetEnvironmentVariable("MESSAGE"));
+                optionsBuilder.UseMySQL("server=proyecto-inge2022.mysql.database.azure.com;userid=saprofa;password=ProyectoInge2022!;database=proyecto_bd");
             }
         }
 
@@ -132,8 +137,6 @@ namespace API
 
                 entity.ToTable("datos_sorteo");
 
-                entity.HasIndex(e => e.IdUsuario, "id_usuario");
-
                 entity.HasIndex(e => e.PlanPremios, "plan_premios");
 
                 entity.HasIndex(e => e.TipoLoteria, "tipo_loteria");
@@ -177,6 +180,43 @@ namespace API
                     .WithMany(p => p.DatosSorteos)
                     .HasForeignKey(d => d.TipoLoteria)
                     .HasConstraintName("datos_sorteo_ibfk_2");
+            });
+
+            modelBuilder.Entity<Datosfomulario>(entity =>
+            {
+                entity.ToTable("datosfomulario");
+
+                entity.Property(e => e.Id)
+                    .HasMaxLength(30)
+                    .HasColumnName("id");
+
+                entity.Property(e => e.CompraExcedentes).HasColumnName("compra_excedentes");
+
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(200)
+                    .HasColumnName("descripcion");
+
+                entity.Property(e => e.FechaRealización).HasColumnName("Fecha_realización");
+
+                entity.Property(e => e.FraccionEntero)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("Fraccion_entero");
+
+                entity.Property(e => e.MontoUnitario).HasColumnName("Monto_unitario");
+
+                entity.Property(e => e.NomFiscalizador)
+                    .HasMaxLength(50)
+                    .HasColumnName("nom_fiscalizador");
+
+                entity.Property(e => e.NumeroMarchamo)
+                    .HasMaxLength(45)
+                    .HasColumnName("numeroMarchamo");
+
+                entity.Property(e => e.NumeroPremio)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("Numero_premio");
+
+                entity.Property(e => e.Ventas).HasColumnName("ventas");
             });
 
             modelBuilder.Entity<ListaChequeoDetalle>(entity =>
@@ -240,44 +280,61 @@ namespace API
 
             modelBuilder.Entity<Marchamo>(entity =>
             {
-                entity.HasKey(e => e.IdMarchamo)
-                    .HasName("PRIMARY");
-
                 entity.ToTable("marchamos");
 
-                entity.HasIndex(e => e.IdDatosSorteo, "FK_IdDatosSorteo_idx");
+                entity.HasIndex(e => e.IdSorteo, "id_Sorteo_fk_idx");
 
-                entity.Property(e => e.IdMarchamo)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("id_Marchamo");
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(15)")
+                    .HasColumnName("id");
 
-                entity.Property(e => e.IdDatosSorteo)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("id_Datos_Sorteo");
+                entity.Property(e => e.IdSorteo)
+                    .HasColumnType("int(15)")
+                    .HasColumnName("idSorteo");
 
                 entity.Property(e => e.NumeroMarchamo)
-                    .IsRequired()
                     .HasMaxLength(45)
-                    .HasColumnName("Numero_Marchamo");
-
-                entity.Property(e => e.Observacion).HasMaxLength(200);
+                    .HasColumnName("numeroMarchamo");
 
                 entity.Property(e => e.Tipo)
-                    .IsRequired()
-                    .HasMaxLength(45);
+                    .HasMaxLength(45)
+                    .HasColumnName("tipo");
 
                 entity.Property(e => e.TipoMarchamo)
+                    .HasMaxLength(45)
+                    .HasColumnName("tipoMarchamo");
+
+                entity.Property(e => e.Valija)
+                    .HasMaxLength(45)
+                    .HasColumnName("valija");
+
+                entity.HasOne(d => d.IdSorteoNavigation)
+                    .WithMany(p => p.Marchamos)
+                    .HasForeignKey(d => d.IdSorteo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("id_Sortedo_Fk");
+            });
+
+            modelBuilder.Entity<Parametro>(entity =>
+            {
+                entity.HasKey(e => e.IdParametro)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("parametros");
+
+                entity.Property(e => e.IdParametro)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("Id_Parametro");
+
+                entity.Property(e => e.CodigoParametro)
                     .IsRequired()
                     .HasMaxLength(45)
-                    .HasColumnName("Tipo_Marchamo");
+                    .HasColumnName("Codigo_Parametro");
 
-                entity.Property(e => e.Valija).HasMaxLength(45);
-
-                entity.HasOne(d => d.IdDatosSorteoNavigation)
-                    .WithMany(p => p.Marchamos)
-                    .HasForeignKey(d => d.IdDatosSorteo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_IdDatosSorteo");
+                entity.Property(e => e.ParametroValor)
+                    .IsRequired()
+                    .HasMaxLength(45)
+                    .HasColumnName("Parametro_Valor");
             });
 
             modelBuilder.Entity<PlanPremio>(entity =>
@@ -331,11 +388,16 @@ namespace API
 
             modelBuilder.Entity<Prueba>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.IdPrueba)
+                    .HasName("PRIMARY");
 
                 entity.ToTable("pruebas");
 
                 entity.HasIndex(e => e.IdDatoSorteo, "id_dato_sorteo");
+
+                entity.Property(e => e.IdPrueba)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_prueba");
 
                 entity.Property(e => e.Bolita)
                     .HasMaxLength(1)
@@ -350,8 +412,12 @@ namespace API
                     .HasMaxLength(3)
                     .HasColumnName("numero");
 
+                entity.Property(e => e.Valija)
+                    .HasMaxLength(5)
+                    .HasColumnName("valija");
+
                 entity.HasOne(d => d.IdDatoSorteoNavigation)
-                    .WithMany()
+                    .WithMany(p => p.Pruebas)
                     .HasForeignKey(d => d.IdDatoSorteo)
                     .HasConstraintName("pruebas_ibfk_1");
             });
@@ -403,23 +469,11 @@ namespace API
                 entity.Property(e => e.Ventas).HasColumnName("ventas");
             });
 
-            modelBuilder.Entity<Representate>(entity =>
+            modelBuilder.Entity<Representante>(entity =>
             {
-                entity.HasNoKey();
+                entity.ToTable("representantes");
 
-                entity.ToTable("representates");
-
-                entity.HasIndex(e => e.IdDatosPrevios, "id_Datos_Previos_idx");
-
-                entity.Property(e => e.GOperaciones)
-                    .HasMaxLength(45)
-                    .HasColumnName("G_Operaciones");
-
-                entity.Property(e => e.GProduccion)
-                    .HasMaxLength(45)
-                    .HasColumnName("G_Produccion");
-
-                entity.Property(e => e.Gerencia).HasMaxLength(45);
+                entity.HasIndex(e => e.IdDatosPrevios, "id_Datos_Previos_fk_idx");
 
                 entity.Property(e => e.Id)
                     .HasColumnType("int(11)")
@@ -427,14 +481,20 @@ namespace API
 
                 entity.Property(e => e.IdDatosPrevios)
                     .HasColumnType("int(11)")
-                    .HasColumnName("id_Datos_Previos");
+                    .HasColumnName("idDatosPrevios");
 
-                entity.Property(e => e.Juez).HasMaxLength(45);
+                entity.Property(e => e.Juez)
+                    .HasMaxLength(45)
+                    .HasColumnName("juez");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(45)
+                    .HasColumnName("nombre");
 
                 entity.HasOne(d => d.IdDatosPreviosNavigation)
-                    .WithMany()
+                    .WithMany(p => p.Representantes)
                     .HasForeignKey(d => d.IdDatosPrevios)
-                    .HasConstraintName("id_Datos_Previos");
+                    .HasConstraintName("id_Datos_Previos_fk");
             });
 
             modelBuilder.Entity<Resultado>(entity =>
@@ -569,6 +629,10 @@ namespace API
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(100)
                     .HasColumnName("nombre");
+
+                entity.Property(e => e.Usuario1)
+                    .HasMaxLength(45)
+                    .HasColumnName("usuario");
             });
 
             OnModelCreatingPartial(modelBuilder);

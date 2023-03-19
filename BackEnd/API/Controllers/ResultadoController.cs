@@ -49,4 +49,13 @@ public class ResultadoController : ControllerBase
         ResultadoUpdate.IdResultado = resultado.IdResultado;
         context.SaveChanges();
     }
+
+    [HttpDelete("{id}")]
+    public void Delete(int id)
+    {
+        var context = new proyecto_bdContext();
+        var resultado = context.Resultados.FirstOrDefault(x => x.IdResultado == id);
+        context.Resultados.Remove(resultado);
+        context.SaveChanges();
+    }
 }

@@ -30,6 +30,7 @@ public class DatosPreviosAController : ControllerBase
         var datosPreviosAdministracion = context.DatosPreviosAdministracions.FirstOrDefault(x => x.Id == id);
         return datosPreviosAdministracion;
     }
+    
 
     [HttpPost]
     public ActionResult Post([FromBody] DatosPreviosAdministracion DatosPreviosAdministracion)
@@ -48,6 +49,15 @@ public class DatosPreviosAController : ControllerBase
         var context = new proyecto_bdContext();
         var DatosPreviosAdministracionUpdate = context.DatosPreviosAdministracions.FirstOrDefault(x => x.Id == datosPreviosAdministracion.Id);
         DatosPreviosAdministracionUpdate.Id = datosPreviosAdministracion.Id;
+        context.SaveChanges();
+    }
+
+    [HttpDelete("{id}")]
+    public void Delete(int id)
+    {
+        var context = new proyecto_bdContext();
+        var datosPreviosAdministracion = context.DatosPreviosAdministracions.FirstOrDefault(x => x.Id == id);
+        context.DatosPreviosAdministracions.Remove(datosPreviosAdministracion);
         context.SaveChanges();
     }
 }
