@@ -16,8 +16,7 @@ import Pruebas3MonazosPage from './pages/Pruebas/Pruebas3MonazosPage';
 import PruebasNTPage from './pages/Pruebas/PruebasNTPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import PlanPremiosPage from './pages/PlanPremios/PlanPremiosPage';
-import CierreApuestas from './pages/CierreApuestas/CierreApuestas';
-import VerificaMontosAcumulados from './pages/VerificaMontosAcumulados/VerificaMontosAcumulados';
+
 
 function App() {
   return (
@@ -40,16 +39,7 @@ function App() {
           <Route exact path="/Pruebas3Monazos" element={<Pruebas3MonazosPage />} /> 
           <Route exact path="/PruebasNuevosTiempos" element={<PruebasNTPage />} /> 
           <Route exact path="/PlanPremios" element={<PlanPremiosPage />} />
-
-
-
-
-
-
-
-
-          <Route exact path="/CierreApuestas" element={<CierreApuestas />} />
-          <Route exact path="/VerificaMontosAcumulados" element={<VerificaMontosAcumulados />} />
+          
 
         </Routes>
       </div>
