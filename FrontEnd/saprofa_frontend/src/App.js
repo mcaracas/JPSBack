@@ -20,6 +20,8 @@ import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import ConfirmationCodeModal from './components/pure/forms/ConfirmationCodeModal';
 import LoteriaFisicapage from './pages/Resultados/LoteriaFisicapage';
 import ConclusionesRecomendacionesPage from './pages/ConclusionesRecomendaciones/ConclusionesRecomendacionesPage';
+import CierreApuestas from './pages/CierreApuestas/CierreApuestas';
+import VerificaMontosAcumulados from './pages/VerificaMontosAcumulados/VerificaMontosAcumulados';
 
 function App() {
   return (
@@ -46,6 +48,8 @@ function App() {
           <Route exact path="/ConfirmationCodeModal" element={<ConfirmationCodeModal />} />
           <Route exact path="/ResultadosLoteriaFisica" element={<LoteriaFisicapage/>} />
           <Route exact path="/ConclusionesRecomendaciones" element={<ConclusionesRecomendacionesPage/>} />
+          <Route exact path="/CierreApuestas" element={<CierreApuestas />} />
+          <Route exact path="/VerificaMontosAcumulados" element={<VerificaMontosAcumulados />} />
         </Routes>
       </div>
     </Router>
