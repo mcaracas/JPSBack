@@ -30,7 +30,17 @@ body{
     text-transform: capitalize;
     background-color: #C8283B;
     border: none;
+    &:hover {
+        background-color: #ab1425;  
+      }
+    &:disabled	{
+        background-color: #C8283B;
+        opacity: 0.5;
+        color: white;
+    }
 }
+
+
 
 .lbl{   //For the labels 'Usuario' and 'Contraseña'
     font-size: 16px;

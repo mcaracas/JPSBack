@@ -35,9 +35,7 @@ const LotteryCard = ({ lottery }) => {
     //If clicks on a lottery, redirect to correspondent page
     const click = async (tipo) => {
         // alert(`clicked ${tipo}`)
-        const datosFormulario = await getDatosFormularios(`${tipoLoteria}${numSorteo}`);
         sessionStorage.setItem('lottery', JSON.stringify(lottery));
-        sessionStorage.setItem('datosFormulario', JSON.stringify(datosFormulario.data));
         navigate(getNavigation(tipo));
     }
 
