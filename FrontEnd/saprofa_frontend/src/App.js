@@ -40,6 +40,14 @@ function App() {
           <Route exact path="/Pruebas3Monazos" element={<Pruebas3MonazosPage />} /> 
           <Route exact path="/PruebasNuevosTiempos" element={<PruebasNTPage />} /> 
           <Route exact path="/PlanPremios" element={<PlanPremiosPage />} />
+
+
+
+
+
+
+
+
           <Route exact path="/CierreApuestas" element={<CierreApuestas />} />
           <Route exact path="/VerificaMontosAcumulados" element={<VerificaMontosAcumulados />} />
 
