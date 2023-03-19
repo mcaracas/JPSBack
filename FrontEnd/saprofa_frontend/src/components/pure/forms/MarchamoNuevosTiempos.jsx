@@ -92,7 +92,6 @@ const buildMarchamoList = (values) => {
 const MarchamoNuevosTiempos = (id) => {
     return (
         <div className='container'>
-            <h1>Marchamos Nuevos Tiempos y Reventados</h1>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}

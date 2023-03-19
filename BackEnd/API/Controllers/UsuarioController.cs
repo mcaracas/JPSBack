@@ -16,34 +16,38 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpGet]
-        public IEnumerable<Usuario> Get()
+    public IEnumerable<Usuario> Get()
     {
         var context = new proyecto_bdContext();
         var Usuarios = context.Usuarios.ToList();
         return Usuarios;
     }
 
-    [HttpGet("{id}")]
-    public Usuario Get(int id)
-    {
-        var context = new proyecto_bdContext();
-        var usuario = context.Usuarios.FirstOrDefault(x => x.Id == id);
-        return usuario;
-    }
+    /*
+        [HttpGet("{id}")]
+        public Usuario Get(int id)
+        {
+            var context = new proyecto_bdContext();
+            var usuario = context.Usuarios.FirstOrDefault(x => x.Id == id);
+            return usuario;
+        }
+    */
 
     [HttpPost, Route("[action]", Name = "Register")]
     public ActionResult Register([FromBody] Usuario Usuario)
     {
         var context = new proyecto_bdContext();
         Usuario.Clave = Utilidades.Utilidades.Encrypt(Usuario.Clave);
-        if (Usuario != null){
-        Usuario.DatosSorteos = null;
-        context.Usuarios.Add(Usuario);
-        context.SaveChanges();
-        return Ok(); 
+        if (Usuario != null)
+        {
+            Usuario.DatosSorteos = null;
+            context.Usuarios.Add(Usuario);
+            context.SaveChanges();
+            return Ok();
         }
-        else{
-        return BadRequest();
+        else
+        {
+            return BadRequest();
         }
     }
 
@@ -52,7 +56,7 @@ public class UsuarioController : ControllerBase
     {
         var context = new proyecto_bdContext();
         var claveEncriptada = Utilidades.Utilidades.Encrypt(Usuario.Clave);
-        var usuario = context.Usuarios.FirstOrDefault(x => x.Usuario1 == Usuario.Usuario1  && x.Clave == claveEncriptada);
+        var usuario = context.Usuarios.FirstOrDefault(x => x.Usuario1 == Usuario.Usuario1 && x.Clave == claveEncriptada);
         if (usuario != null)
         {
             return Ok(usuario);
@@ -63,9 +67,46 @@ public class UsuarioController : ControllerBase
         }
     }
 
+    [HttpGet("{username}")]
+    public string GetMail(string username)
+    {
+        var context = new proyecto_bdContext();
+        var usuario = context.Usuarios.FirstOrDefault(x => x.Usuario1 == username);
 
-    [HttpPut("{id}")]
-        [HttpPut]
+        if (usuario == null)
+        {
+            return "No se encontró el usuario";
+        }
+        else
+        {
+            ConfirmEmail generateMail = new ConfirmEmail();
+            var code = "L0-" + Guid.NewGuid().ToString();
+            generateMail.Page_Load("cabezasvizcaino@gmail.com", code, "Su código de recuperación es:");
+            return code;
+        }
+    }
+
+    [HttpPut("{username}")]
+    public IActionResult UpdatePassword(string username)
+    {
+        var context = new proyecto_bdContext();
+        var usuarioUpdate = context.Usuarios.FirstOrDefault(x => x.Usuario1 == username);
+        if (usuarioUpdate == null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            ConfirmEmail generateMail = new ConfirmEmail();
+            var code = "L0-" + Guid.NewGuid().ToString();
+            generateMail.Page_Load("cabezasvizcaino@gmail.com", code, "Su contraseña es:");
+            usuarioUpdate.Clave = Utilidades.Utilidades.Encrypt(code.ToString());
+            context.SaveChanges();
+        }
+        return NoContent();
+    }
+
+    [HttpPut]
     public void UpdateUsuario(Usuario usuario)
     {
         var context = new proyecto_bdContext();

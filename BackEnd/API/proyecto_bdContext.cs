@@ -37,6 +37,7 @@ namespace API
         public virtual DbSet<ResultadosBitacora> ResultadosBitacoras { get; set; }
         public virtual DbSet<TipoLoterium> TipoLoteria { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
+        public virtual DbSet<ActaDeFiscalizacion> ActaDeFiscalizacions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -633,6 +634,49 @@ namespace API
                 entity.Property(e => e.Usuario1)
                     .HasMaxLength(45)
                     .HasColumnName("usuario");
+            });
+
+            modelBuilder.Entity<ActaDeFiscalizacion>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .HasName("PRIMARY");
+                
+                entity.ToTable("acta_de_fiscalizacion");
+
+                entity.HasIndex(e => e.IdDatoSorteo, "id_dato_sorteo");
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id");
+
+                entity.Property(e => e.ConclusionesDetalle)
+                    .HasMaxLength(500)
+                    .HasColumnName("conclusiones_detalle");
+
+                entity.Property(e => e.IdDatoSorteo)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_dato_sorteo");
+
+                entity.Property(e => e.OtrasConclusiones)
+                    .HasMaxLength(85)
+                    .HasColumnName("otras_conclusiones");
+
+                entity.Property(e => e.Protocolo)
+                    .HasMaxLength(15)
+                    .HasColumnName("protocolo");
+
+                entity.Property(e => e.Recomendacion)
+                    .HasMaxLength(15)
+                    .HasColumnName("recomendacion");
+
+                entity.Property(e => e.RecomendacionDetalle)
+                    .HasMaxLength(500)
+                    .HasColumnName("recomendacion_detalle");
+                
+                entity.HasOne(d => d.IdDatoSorteoNavigation)
+                    .WithMany(p => p.ActaDeFiscalizacions)
+                    .HasForeignKey(d => d.IdDatoSorteo)
+                    .HasConstraintName("acta_ibfk_1");
             });
 
             OnModelCreatingPartial(modelBuilder);

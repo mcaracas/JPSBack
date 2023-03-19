@@ -75,7 +75,7 @@ const RegisterForm = () => {
                                 <label className='lbl' htmlFor="username">Cédula</label>
                                 <br></br>
                                 <div className='d-flex'>
-                                    {item && <p className='mt-2' style={{'font-weight':'bold'}}>{item.parametroValor} </p>}
+                                    {item && <p className='mt-2' style={{'fontWeight':'bold'}}>{item.parametroValor} </p>}
                                     <div className='col'>
                                         <Field name="username" type="string" id="username"
                                             placeholder="Digite el número de cédula o residencia"
