@@ -27,6 +27,9 @@ import DatosParticipantesPage from './pages/DatosParticipantes/DatosParticipante
 import TomoFolioPage from './pages/TomoFolio/TomoFolioPage';
 import SeriesEnJuegoPage from './pages/seriesEnJuego/seriesEnJuegoPage';
 import EscrutinioPage from './pages/Escrutinio/EscrutinioPage';
+import Test from './components/pure/forms/Test';
+import Test2 from './components/pure/forms/Test2';
+
 function App() {
   return (
     <Router>
@@ -44,7 +47,7 @@ function App() {
           <Route exact path="/NombreFiscalizadores" element={<NombreFiscalizadores />} /> {/* Name of the inspectors page */}
           <Route exact path="/Valija3Monazos" element={<Valija3Monazos />} /> {/* Name of the inspectors page */}
           <Route exact path="/ValijaNuevosTiempos" element={<ValijaNuevosTiempos />} /> {/* Name of the inspectors page */}
-          <Route exact path="/PruebasLotto" element={<PruebasLottoPage />} /> 
+          <Route exact path="/PruebasLotto" element={<PruebasLottoPage />} />   
           <Route exact path="/Pruebas3Monazos" element={<Pruebas3MonazosPage />} /> 
           <Route exact path="/PruebasNuevosTiempos" element={<PruebasNTPage />} /> 
           <Route exact path="/PlanPremios" element={<PlanPremiosPage />} />
@@ -59,6 +62,8 @@ function App() {
           <Route exact path="/TomoFolio" element={<TomoFolioPage/>} />
           <Route exact path="/SeriesEnJuego" element={<SeriesEnJuegoPage/>} />
           <Route exact path="/Escrutinio" element={<EscrutinioPage/>} />
+          <Route exact path="/Test" element={<Test/>}/>
+          <Route exact path="/Test" element={<Test2/>}/>
         </Routes>
       </div>
     </Router>

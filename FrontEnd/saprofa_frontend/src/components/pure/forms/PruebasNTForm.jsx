@@ -1,227 +1,260 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import '../../../styles/pruebas/pruebasForms.sass'
-import InputPrueba from '../pruebas/InputPrueba';
-import { insertPrueba, insertListaPrueba } from '../../../services/axiosService';
+import React, { useState } from "react";
+import { Formik, FieldArray, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { insertListaPrueba } from '../../../services/axiosService';
+import SuccessModal from "../../modals/SuccessModal";
 
-const PruebasNTForm = ({IdDatoSorteo}) => {
-      /**
-     * Initialize an array with 6 fields, each field with an object with a bolita property
-     * indicating its index
-     * @var {bolita: object} its property bolita is the index of the field
-     * @returns {Array} Array with 6 fields, each field containing an object with a bolita property
-     * initialized empty
-     */
-       const initializeInputFields = () => {
-        let numBolita = 'bolita';
-        let inputFields = [{}];
-        for(let i = 0; i < 5; i++){
-            numBolita = `bolita${i}`;
-            inputFields[i] = {
-                [numBolita] : ''
-            }
-        }
-        return inputFields;
-    }
+// TODO: Esto se debe recibir desde el Backend para ser dinámico
+const CANT_BOLITAS = 2;
+const lottery = JSON.parse(sessionStorage.getItem('lottery'));
+const numSorteo = lottery?.numSorteo;
+const tipoLoteria = lottery?.tipoLoteria;
+const idSorteo = `${tipoLoteria}${numSorteo}`;
+const idDatoSorteo = lottery?.idInterno;
 
-    /**
-     * Hook useState on inputFields
-     */
-    const [inputFields, setInputFields] = useState(initializeInputFields());
+const validationSchema = Yup.object().shape({
+  pruebas: Yup.array().of(
+    Yup.object().shape({
+      valija: Yup.string().required("Valija es requerida"),
+      resultados: Yup.array().of(
+        Yup.object().shape({
+          numero: Yup.string(),
+          tipoBolita: Yup.string(),
+        }))
+    })
+  ).min(1, 'Debes agregar al menos una prueba').default(() => [{}])
+});
 
-    /**
-     * Function to write in the input fields
-     * @param {int} index 
-     * @param {event} event 
-     */
-     const handleFormChange = (index, event) => {
-        let data = [...inputFields];
-        //sets the value of the input field to uppercase
-        data[index][event.target.name] = event.target.value.toUpperCase();
-        setInputFields(data);
-    }
+const createResultados = cant => {
+  const resultados = [];
+  for (let i = 0; i < cant; i++) {
+    resultados.push({
+      numero: '',
+      tipoBolita: 'B',
+    });
+  }
+  return resultados;
+};
 
-    /**
-     * Adds a new input field to the form
-     * bolita is the number shown in the test 
-     * and the value to put in the input
-     */
-    const addFields = () => {
-        let numBolita = `bolita${inputFields.length}`;
-        let newField = {[numBolita]:''};
-        setInputFields([...inputFields, newField]);
-    }
-
-    /**
-     * Removes an input field from the form with the given index
-     * @param {int} index 
-     */
-    const removeFields = (index) => {
-        let data = [...inputFields];
-        data.splice(index,1 );
-        setInputFields(data);
-    }
-
-    /**
-     * The tests have to be in group of five
-     * @param {int} numberOfFields 
-     * @returns {int} the number of fields left over from forming groups of five
-     */
-     function checkNumberOfTests(numberOfFields) {
-        let difference = numberOfFields.length%5;
-        if (numberOfFields.length % 5 !== 0) {
-            return difference;
-        }
-        return 0;
-    }
-
-    /**
-     * The list of tests is sent to the backend
-     * @returns {Array} an array of objects with the id of the lottery and the number of the bolita of the test     
-     */
-    const testListSubmit = (values) => {
-        const list = [];
-
-        const idDatoSorteo = IdDatoSorteo;
-        let numBolita = '';
-        for (let i = 0; i < inputFields.length; i++){
-            numBolita = `bolita${i}`;
-            list.push({
-                valija : values.valija,
-                idDatoSorteo: idDatoSorteo,
-                numero: inputFields[i][numBolita],
-            });
-        }
-        return list;
-    }
-
-
-    return (
-        <div className='container'>
-            <Formik
-                initialValues={{valija:''}}
-                validate = { values => {
-                    let errors = {};
-                    let numBolita;
-                    let numberOfFields = checkNumberOfTests(inputFields);
-                    if(numberOfFields !== 0){
-                        alert(`Las pruebas deben ir en grupos de 5. Elimine ${numberOfFields} pruebas o agregue ${5-numberOfFields} pruebas`);
-                    }
-                    values.valija = values.valija.toUpperCase();
-                    if(!values.valija){
-                        errors.valija = 'Valija requerida';	
-                    } else if( values.valija !== 'A' && values.valija !== 'B' && values.valija !== 'C'){
-                        errors.valija = 'Valija debe ser A, B o C';
-                    }
-
-                    for(let i = 0; i < inputFields.length; i++){
-                        numBolita = `bolita${i}`;
-                        // sets the value of the input field to values object
-                        values[numBolita] = inputFields[i][numBolita];
-                        if(!inputFields[i][numBolita]){
-                           errors = {
-                                 ...errors,
-                                [numBolita]: 'Campo requerido',
-                           }
-                        }
-                        else if(inputFields[i][numBolita] > 99 || inputFields[i][numBolita] < 0){
-                            errors = {
-                                ...errors,
-                                [numBolita]: 'Debe ser un número entre 00 y 99',
-                            }
-                        } else if (isNaN(inputFields[i][numBolita]) && inputFields[i][numBolita] !== 'N/A') {
-                            errors = {
-                                ...errors,
-                                [numBolita]: 'Debe ser un número o N/A',
-                            }
-                        }
-                    }
-                    return errors;
-                }}
-                onSubmit={
-                    async (values)=>{
-                        console.log(values);
-                        let sent = true;
-                        const listToSubmit = testListSubmit(values);
-                        
-                        insertListaPrueba(listToSubmit)
-                            .then((response) => { 
-                                if(response.status === 200){
-                                    // alert('Prueba guardada con éxito');
-                                }else{
-                                    sent = false;
-                                    throw new Error('Prueba no insertada');
-                                }
-                            }).catch((error) => { 
-                                sent = false;
-                                alert(`Algo salió mal: ${error}`);
-                            }).finally(() => {
-                                if(sent){
-                                    alert('Pruebas guardadas con éxito');
-                                }
-                            })
-                    }
-                }
-                >
-                {({ errors, }) => (
-                        <div className='container-fluid'>
-                            <Form>
-                                <div className='row'>
-                                    <table className='table table-bordered align-middle mt-5 col'>
-                                        <thead>
-                                            <tr>
-                                                <th colSpan={11}>Pruebas realizadas antes del sorteo<br/> Números favorecidos</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th>
-                                                    <label htmlFor='valija'>Valija</label>
-                                                    <Field id='valija' name='valija' type='text' className='form-control'/>
-                                                    <ErrorMessage name='valija' component={() => {
-                                                        return <div className='error'>{errors.valija}</div>
-                                                    }}/>
-                                                </th>
-                                                {
-                                                    inputFields.map((input, index) => {
-                                                        let numBolita = `bolita${index}`;
-                                                        return(
-                                                            <InputPrueba
-                                                                key={index}
-                                                                index = { index } 
-                                                                input = {input}
-                                                                handleFormChange = { handleFormChange }
-                                                                removeFields = { removeFields }
-                                                                name = {numBolita}
-                                                                errorMsg = {errors[numBolita]}
-                                                            >
-                                                            </InputPrueba>
-                                                        )
-                                                    })
-                                                }
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <div className='button-field col-1 mt-5 '>
-                                        <button 
-                                            type='button' 
-                                            className='btn btn-success'
-                                            onClick={addFields}
-                                        >
-                                            Agregar Prueba
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className='button-field'>
-                                    <button type="submit" className='btn'>Registrar Pruebas</button>                                    
-                                </div>
-                            </Form>
-                        </div>
-                    )}
-            </Formik>
-        </div>
-    );
+function validateNumber(value) {
+  let error;
+  if (!value) {
+    error = 'Número requerido';
+  } else if (!/^[0-9]$/.test(value)) {
+    error = 'Debe ser un número entre 0 y 9';
+  }
+  return error;
 }
+
+const pruebaInicial = {
+  valija: "A",
+  resultados: createResultados(CANT_BOLITAS),
+};
+
+const initialValues = {
+  pruebas: [pruebaInicial],
+};
+
+const bolitaOptions = [
+  { value: 'B', label: 'B' },
+  { value: 'R', label: 'R' },
+];
+
+const valijaOptions = [
+  { value: 'A', label: 'A' },
+  { value: 'B', label: 'B' },
+  { value: 'C', label: 'C' },
+];
+
+const PruebasNTForm = () => {
+
+  const [valija, setValija] = useState("A");
+  const [pruebas, setPruebas] = useState(initialValues.pruebas);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [datosEnviados, setDatosEnviados] = useState(false);
+  const [titulo, setTitulo] = useState('');
+  const [mensaje, setMensaje] = useState('');
+  function handleCloseSuccessModal() {
+    setShowSuccessModal(false);
+  }
+
+  const insertaPrueba = (formik) => {
+    const newPrueba = {
+      valija: valija,
+      resultados: createResultados(CANT_BOLITAS),
+    };
+    const newPruebas = structuredClone(pruebas);
+    newPruebas.push(newPrueba);
+    setPruebas(newPruebas);
+  };
+
+  const eliminarPrueba = (idx) => {
+    const newPruebas = structuredClone(pruebas);
+    newPruebas.splice(idx, 1);
+    setPruebas(newPruebas);
+  };
+
+  const handleSelectChange = (event) => {
+    const selectedValija = event.target.value;
+    if (selectedValija !== undefined) {
+      setValija(selectedValija);
+    }
+  };
+
+  const handleTipoBolitaChange = (event, idxPrueba, idxResultado) => {
+    const selectedTipoBolita = event.target.value;
+    if (selectedTipoBolita) {
+      const newPruebas = JSON.parse(JSON.stringify(pruebas));
+      newPruebas[idxPrueba].resultados[idxResultado].tipoBolita = selectedTipoBolita;
+      setPruebas(newPruebas);
+    }
+  };
+
+  const handlePruebaChange = (value, idxPrueba, idxResultado) => {
+    const newPruebas = JSON.parse(JSON.stringify(pruebas));
+    newPruebas[idxPrueba].resultados[idxResultado].numero = value;
+    setPruebas(newPruebas);
+  };
+
+  const formatListaPruebas = pruebas => {
+    const list = pruebas.flatMap(prueba => {
+      return prueba.resultados.map(resultado => {
+        return {
+          valija,
+          idDatoSorteo,
+          numero: resultado.numero,
+          bolita: resultado.tipoBolita,
+        };
+      });
+    });
+    console.log(list);
+    return list;
+  }
+  let a;
+  return (
+    <>
+      <div className="container">
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={
+            async (values) => {
+              try {
+                const listaSubmit = formatListaPruebas(pruebas);
+                const response = await insertListaPrueba(listaSubmit);
+                console.log("toSubmit: ", listaSubmit);
+                if (response.status === 200) {
+                  setMensaje("Pruebas guardadas exitosamente");
+                  setTitulo("¡Operación Exitosa!");
+                  setDatosEnviados(true);
+                  setShowSuccessModal(true);
+                } else {
+                  console.log('error');
+                }
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          }>
+          {(formik, isSubmitting, isValidating, touched) => (
+            <div className='container-fluid'>
+              <Form onSubmit={formik.handleSubmit}>
+                <div className='row'>
+                  <table className='table table-bordered align-middle mt-5'>
+                    <thead>
+                      <tr>
+                        <th colSpan={2}><h3>Pruebas realizadas antes del sorteo<br /> Números favorecidos</h3></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th className='col-2'>
+                          <label htmlFor="valija">Valija</label>
+                          <select
+                            className='form-control mx-auto'
+                            id='valija'
+                            name='valija'
+                            value={valija}
+                            onChange={handleSelectChange}
+                          >
+                            {valijaOptions.map(option => (
+                              <option key={option.value} value={option.value}>{option.label}</option>
+                            ))}
+                          </select>
+                        </th>
+                        <FieldArray
+                          name="pruebas"
+                          render={(arrayHelpers) => (
+                            <td>
+                              {pruebas.length > 0 &&
+                                pruebas.map((prueba, idxPrueba) => (
+                                  <div key={idxPrueba} className="row justify-content-center mb-5">
+                                    <h5>Prueba {idxPrueba + 1}</h5>
+                                    <div className="row">
+                                      {prueba.resultados.map((resultado, idxResultado) => (
+                                        <div key={idxResultado} className="col">
+                                          <label htmlFor="tipoBolita">Bolita</label>
+                                          <select
+                                            className='form-control mx-auto'
+                                            id='tipoBolita'
+                                            name='tipoBolita'
+                                            value={resultado.tipoBolita}
+                                            onChange={(event) => handleTipoBolitaChange(event, idxPrueba, idxResultado)}
+                                          >
+                                            {bolitaOptions.map(option => (
+                                              <option key={option.value} value={option.value}>{option.label}</option>
+                                            ))}
+                                          </select>
+                                          <label htmlFor="resultado">Resultado</label>
+                                          <Field
+                                            name={`pruebas[${idxPrueba}].resultados[${idxResultado}]`}
+                                            value={resultado.numero}
+                                            className='form-control mx-auto'
+                                            validate={() => validateNumber(resultado.numero)}
+                                            onChange={(event) => handlePruebaChange(event.currentTarget.value, idxPrueba, idxResultado)}
+                                          />
+                                          {formik.errors && formik.touched?.pruebas?.[idxPrueba]?.resultados?.[idxResultado] &&
+                                            <div className='error'>{formik.errors?.pruebas?.[idxPrueba]?.resultados?.[idxResultado]}</div>
+                                          }
+                                        </div>
+                                      ))}
+                                      <i
+                                        className='bi bi-x-square-fill col-1 closeX'
+                                        onClick={() => eliminarPrueba(idxPrueba)}
+                                      />
+                                    </div>
+                                  </div>
+                                ))}
+                              <button
+                                type="button"
+                                className=" row btn btn-success mb-5"
+                                onClick={() => insertaPrueba(formik)}
+                              >
+                                Agregar Prueba
+                              </button>
+                            </td>
+                          )}
+                        />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className='button-field'>
+                  <button type="submit" className='btn mt-5' disabled={isSubmitting || isValidating || datosEnviados}>Registrar Pruebas</button>
+                </div>
+              </Form>
+            </div>
+          )}
+        </Formik>
+      </div>
+      <SuccessModal
+        show={showSuccessModal}
+        handleClose={handleCloseSuccessModal}
+        titulo={titulo}
+        mensaje={mensaje}
+      />
+    </>
+  );
+};
 
 export default PruebasNTForm;
