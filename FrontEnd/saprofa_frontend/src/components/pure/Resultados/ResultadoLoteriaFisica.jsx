@@ -3,11 +3,19 @@ import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
 import PlanPremios from '../PlanPremios';
-import { getPremioFromAdministracion } from '../../../services/axiosService';
+import { getPremioFromAdministracion, insertarPremios } from '../../../services/axiosService';
 
-const ResultadoLoteriaFisica = ({ num_sorteo, tipo_loteria }) => {
+const lottery = JSON.parse(sessionStorage.getItem('lottery'));
+const idPlanPremios = lottery.planPremios;
+const idDatoSorteo = lottery.idInterno;
+console.log('lottery:', lottery);
+console.log('idPlanPremios:', idPlanPremios);
+
+const ResultadoLoteriaFisica = ({ idSorteo }) => {
     const [resultados, setResultados] = useState([]);
     const [resultado, setResultado] = useState({});
+    const [numero, setNumero] = useState('');
+    const [serie, setSerie] = useState('');
     
     const formRef = useRef(null);
 
@@ -31,18 +39,20 @@ const ResultadoLoteriaFisica = ({ num_sorteo, tipo_loteria }) => {
                 formRef.current.setValues(formValues);
             }
 
-            console.log("resultado:", resultado);
+            // console.log("resultado:", resultado);
             // {
-            //     idResultado : int,
-            //     numPremioPlan : int,
-            //     idDatoSorteo : int,
-            //     numFavorecido : string,
-            //     seriePremio : string,
-            //     verificado : bool,
-            //     verificaAcumulado : bool,
-            //     idDatoSorteoNavigation : bool,
-            //     numPremioPlanNavigation : int,
-            // }
+            //     "tipoPremio":"",
+            //     "idResultado":0,
+            //     "numeroResultado":0,
+            //     "numPremioPlan":1,
+            //     "idDatoSorteo":1,
+            //     "numFavorecido":"00",
+            //     "seriePremio":"000",
+            //     "verificado":true,
+            //     "verificaAcumulado":true,
+            //     "idDatoSorteoNavigation": null,
+            //     "numPremioPlanNavigation": null
+            //  }
             
 
         } catch (error) {
@@ -52,11 +62,18 @@ const ResultadoLoteriaFisica = ({ num_sorteo, tipo_loteria }) => {
 
     const agregarResultado = (values) => {
         setResultados([...resultados,{
-            numero: values.numero,
-            serie: values.serie,
-            tipoPremio: '',
+            idResultado : 9,
+            numeroResultado : 1,
+            numPremioPlan : idPlanPremios,
+            idDatoSorteo,
+            numFavorecido : values.numero,
+            seriePremio : values.serie,
+            verificado : true, //TODO: change this to the real data
+            verificaAcumulado : true, //TODO: change this to the real data
+            idDatoSorteoNavigation : null,
+            numPremioPlanNavigation : null,
         }]);
-        console.log('resultados:',resultados);
+        // console.log('resultados:',resultados);
     }
 
     const removeFields = (index) => {
@@ -101,10 +118,33 @@ const ResultadoLoteriaFisica = ({ num_sorteo, tipo_loteria }) => {
             }}
             innerRef = {formRef}
             onSubmit={
-                async (values)=>{ 
-                    console.log('values:',values);
-                    console.log('resultados:',resultados);
+                async (values)=>{
+                    try{
+                        console.log('resultados a enviar:',resultados);
+                        const response = await insertarPremios(resultados);
+                        if(response.status === 200 ){
+                            console.log('response:',response.data);
+                        } else {
+                            console.log('error');
+                        }
+                    }catch(error){
+                        console.log(error);
+                    }
+// {
+// "idDatoSorteo": 1,
+// "idDatoSorteoNavigation": null,
+// "idResultado": 9,
+// "numFavorecido": 12,
+// "numPremioPlan": 1,
+// "numPremioPlanNavigation": null,
+// "numeroResultado": 1,
+// "seriePremio": 225,
+// "verificaAcumulado": 1,
+// "verificado": 1
+// }
                 }
+                
+
             }
                 >
                 {({ errors, handleSubmit, handleBlur }) => (
@@ -127,7 +167,7 @@ const ResultadoLoteriaFisica = ({ num_sorteo, tipo_loteria }) => {
                                                             name='numero' 
                                                             type='text' 
                                                             className='form-control input-form-control' 
-                                                            validate={validateNumber}
+                                                            // validate={validateNumber}
                                                             />
                                                         <ErrorMessage name='numero' component={() => {
                                                             return (
@@ -142,7 +182,7 @@ const ResultadoLoteriaFisica = ({ num_sorteo, tipo_loteria }) => {
                                                             name='serie' 
                                                             type='text' 
                                                             className='form-control input-form-control' 
-                                                            validate={validateSerie}
+                                                            // validate={validateSerie}
                                                             />
                                                         <ErrorMessage name='serie' component={() => {
                                                             return (
@@ -151,7 +191,7 @@ const ResultadoLoteriaFisica = ({ num_sorteo, tipo_loteria }) => {
                                                         }}/>
                                                     </th>
                                                     <td className='col-4'>
-                                                        <PlanPremios/>
+                                                        <PlanPremios idPlanPremios={1}/>
                                                     </td>
                                                 </tr>
                                             </tbody>
