@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import { getDatosFormularios } from '../../services/axiosService';
 
-const LotteryCard = ({ tipoLoteria, numSorteo }) => {
+const LotteryCard = ({ lottery }) => {
 
     const navigate = useNavigate();
 
-    const defaultLottery = {
-        tipoLoteria : 'Loteria Nacional',
-        numSorteo : 4076,
-    };
+    const tipoLoteria = lottery.tipoLoteria;
+    const numSorteo = lottery.numSorteo;
 
     const getImg = (tipoLoteria) => {
         switch (tipoLoteria) {
@@ -34,9 +33,10 @@ const LotteryCard = ({ tipoLoteria, numSorteo }) => {
     }
 
     //If clicks on a lottery, redirect to correspondent page
-    const click = (tipo) => {
+    const click = async (tipo) => {
         // alert(`clicked ${tipo}`)
-        navigate(getNavigation(tipo));
+        sessionStorage.setItem('lottery', JSON.stringify(lottery));
+        navigate("/DatosParticipantesPage");
     }
 
     return (
@@ -51,8 +51,7 @@ const LotteryCard = ({ tipoLoteria, numSorteo }) => {
 
 
 LotteryCard.propTypes = {
-    tipoLoteria : PropTypes.string.isRequired,
-    numSorteo : PropTypes.number.isRequired,
+    lottery : PropTypes.object.isRequired,
 }
 
 export default LotteryCard;

@@ -3,11 +3,10 @@ import LotteryCard from '../pure/LotteryCard';
 
 const LotteryCardList = ({lotteries}) => {
 
-    const lotteryList = lotteries;
-    const [lotteryCards, setLotteryCards] = useState(lotteryList);
+    const [lotteryCards, setLotteryCards] = useState([]);
     useEffect(() => {
-        setLotteryCards(lotteryList);
-        console.log(lotteries)
+        console.log("lotteries:",lotteries);
+        setLotteryCards(lotteries);
     }, []);
 
     return (
@@ -17,8 +16,7 @@ const LotteryCardList = ({lotteries}) => {
                     return(
                             <LotteryCard
                             key={ index }
-                            tipoLoteria = { lotteryCard.tipoLoteria }
-                            numSorteo = { lotteryCard.numSorteo }
+                            lottery = { lotteryCard }
                             className= 'col'
                             ></LotteryCard>
                     )
