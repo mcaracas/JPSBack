@@ -2,6 +2,11 @@ import React from 'react';
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import ResultadoLoteriaFisica from '../../components/pure/Resultados/ResultadoLoteriaFisica';
 
+const lottery = JSON.parse(sessionStorage.getItem('lottery'));
+const numSorteo = lottery.numSorteo;
+const tipoLoteria = lottery.tipoLoteria;
+const idSorteo = `${tipoLoteria}${numSorteo}`;
+
 const LoteriaFisicapage = () => {
     const num_sorteo = sessionStorage.getItem('num_sorteo');
     const tipo_loteria = sessionStorage.getItem('tipo_loteria');
@@ -9,7 +14,7 @@ const LoteriaFisicapage = () => {
     return (
         <div>
             <EncabezadoFranjas title={"Resultados Loteria Fisica"}/>
-            <ResultadoLoteriaFisica num_sorteo='3360' tipo_loteria='LN'/>
+            <ResultadoLoteriaFisica idSorteo={idSorteo}/>
         </div>
     );
 }
