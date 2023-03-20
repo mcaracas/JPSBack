@@ -42,11 +42,12 @@ body{
 
 
 
-.lbl{   //For the labels 'Usuario' and 'Contraseña'
+.lblLogin{   //For the labels 'Usuario' and 'Contraseña'
     font-size: 16px;
     margin-top: 20px;
     font-weight: bolder;
     padding-bottom: 5px;
+    border: none;
 }	
 
 .inp{   //For the input fields

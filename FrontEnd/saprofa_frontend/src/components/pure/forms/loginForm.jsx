@@ -63,7 +63,7 @@ const LoginForm = () => {
                     <Form>
                         <div className="form-group">
                             <div className='username-field'>
-                                <label className='lbl' htmlFor="username">Cédula</label>
+                                <label className='lblLogin' htmlFor="username">Cédula</label>
                                 <br></br>
                                 <Field name="username" type="string" id="username"
                                     placeholder="L0XXXXXXXXX"
@@ -77,7 +77,7 @@ const LoginForm = () => {
                                 )}
                             </div>
                             <div className='password-field'>
-                                <label className='lbl' htmlFor="password">Contraseña</label>
+                                <label className='lblLogin' htmlFor="password">Contraseña</label>
                                 <br></br>
                                 <Field name="password" type="password" id="password"
                                     placeholder="Contraseña"
@@ -103,7 +103,7 @@ const LoginForm = () => {
             <div className='mt-3'>
                 <Link to='/ForgotPasswordPage' className='link'>¿Olvidaste tu contraseña?</Link>
             </div>
-            <div className='mt-3'>
+            <div className='mt-3 mb-5'>
                 <Link to='/Register' className='link'>¿No tienes una cuenta? Registrarse</Link>
             </div>
 

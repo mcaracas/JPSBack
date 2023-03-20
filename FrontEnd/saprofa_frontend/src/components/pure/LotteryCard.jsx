@@ -36,7 +36,7 @@ const LotteryCard = ({ lottery }) => {
     const click = async (tipo) => {
         // alert(`clicked ${tipo}`)
         sessionStorage.setItem('lottery', JSON.stringify(lottery));
-        navigate(getNavigation(tipo));
+        navigate("/DatosParticipantesPage");
     }
 
     return (
