@@ -36,6 +36,7 @@ namespace API
         public virtual DbSet<Resultado> Resultados { get; set; }
         public virtual DbSet<ResultadosBitacora> ResultadosBitacoras { get; set; }
         public virtual DbSet<TipoLoterium> TipoLoteria { get; set; }
+        public virtual DbSet<TomoFolio> TomoFolios { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
         public virtual DbSet<ActaDeFiscalizacion> ActaDeFiscalizacions { get; set; }
 
@@ -640,6 +641,43 @@ namespace API
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(100)
                     .HasColumnName("descripcion");
+            });
+
+            modelBuilder.Entity<TomoFolio>(entity =>
+            {
+                entity.HasKey(e => e.IdTomoFolio)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("tomo_folio");
+
+                entity.HasIndex(e => e.IdDatoSorteo, "id_dato_sorteo");
+
+                entity.Property(e => e.IdTomoFolio)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_tomo_folio");
+
+                entity.Property(e => e.Estado)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .HasColumnName("estado");
+
+                entity.Property(e => e.Folio)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("folio");
+
+                entity.Property(e => e.IdDatoSorteo)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_dato_sorteo");
+
+                entity.Property(e => e.Tomo)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("tomo");
+
+                entity.HasOne(d => d.IdDatoSorteoNavigation)
+                    .WithMany(p => p.TomoFolios)
+                    .HasForeignKey(d => d.IdDatoSorteo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("tomo_folio_ibfk_1");
             });
 
             modelBuilder.Entity<Usuario>(entity =>
