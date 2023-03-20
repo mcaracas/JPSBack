@@ -6,17 +6,32 @@ import PlanPremios from '../PlanPremios';
 import { getPremioFromAdministracion, insertarPremios } from '../../../services/axiosService';
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
+const planPremios = JSON.parse(sessionStorage.getItem('planPremios'));
 const idPlanPremios = lottery.planPremios;
 const idDatoSorteo = lottery.idInterno;
 console.log('lottery:', lottery);
-console.log('idPlanPremios:', idPlanPremios);
+console.log('PlanPremios:', planPremios);
 
 const ResultadoLoteriaFisica = ({ idSorteo }) => {
+    const [tipoPremio, setTipoPremio] = useState('');
+
+    const handleTipoPremio = value => {
+        setTipoPremio(value);
+    };
+
     const [resultados, setResultados] = useState([]);
-    const [resultado, setResultado] = useState({});
-    const [numero, setNumero] = useState('');
-    const [serie, setSerie] = useState('');
-    
+    const [resultado, setResultado] = useState({
+        numeroResultado : 1,
+        numPremioPlan : idPlanPremios,
+        idDatoSorteo,
+        numFavorecido : '',
+        seriePremio : '',
+        verificado : true, //TODO: change this to the real data
+        verificaAcumulado : true, //TODO: change this to the real data
+        idDatoSorteoNavigation : null,
+        numPremioPlanNavigation : null,
+    });
+
     const formRef = useRef(null);
 
     const obtenerResultadoAdminitracion = async (id) => {
@@ -24,22 +39,21 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
             // const premio = await getPremioFromAdministracion(id);
             // setResultado({
             //     numero: premio.numFavorecido,
-            //     serie: premio.seriePremio,
+            //     seriePremio: premio.seriePremio,
             // });
             //TODO: change this to the real data
             setResultado({
-                numero: 12,
-                serie: 225,
+                numFavorecido: 72,
+                seriePremio: 999,
             });
             if (resultado) {
                 const formValues = {
-                    numero: resultado.numero,
-                    serie: resultado.serie,
+                    numFavorecido: resultado.numFavorecido,
+                    seriePremio: resultado.seriePremio,
                 };
+                console.log('formValues:',formValues)
                 formRef.current.setValues(formValues);
             }
-
-            // console.log("resultado:", resultado);
             // {
             //     "tipoPremio":"",
             //     "idResultado":0,
@@ -62,12 +76,11 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
 
     const agregarResultado = (values) => {
         setResultados([...resultados,{
-            idResultado : 9,
             numeroResultado : 1,
             numPremioPlan : idPlanPremios,
             idDatoSorteo,
-            numFavorecido : values.numero,
-            seriePremio : values.serie,
+            numFavorecido : values.numFavorecido.toString(),
+            seriePremio : values.seriePremio.toString(),
             verificado : true, //TODO: change this to the real data
             verificaAcumulado : true, //TODO: change this to the real data
             idDatoSorteoNavigation : null,
@@ -82,46 +95,45 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
         setResultados(data);
     }
 
-    const validateSerie = (serie) => {
-        if(!serie || serie === ''){
+    const validateSerie = (seriePremio) => {
+        if(!seriePremio || seriePremio === ''){
             return 'La serie es requerida';
         }
-        else if(isNaN(serie)){
+        else if(isNaN(seriePremio)){
             return 'La serie debe ser un número';
         }
-        else if(serie.length !== 3){
+        else if(seriePremio.length !== 3){
             return 'La serie debe tener 3 dígitos';
         }
         return '';
     }
     
-    const validateNumber = (numero) => {
-        if(!numero || numero === ''){
+    const validateNumber = (numFavorecido) => {
+        if(!numFavorecido || numFavorecido === ''){
             return 'El número es requerido';
         }
-        else if(isNaN(numero)){
+        else if(isNaN(numFavorecido)){
             return 'El número debe ser un número';
         }
-        else if(numero.length !== 2){
+        else if(numFavorecido.length !== 2){
             return 'El número debe tener 2 dígitos';
         }
         return '';
     }
-    
+
     return (
         <div className='container'>
             <Formik
-            initialValues={{
-                numero: resultado ? resultado.numero : '',
-                serie: resultado ? resultado.serie : '',
-                tipoPremio: '',
-            }}
-            innerRef = {formRef}
+            initialValues={ resultado }
+            innerRef = { formRef }
             onSubmit={
                 async (values)=>{
                     try{
-                        console.log('resultados a enviar:',resultados);
                         const response = await insertarPremios(resultados);
+                        console.log('resultados a enviar:',resultados);
+                        if(resultados.length === 0){
+                            alert('No se han agregado resultados');
+                        }
                         if(response.status === 200 ){
                             console.log('response:',response.data);
                         } else {
@@ -130,24 +142,10 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                     }catch(error){
                         console.log(error);
                     }
-// {
-// "idDatoSorteo": 1,
-// "idDatoSorteoNavigation": null,
-// "idResultado": 9,
-// "numFavorecido": 12,
-// "numPremioPlan": 1,
-// "numPremioPlanNavigation": null,
-// "numeroResultado": 1,
-// "seriePremio": 225,
-// "verificaAcumulado": 1,
-// "verificado": 1
-// }
                 }
-                
-
             }
                 >
-                {({ errors, handleSubmit, handleBlur }) => (
+                {({ errors }) => (
                         <div className='container-fluid'>
                             <Form>
                                 <div className='row'>
@@ -161,37 +159,38 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                                             <tbody>
                                                 <tr>
                                                     <th>
-                                                        <label htmlFor='numero'>Número</label>
+                                                        <label htmlFor='numFavorecido'>Número</label>
                                                         <Field 
-                                                            id='numero' 
-                                                            name='numero' 
+                                                            id='numFavorecido' 
+                                                            name='numFavorecido' 
                                                             type='text' 
                                                             className='form-control input-form-control' 
-                                                            // validate={validateNumber}
+                                                            validate={validateNumber}
                                                             />
-                                                        <ErrorMessage name='numero' component={() => {
+                                                        <ErrorMessage name='numFavorecido' component={() => {
                                                             return (
-                                                                <div className='error'>{errors.numero}</div>
+                                                                <div className='error'>{errors.numFavorecido}</div>
                                                             )
                                                         }}/>
                                                     </th>
                                                     <th>
-                                                        <label htmlFor='serie'>Serie</label>
+                                                        <label htmlFor='seriePremio'>Serie</label>
                                                         <Field 
-                                                            id='serie' 
-                                                            name='serie' 
+                                                            id='seriePremio' 
+                                                            name='seriePremio' 
                                                             type='text' 
                                                             className='form-control input-form-control' 
-                                                            // validate={validateSerie}
+                                                            validate={validateSerie}
                                                             />
-                                                        <ErrorMessage name='serie' component={() => {
+                                                        <ErrorMessage name='seriePremio' component={() => {
                                                             return (
-                                                                <div className='error'>{errors.serie}</div>
+                                                                <div className='error'>{errors.seriePremio}</div>
                                                             )
                                                         }}/>
                                                     </th>
                                                     <td className='col-4'>
-                                                        <PlanPremios idPlanPremios={1}/>
+                                                        <PlanPremios idPlanPremios={ idPlanPremios } onSelectChange={ handleTipoPremio }/>
+                                                        {/* {console.log("tipoPremio:",tipoPremio)} */}
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -241,15 +240,15 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                         {resultados.map((resultado, index) => {
                             return (
                                 <tr key={index}>
-                                    <td>{resultado.numero}</td>
-                                    <td>{resultado.serie}</td>
+                                    <td>{resultado.numFavorecido}</td>
+                                    <td>{resultado.seriePremio}</td>
                                     <td>
                                         <div className="container">
                                             <div className="row justify-content-center">
                                                 <div className="col-12 col-md-6 text-center">
                                                     {/* TODO: add the real premio */}
                                                     {/* {resultado.tipoPremio} */}
-                                                    1.000.000
+                                                    {tipoPremio}
                                                 </div>
                                                 <div className="col-12 col-md-6 d-flex justify-content-end align-items-start">
                                                     <i className='bi bi-x-square-fill closeX' onClick={() => removeFields(index)}/>
