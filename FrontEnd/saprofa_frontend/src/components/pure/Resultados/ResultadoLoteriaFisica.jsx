@@ -143,8 +143,6 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                         console.log(error);
                     }
                 }
-                
-
             }
                 >
                 {({ errors }) => (
@@ -167,7 +165,7 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                                                             name='numFavorecido' 
                                                             type='text' 
                                                             className='form-control input-form-control' 
-                                                            // validate={validateNumber}
+                                                            validate={validateNumber}
                                                             />
                                                         <ErrorMessage name='numFavorecido' component={() => {
                                                             return (
@@ -182,7 +180,7 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                                                             name='seriePremio' 
                                                             type='text' 
                                                             className='form-control input-form-control' 
-                                                            // validate={validateSerie}
+                                                            validate={validateSerie}
                                                             />
                                                         <ErrorMessage name='seriePremio' component={() => {
                                                             return (
