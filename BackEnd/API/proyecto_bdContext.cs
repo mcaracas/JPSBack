@@ -546,6 +546,10 @@ namespace API
                     .WithMany(p => p.Resultados)
                     .HasForeignKey(d => d.NumPremioPlan)
                     .HasConstraintName("resultados_ibfk_2");
+
+            entity.Property(e => e.NumeroResultado)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("NumeroResultado");
             });
 
             modelBuilder.Entity<ResultadosBitacora>(entity =>
