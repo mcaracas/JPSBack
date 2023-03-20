@@ -25,11 +25,12 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public void Post(Resultado resultado)
+        public ActionResult Post([FromBody] List<Resultado> Resultados)
         {
-            var context = new proyecto_bdContext();
-            context.Resultados.Add(resultado);
-            context.SaveChanges();
+        var context = new proyecto_bdContext();
+        context.Resultados.AddRange(Resultados);
+        context.SaveChanges();
+        return Ok();
         }
     }
 
