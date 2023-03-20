@@ -104,8 +104,11 @@ export function insertDatosAdministracion(datos){
     return APIRequest.post('/Representate',datos);
 }
 //get -> rellenar los campos en el formulario
-export function getPremioFromAdministracion(id){
-    return APIRequest.get('/Premio/'+id);
+export function getPremioFromAdministracion(numeroResultado){
+    return APIRequest.get(`/VerificarResultadosLF/${numeroResultado}`);
 }
 
 //post -> mandar la tabla con resultados a insertar en la BD
+export function insertarPremios(premios){
+    return APIRequest.post('/VerificarResultadosLF',premios);
+}
