@@ -116,53 +116,52 @@ const DatosParticipantes = ({ idSorteo }) => {
         {({ errors, isSubmitting, isValidating }) => (
           <div className='container-fluid col'>
             <Form>
-              <h2>Representantes</h2>
               <div className="row">
                 <div className="col-8">
                   <div className="col-12 col-md-6 m-4">
-                    <h5>Por G. Operaciones</h5>
+                    <h5 className='text-start'>Por G. Operaciones</h5>
                     <Field className="form-control" name="GOperaciones" />
                     <ErrorMessage name="GOperaciones" component={() => {
                       return <div className='error'>{errors.GOperaciones}</div>
                     }}/>
                   </div>
                   <div className="col-12 col-md-6 m-4">
-                    <h5>Por G. Produccion y Comercializacion</h5>
+                    <h5 className='text-start'>Por G. Produccion y Comercializacion</h5>
                     <Field className="form-control" name="GProduccionYComercializacion" />
                     <ErrorMessage name="GProduccionYComercializacion" component={() => {
                       return <div className='error'>{errors.GProduccionYComercializacion}</div>
                     }}/> 
                   </div>
                   <div className="col-12 col-md-6 m-4">
-                    <h5>Por Gerencia</h5>
+                    <h5 className='text-start'>Por Gerencia</h5>
                     <Field className="form-control" name="Gerencia" />
                     <ErrorMessage name="Gerencia" component={() => {
                       return <div className='error'>{errors.Gerencia}</div>
                     }}/>
                   </div>
                   <div className="col-12 col-md-6 m-4">
-                    <h5>Por Juez</h5>
+                    <h5 className='text-start'>Por Juez</h5>
                     <Field className="form-control" name="Juez" />
                     <ErrorMessage name="Juez" component={() => {
                       return <div className='error'>{errors.Juez}</div>
                     }}/>
                   </div>
                   <div className="col-12 col-md-6 m-4">
-                    <h5>Presentador del Sorteo</h5>
+                    <h5 className='text-start'>Presentador del Sorteo</h5>
                     <Field className="form-control" name="PresentadorDelSorteo" />
                     <ErrorMessage name="PresentadorDelSorteo" component={() => {
                       return <div className='error'>{errors.PresentadorDelSorteo}</div>
                     }}/>
                   </div>
                   <div className="col-12 col-md-6 m-4">
-                    <h5>Prompter</h5>
+                    <h5 className='text-start'>Prompter</h5>
                     <Field className="form-control" name="Prompter" />
                     <ErrorMessage name="Prompter" component={() => {
                       return <div className='error'>{errors.Prompter}</div>
                     }}/>
                   </div>
                   <div className="col-12 col-md-6 m-4">
-                    <h5>Equipo de Computo</h5>
+                    <h5 className='text-start'>Equipo de Computo</h5>
                     <Field className="form-control" name="EquipoDeComputo" />
                     <ErrorMessage name="EquipoDeComputo" component={() => {
                       return <div className='error'>{errors.EquipoDeComputo}</div>
@@ -172,7 +171,7 @@ const DatosParticipantes = ({ idSorteo }) => {
                 <div className='col-2'>
                   <div className="col-12 col-md-6 d-flex flex-column justify-content-between">
                     <button className="btn mt-5 mb-5" name='obtenerDatos' type="button" onClick={()=>obtenerDatosAdministracion(idSorteo)}>Obtener Participantes</button>
-                    <button className="btn mt-5 mb-5" disabled={isSubmitting || isValidating || datosEnviados} type="submit" oncClick={()=>{insertDatosAdministracion()}}>Registar Datos de Participantes</button>
+                    <button className="btn mt-5 mb-5" disabled={isSubmitting || isValidating || datosEnviados} type="submit" onClick={()=>{insertDatosAdministracion()}}>Registar Datos de Participantes</button>
                   </div>
                 </div>
               </div>
