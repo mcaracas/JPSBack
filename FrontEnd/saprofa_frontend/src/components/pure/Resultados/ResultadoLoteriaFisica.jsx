@@ -7,8 +7,8 @@ import { getPremioFromAdministracion, insertarPremios } from '../../../services/
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
 const planPremios = JSON.parse(sessionStorage.getItem('planPremios'));
-const idPlanPremios = lottery.planPremios;
-const idDatoSorteo = lottery.idInterno;
+const idPlanPremios = lottery?.planPremios;
+const idDatoSorteo = lottery?.idInterno;
 console.log('lottery:', lottery);
 console.log('PlanPremios:', planPremios);
 

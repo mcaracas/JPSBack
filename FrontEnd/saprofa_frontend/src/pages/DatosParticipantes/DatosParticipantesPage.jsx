@@ -5,9 +5,9 @@ import { getDatosParticipantes } from '../../services/axiosService';
 
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
-const numSorteo = lottery.numSorteo;
-const tipoLoteria = lottery.tipoLoteria;
-const idDatosPrevios = lottery.idInterno;
+const numSorteo = lottery?.numSorteo;
+const tipoLoteria = lottery?.tipoLoteria;
+const idDatosPrevios = lottery?.idInterno;
 const idSorteo = `${tipoLoteria}${numSorteo}`;
 
 const obtenerDatosAdministracion = (idSorteo) => {

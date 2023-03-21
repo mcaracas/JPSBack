@@ -3,8 +3,8 @@ import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import ResultadoLoteriaFisica from '../../components/pure/Resultados/ResultadoLoteriaFisica';
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
-const numSorteo = lottery.numSorteo;
-const tipoLoteria = lottery.tipoLoteria;
+const numSorteo = lottery?.numSorteo;
+const tipoLoteria = lottery?.tipoLoteria;
 const idSorteo = `${tipoLoteria}${numSorteo}`;
 
 const LoteriaFisicapage = () => {
