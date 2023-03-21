@@ -91,3 +91,19 @@ export function insertListaPrueba(Lista) {
 export function getPlanPremios(id) {
     return APIRequest.get('/PlanPremiosDetalle/' + id);
 }
+
+export function getCierreApuestas() {
+    return APIRequest.get('/CierreApuestas');
+}
+
+export function getMontoAcumulado() {
+    return APIRequest.get('/MontoAcumulado');
+}
+
+export function insertarApuestas(monto){
+    return APIRequest.post('',monto)
+}
+
+export function insertaMontoAcumulado(monto){
+    return APIRequest.post('',monto)
+}

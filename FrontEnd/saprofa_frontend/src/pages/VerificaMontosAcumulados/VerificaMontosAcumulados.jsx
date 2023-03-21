@@ -1,9 +1,22 @@
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import React from 'react'
 import './VerificaMontosAcumulados.scss'
+import { getMontoAcumulado } from '../../services/axiosService';
+import { insertaMontoAcumulado } from '../../services/axiosService';
 
 const VerificaMontosAcumulados = () => {
-    const [datos, setDatos] = React.useState("Probando");
+    const [datos, setDatos] = React.useState();
+React.useEffect(() => {
+    getMontoAcumulado().then( Response => {
+        if(Response.status === 200){
+        setDatos(Response.data) }
+        else{
+         throw new Error('No se obtuvieron los datos');}
+    }).catch(error => alert(`Algo salió mal: ${error}`))
+
+}, [datos]);
+
+
     const [checked, setChecked] = React.useState(false);
     
     const handleCheck = (e) => {
@@ -20,7 +33,7 @@ const VerificaMontosAcumulados = () => {
     
     
     const onAceptar = (e) => {
-        console.log(datos);
+        insertaMontoAcumulado(datos);
      }
      const manejarCambiodatos = (e) => {
         setDatos(e.target.value)

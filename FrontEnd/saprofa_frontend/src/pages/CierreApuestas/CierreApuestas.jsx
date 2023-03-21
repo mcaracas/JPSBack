@@ -2,10 +2,21 @@
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import React from 'react'
 import './CierreApuestas.scss'
+import { getCierreApuestas } from '../../services/axiosService';
+import { insertarApuestas } from '../../services/axiosService';
 
 const CierreApuestas = () => {
 
-const [datos, setDatos] = React.useState("Probando");
+const [datos, setDatos] = React.useState();
+React.useEffect(() => {
+    getCierreApuestas().then( Response => {
+        if(Response.status === 200){
+        setDatos(Response.data) }
+        else{
+            throw new Error('No se obtuvieron los datos');}
+        }).catch(error => alert(`Algo salió mal: ${error}`))
+    
+}, [datos]);
 const [checked, setChecked] = React.useState(false);
 
 const handleCheck = (e) => {
@@ -21,8 +32,9 @@ const handleCheck = (e) => {
 
 
 
+
 const onAceptar = (e) => {
-    console.log(datos);
+    insertarApuestas(datos);
  }
  const manejarCambiodatos = (e) => {
     setDatos(e.target.value)
