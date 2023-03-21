@@ -1,9 +1,9 @@
 import './App.css';
-import Marchamo3Monazos from './components/pure/forms/Marchamo3Monazos';
-import MarchamoLotto from './components/pure/forms/MarchamoLotto';
-import MarchamoNacional from './components/pure/forms/MarchamoNacional';
-import MarchamoNuevosTiempos from './components/pure/forms/MarchamoNuevosTiempos';
-import MarchamoPopular from './components/pure/forms/MarchamoPopular';
+import Marchamo3MonazosPage from './pages/Marchamos/Marchamo3MonazosPage';
+import MarchamoLottoPage from './pages/Marchamos/MarchamoLottoPage';
+import MarchamoNuevosTiemposPage from './pages/Marchamos/MarchamoNuevosTiemposPage';
+import MarchamoPopularPage from './pages/Marchamos/MarchamoPopular';
+import MarchamoNacionalPage from './pages/Marchamos/MarchamoNacional';
 import LoginPage from './pages/auth/LoginPage';
 import DatosPrevios from './pages/DatosPrevios/DatosPreviosPage';
 import ChooseLottery from './pages/LotteyCards/ChooseLotteryPage';
@@ -20,6 +20,10 @@ import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import ConfirmationCodeModal from './components/pure/forms/ConfirmationCodeModal';
 import LoteriaFisicapage from './pages/Resultados/LoteriaFisicapage';
 import LoteriaElectronicaPage from './pages/Resultados/LoteriaElectronicaPage';
+import ConclusionesRecomendacionesPage from './pages/ConclusionesRecomendaciones/ConclusionesRecomendacionesPage';
+import CierreApuestas from './pages/CierreApuestas/CierreApuestas';
+import VerificaMontosAcumulados from './pages/VerificaMontosAcumulados/VerificaMontosAcumulados';
+import DatosParticipantesPage from './pages/DatosParticipantes/DatosParticipantesPage';
 
 function App() {
   return (
@@ -30,11 +34,11 @@ function App() {
           <Route path="/Register" element={<RegisterPage/>} />
           <Route exact path="/ChooseLottery" element={<ChooseLottery />} /> {/* Choose lottery page */}
           <Route exact path="/DatosPrevios" element={<DatosPrevios />} /> {/* Previous data page */}
-          <Route exact path="/MarchamoPopular" element={<MarchamoPopular />} /> {/* Popular stamp page */}
-          <Route exact path="/MarchamoNacional" element={<MarchamoNacional />} /> {/* National stamp page */}
-          <Route exact path="/MarchamoLotto" element={<MarchamoLotto />} /> {/* Lotto stamp page */}
-          <Route exact path="/MarchamoNuevosTiempos" element={<MarchamoNuevosTiempos />} /> {/* New times stamp page */}
-          <Route exact path="/Marchamo3Monazos" element={<Marchamo3Monazos />} /> {/* 3 Monazos stamp page */}
+          <Route exact path="/MarchamoPopular" element={<MarchamoPopularPage />} /> {/* Popular stamp page */}
+          <Route exact path="/MarchamoNacional" element={<MarchamoNacionalPage />} /> {/* National stamp page */}
+          <Route exact path="/MarchamoLotto" element={<MarchamoLottoPage />} /> {/* Lotto stamp page */}
+          <Route exact path="/MarchamoNuevosTiempos" element={<MarchamoNuevosTiemposPage />} /> {/* New times stamp page */}
+          <Route exact path="/Marchamo3Monazos" element={<Marchamo3MonazosPage />} /> {/* 3 Monazos stamp page */}
           <Route exact path="/NombreFiscalizadores" element={<NombreFiscalizadores />} /> {/* Name of the inspectors page */}
           <Route exact path="/Valija3Monazos" element={<Valija3Monazos />} /> {/* Name of the inspectors page */}
           <Route exact path="/ValijaNuevosTiempos" element={<ValijaNuevosTiempos />} /> {/* Name of the inspectors page */}
@@ -46,6 +50,10 @@ function App() {
           <Route exact path="/ConfirmationCodeModal" element={<ConfirmationCodeModal />} />
           <Route exact path="/ResultadosLoteriaFisica" element={<LoteriaFisicapage/>} />
           <Route exact path="/ResultadosLoteriaElectronica" element={<LoteriaElectronicaPage/>}/>
+          <Route exact path="/ConclusionesRecomendaciones" element={<ConclusionesRecomendacionesPage/>} />
+          <Route exact path="/CierreApuestas" element={<CierreApuestas />} />
+          <Route exact path="/VerificaMontosAcumulados" element={<VerificaMontosAcumulados />} />
+          <Route exact path="/DatosParticipantesPage" element={<DatosParticipantesPage/>} />
         </Routes>
       </div>
     </Router>

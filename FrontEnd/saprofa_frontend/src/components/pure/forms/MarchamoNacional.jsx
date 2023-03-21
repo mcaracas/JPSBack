@@ -139,7 +139,6 @@ const buildMarchamoList = (values) => {
 const MarchamoNacional = (id) => {
     return (
         <div className='container'>
-            <h1>Marchamos Nacional </h1>
             <Formik
                 initialValues={{}}
                 validationSchema={marchamoSchema}

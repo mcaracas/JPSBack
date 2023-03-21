@@ -22,6 +22,32 @@ export function register(values) {
     });
 }
 
+export function actaFiscalizacion(values) {
+    console.log(values.recomendaciones);
+
+    if (values.procesosConformeEstablecido === false) {
+        values.procesosConformeEstablecido = "";
+    } else {
+        values.procesosConformeEstablecido = "Si";
+    }
+
+    if (values.recomendaciones === false) {
+        values.recomendaciones = "";
+    } else {
+        values.recomendaciones = "Ninguna";
+    }
+
+    return APIRequest.post('/ActaDeFiscalizacion', {
+        contentType: 'application/json; charset=utf-8',
+        "idDatoSorteo": "1",                                //FALTA QUE ESTO LO SAQUE DE LA SESION
+        "protocolo": values.procesosConformeEstablecido,
+        "otrasConclusiones": values.otrasObservaciones,
+        "conclusionesDetalle": values.detalles,
+        "recomendacion": values.recomendaciones,
+        "recomendacionDetalle": values.resultadosSorteo
+    });
+}
+
 export function getMail(username) {
     return APIRequest.get(`/Usuario/` + username);
 }
@@ -62,10 +88,31 @@ export function insertListaPrueba(Lista) {
     return APIRequest.post('/Prueba/ListaPruebas', Lista);
 }
 
-export function getPlanPremios(id) {
-    return APIRequest.get('/PlanPremiosDetalle/' + id);
+export function getPlanPremios(id){
+    return APIRequest.get('/PlanPremiosDetalle/'+id);
+}
+
+export function getDatosPrevios(id){
+    return APIRequest.get('/DatosPreviosA/'+id);
+}
+
+export function getDatosParticipantes(id){
+    return APIRequest.get(`/Representate`);
+}
+
+export function insertDatosAdministracion(datos){
+    return APIRequest.post('/Representate',datos);
+}
+//get -> rellenar los campos en el formulario
+export function getPremioFromAdministracion(numeroResultado){
+    return APIRequest.get(`/VerificarResultadosLF/${numeroResultado}`);
+}
+
+//post -> mandar la tabla con resultados a insertar en la BD
+export function insertarPremios(premios){
+    return APIRequest.post('/VerificarResultadosLF',premios);
 }
 
 export function postResultadosElectronica(resultado) {
-   return APIRequest.post('/Resultado', resultado);
-}
+    return APIRequest.post('/Resultado', resultado);
+ }
