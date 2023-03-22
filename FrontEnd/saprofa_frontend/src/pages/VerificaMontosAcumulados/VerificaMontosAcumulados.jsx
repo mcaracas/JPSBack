@@ -1,65 +1,86 @@
-import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import React from 'react'
-import './VerificaMontosAcumulados.scss'
+import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
+import '../CierreApuestas/CierreApuestas.scss';
+import { Formik, Form } from 'formik';
 import { getMontoAcumulado } from '../../services/axiosService';
 import { insertaMontoAcumulado } from '../../services/axiosService';
+import { useEffect } from 'react';
 
 const VerificaMontosAcumulados = () => {
     const [datos, setDatos] = React.useState();
-React.useEffect(() => {
-    getMontoAcumulado().then( Response => {
-        if(Response.status === 200){
-        setDatos(Response.data) }
-        else{
-         throw new Error('No se obtuvieron los datos');}
-    }).catch(error => alert(`Algo salió mal: ${error}`))
-
-}, [datos]);
-
-
     const [checked, setChecked] = React.useState(false);
-    
+
     const handleCheck = (e) => {
         const isChecked = e.target.checked;
         console.log(isChecked);
-        if(isChecked ){
+        if (isChecked) {
             setChecked(true);
         }
-            else {
+        else {
             setChecked(false);
         }
     }
-    
-    
-    
-    const onAceptar = (e) => {
-        insertaMontoAcumulado(datos);
-     }
-     const manejarCambiodatos = (e) => {
+
+
+    useEffect(() => {
+        getMontoAcumulado('123456').then(res => {
+          if(res.status === 200){
+            setDatos(res.data)
+          }else{
+            throw new Error("No se pudo obtener los datos")
+          }
+        }).catch(err => {
+          alert(`Algo salió mal: ${err}`);
+        })
+      }, [])
+
+
+    const initialValues = {
+        monto: ''
+    }
+
+    const handleSubmit = async () => {
+        try {
+            await insertaMontoAcumulado(datos);
+            alert("Se ha cerrado las apuestas");
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
+
+    const manejarCambiodatos = (e) => {
         setDatos(e.target.value)
-     }
-    
-      return (
+    }
+
+    return (
         <div>
-            <section className="verificaAcumulado">
-            <EncabezadoFranjas title= {"Verificar monto de acumulado"}></EncabezadoFranjas>       
-                <hr/>
-                <h5>Monto acumulado:</h5>
+            <section className="cierreApuestas">
+                <EncabezadoFranjas title={"Cierre de las apuestas"}></EncabezadoFranjas>
+                <hr />
+                <h5>Monto total:</h5>
                 {datos}
                 <br />
                 <br />
                 <h6>¿Es correcto?</h6>
-                <input className="check" onChange= {handleCheck} type="checkbox" name="nombre" id="nombre" />
-                <hr/>
+                <input className="check" onChange={handleCheck} type="checkbox" name="nombre" id="nombre" />
+                <hr />
                 <h6>En caso de error digite el monto correcto</h6>
-                <input className="lbl" disabled={checked? "disabled" : ""} onChange={manejarCambiodatos} type="text" />
+                <input className="lbl" disabled={checked ? "disabled" : ""} onChange={manejarCambiodatos} type="text" />
                 <br />
-                <button className="boton" disabled={!checked && checked? "disabled" : ""} onClick={onAceptar}>Aceptar</button>
+                <Formik
+                    initialValues={initialValues}
+                    onSubmit={handleSubmit}
+                >
+                    <Form>
+                        <button type="submit" className="boton" disabled={!checked && checked ? "disabled" : ""}>Aceptar
+                        </button>
+                    </Form>
+                </Formik>
             </section>
-    
         </div>
-      )
-    }
+    )
+}
     
     export default VerificaMontosAcumulados
     

@@ -113,18 +113,21 @@ export function insertarPremios(premios){
     return APIRequest.post('/VerificarResultadosLF',premios);
 }
 
-export function getCierreApuestas() {
-    return APIRequest.get('/CierreApuestas');
+
+export function getCierreApuestas(id) {
+    return APIRequest.get('/CierreApuestas/'+id);
 }
 
-export function getMontoAcumulado() {
-    return APIRequest.get('/MontoAcumulado');
+export function getMontoAcumulado(id) {
+    return APIRequest.get('/MontoAcumulado/'+id);
 }
 
 export function insertarApuestas(monto){
-    return APIRequest.post('',monto)
+    console.log(monto);
+    return APIRequest.post('/CierreApuestas/',monto)
 }
 
 export function insertaMontoAcumulado(monto){
-    return APIRequest.post('',monto)
+    console.log(monto);
+    return APIRequest.post('/VerificarAcumGtecController/',monto)
 }
