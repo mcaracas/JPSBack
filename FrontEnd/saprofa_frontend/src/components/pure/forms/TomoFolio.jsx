@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-
+import { getUltimoTomofolio, postTomoFolio } from '../../../services/axiosService';
 
 
 const Tomo = ({ idInterno }) => {
@@ -12,37 +12,38 @@ const Tomo = ({ idInterno }) => {
     const [folioActual, setFolioActual] = useState(1);
 
     const initialValues = {
-        tomo: '',
-        folio: ''
+        tomo: tomoActual,
+        folio: folioActual
     }
 
     async function getTomoFolio() {
-        // const response = await getTomoFolio(idInterno);
-        // console.log("Datos: ", response);
-        setTomo(8);
-        setFolio(97);
-        setTomoActual(tomo);
-        setFolioActual(folio+1);
+        console.log(idInterno);
+        const response = await getUltimoTomofolio(idInterno);
+        let tom = response.data.tomo;
+        let fol = response.data.folio;
+        setTomo(tom);
+        setFolio(fol);
     }
 
     const addTomoActual = () => {
-        //@TODO: When tomoActual updates, set folioActual to 2
         setTomoActual(tomoActual + 1);
     }
 
     const addFolioActual = () => {
-        //@TODO: Set a maximum value for folioActual,
-        // when it reaches it, add 1 to tomoActual and set folioActual to 2
-        setFolioActual(folioActual + 1);
+        if(folioActual < 254){
+            setFolioActual(folioActual + 1);
+        }else{
+            setFolioActual(2);
+            addTomoActual();
+        }
     }
 
-    //When the page is loaded, get tomo and folio
+    //Get Tomo and Folio from DB when component is mounted
     useEffect(() => {
-        setTomo(8);
-        setFolio(97);
+        getTomoFolio();
     }, []);
 
-    //when tomo y folio are set, set tomoActual and folioActual
+    //Set Tomo and Folio Actual when Tomo and Folio are changed
     useEffect(() => {
         setTomoActual(tomo);
         setFolioActual(folio+1);
@@ -52,8 +53,24 @@ const Tomo = ({ idInterno }) => {
     return (
         <div className="container-fluid">
             <Formik
-                initialValues={{}}
-            >
+                initialValues={initialValues}
+                onSubmit={async (values) => {
+                    const data = {
+                        "tomo": tomoActual,
+                        "folio": folioActual,
+                        "idDatoSorteo": idInterno,
+                        "estado": "Activo"
+                    }
+                    postTomoFolio(data)
+                        .then(response => {
+                            console.log(response);
+                        }
+                        )
+                        .catch(error => {
+                            console.log(error);
+                        });
+                
+                }}>
                 {({ errors, touched }) => (
                     <Form>
                         <table className='table table-bordered align-middle' id="tabla">
@@ -117,6 +134,14 @@ const Tomo = ({ idInterno }) => {
                                             onClick={addFolioActual}>+</button>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colSpan={4}>
+                                        <button
+                                            type='submit'
+                                            name='Guardar'
+                                            className='btn btn-primary'>Guardar</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </Form>
@@ -132,56 +157,3 @@ Tomo.propTypes = {
 }
 
 export default Tomo;
-
-
-//DELETE
-{/* <div className='container'>
-                            <div className='row' id="contSorteo">
-                                <div className='row' id="fila">
-                                    <div className='col align-self-start'>
-                                        <b>Tomo y folio de sorteo anterior</b><br></br>
-                                        <div className='row '>
-                                            <label htmlFor="tomo">Tomo: </label>
-                                            <Field
-                                                name="tomo"
-                                                type="number"
-                                                id="tomo"
-                                                className="inputTomo"
-                                                value={1}
-                                                disabled />
-                                            <label htmlFor="folio">Folio: </label>
-                                            <Field
-                                                name="folio"
-                                                type="number"
-                                                id="folio"
-                                                className="inputFolio"
-                                                value={1}
-                                                disabled />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='row'>
-                                    <div className='col align-self-start'>
-                                    <b>Tomo y folio de sorteo actual</b><br></br>
-                                        <div className='w-50 p-3'>
-                                            <label htmlFor="tomo">Tomo: </label>
-                                            <Field
-                                                name="tomo"
-                                                type="number"
-                                                id="tomo"
-                                                className="inputTomo"
-                                                value={1}
-                                                disabled />
-                                            <label htmlFor="folio">Folio: </label>
-                                            <Field
-                                                name="folio"
-                                                type="number"
-                                                id="folio"
-                                                className="inputFolio"
-                                                value={1}
-                                                disabled />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
