@@ -537,9 +537,9 @@ namespace API
                     .HasColumnType("int(11)")
                     .HasColumnName("id_resultado");
 
-                entity.Property(e => e.TipoLoteria)
-                    .HasColumnType("int(30)")
-                    .HasColumnName("TipoLoteria");
+                entity.Property(e => e.tipoResultado)
+                    .HasMaxLength(30)
+                    .HasColumnName("tipoResultado");
 
                 entity.Property(e => e.IdDatoSorteo)
                     .HasColumnType("int(11)")
