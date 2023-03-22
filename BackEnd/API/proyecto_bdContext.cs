@@ -538,7 +538,7 @@ namespace API
                     .HasColumnName("id_resultado");
 
                 entity.Property(e => e.tipoResultado)
-                    .HasColumnType("int(30)")
+                    .HasMaxLength(30)
                     .HasColumnName("tipoResultado");
 
                 entity.Property(e => e.IdDatoSorteo)
