@@ -112,3 +112,11 @@ export function getPremioFromAdministracion(numeroResultado){
 export function insertarPremios(premios){
     return APIRequest.post('/VerificarResultadosLF',premios);
 }
+
+export function getUltimoTomofolio(idInterno){
+    return APIRequest.get('/TomoFolio/UltimoTomofolio/'+idInterno);
+}
+
+export function postTomoFolio(data){
+    return APIRequest.post('/TomoFolio',data);
+}

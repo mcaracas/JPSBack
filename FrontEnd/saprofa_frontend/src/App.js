@@ -23,7 +23,7 @@ import ConclusionesRecomendacionesPage from './pages/ConclusionesRecomendaciones
 import CierreApuestas from './pages/CierreApuestas/CierreApuestas';
 import VerificaMontosAcumulados from './pages/VerificaMontosAcumulados/VerificaMontosAcumulados';
 import DatosParticipantesPage from './pages/DatosParticipantes/DatosParticipantesPage';
-
+import TomoFolioPage from './pages/TomoFolio/TomoFolioPage';
 function App() {
   return (
     <Router>
@@ -52,6 +52,7 @@ function App() {
           <Route exact path="/CierreApuestas" element={<CierreApuestas />} />
           <Route exact path="/VerificaMontosAcumulados" element={<VerificaMontosAcumulados />} />
           <Route exact path="/DatosParticipantesPage" element={<DatosParticipantesPage/>} />
+          <Route exact path="/TomoFolio" element={<TomoFolioPage/>} />
         </Routes>
       </div>
     </Router>
