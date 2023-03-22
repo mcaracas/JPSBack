@@ -6,15 +6,10 @@ import ResultadosNT from '../../components/pure/Resultados/ResultadosNT';
 
 
 const LoteriaElectronicaPage = () => {
-
-    // @TODO: Get the type of lottery from the session storage
-    let tipoSorteo = "3M";
-
-    //@TODO: Get numeroSorteo from the session storage
-    let numeroSorteo = 3362;
-
-    //@TODO: Get idInterno from the session storage
-    let idInterno = 10;
+    const lottery = JSON.parse(sessionStorage.getItem("lottery"));
+    const tipoSorteo = lottery?.tipoLoteria;
+    const numeroSorteo = lottery?.numSorteo;
+    const idInterno = lottery?.idInterno;
 
     return (
         <div>
