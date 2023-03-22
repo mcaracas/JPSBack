@@ -2,13 +2,16 @@ import React, { useRef, useState } from 'react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { postResultadosElectronica } from '../../../services/axiosService';
 import PropTypes from 'prop-types'
-
+import SuccessModal from '../../modals/SuccessModal';
 
 const ResultadosNT = ({ numSorteo, idInterno }) => {
 
     const numeroRef = useRef("");
 
     const [resultados, setResultados] = useState([]);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [titulo, setTitulo] = useState('');
+    const [mensaje, setMensaje] = useState('');
 
     const agregarResultado = (values) => {
         setResultados([...resultados, {
@@ -53,6 +56,10 @@ const ResultadosNT = ({ numSorteo, idInterno }) => {
         return '';
     }
 
+    function handleCloseSuccessModal() {
+        setShowSuccessModal(false);
+    }
+
     async function handleSubmit() {
         try {
             const data = {
@@ -65,146 +72,154 @@ const ResultadosNT = ({ numSorteo, idInterno }) => {
             const response = await postResultadosElectronica(data);
 
             // Display success message to the user
-            alert("Resultado guardado correctamente");
+            setTitulo('Operación exitosa');
+            setMensaje('Resultados ingresados correctamente');
+            setShowSuccessModal(true);
             // Reload the page
             //window.location.reload();
         } catch (error) {
-            console.error("Something went wrong:", error);
-            alert("Ingreso de resultado fallido. Intente de nuevo.");
+            setTitulo('Operación fallida');
+            setMensaje('No se pudieron ingresar los resultados');
+            setShowSuccessModal(true);
         }
     }
-
-
-
-
-
+    
     return (
-        <div className="container">
-            <Formik
-                initialValues={{
-                    numero: ""
-                }}
-                onSubmit={(values, { resetForm }) => {
+        <>
 
-                    agregarResultado({ numero: numeroRef.current })
-                    resetForm({ numero: "" });
+            <div className="container">
+                <Formik
+                    initialValues={{
+                        numero: ""
+                    }}
+                    onSubmit={(values, { resetForm }) => {
 
-                }}
-            >
-                {({ errors, touched }) => (
-                    <div className="container-fluid">
-                        <Form >
-                            <div className="row">
-                                <table className="table table-bordered align-middle mt-5 col">
-                                    <thead>
-                                        <tr>
-                                            <th colSpan={2}>Resultados del Sorteo de Nuevos Tiempos No. {numSorteo}
-                                                <br /> Números favorecidos</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th>
-                                                <label htmlFor="numero">Número</label>
-                                                <Field
-                                                    id="numero"
-                                                    name="numero"
-                                                    type="text"
-                                                    className="form-control input-form-control"
-                                                    validate={validateNumber}
-                                                    innerRef={numeroRef}
-                                                    autoFocus
-                                                />
-                                                <ErrorMessage name="numero" component={() => {
-                                                    return (
-                                                        <div className="error">{errors.numero}</div>
-                                                    )
-                                                }} />
-                                            </th>
-                                            <th>
-                                                {touched.numero && errors.numero ?
-                                                    //Disabled button
-                                                    <div className='button-field col-2 ms-3 '>
-                                                        <button
-                                                            type='button'
-                                                            className='btn btn-success'
-                                                            disabled> Agregar Resultado
-                                                        </button>
-                                                    </div> :
-                                                    <div className='button-field col-2 ms-3 '>
-                                                        <button
-                                                            type='submit'
-                                                            className='btn btn-success'>
-                                                            Agregar Resultado
-                                                        </button>
-                                                    </div>}
-                                            </th>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        agregarResultado({ numero: numeroRef.current })
+                        resetForm({ numero: "" });
 
-                            <div>
-                                <table className='table align-middle mt-5 col'>
-                                    <thead>
-                                        <tr>
-                                            <th colSpan={3}>Resultados Agregados</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th>Número</th>
-                                        </tr>
-                                        {resultados.map((resultado, index) => {
-                                            return (
-                                                <tr key={index}>
-                                                    <td>{resultado.numero}</td>
-                                                    <td>
-                                                        <div className="container">
-                                                            <div className="row justify-content-center">
-                                                                <div className="col-12 col-md-6 d-flex justify-content-end align-items-start">
-                                                                    <i className='bi bi-x-square-fill closeX' onClick={() => removeFields(index)} />
+                    }}
+                >
+                    {({ errors, touched }) => (
+                        <div className="container-fluid">
+                            <Form >
+                                <div className="row">
+                                    <table className="table table-bordered align-middle mt-5 col">
+                                        <thead>
+                                            <tr>
+                                                <th colSpan={2}>Resultados del Sorteo de Nuevos Tiempos No. {numSorteo}
+                                                    <br /> Números favorecidos</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th>
+                                                    <label htmlFor="numero">Número</label>
+                                                    <Field
+                                                        id="numero"
+                                                        name="numero"
+                                                        type="text"
+                                                        className="form-control input-form-control"
+                                                        validate={validateNumber}
+                                                        innerRef={numeroRef}
+                                                        autoFocus
+                                                    />
+                                                    <ErrorMessage name="numero" component={() => {
+                                                        return (
+                                                            <div className="error">{errors.numero}</div>
+                                                        )
+                                                    }} />
+                                                </th>
+                                                <th>
+                                                    {touched.numero && errors.numero ?
+                                                        //Disabled button
+                                                        <div className='button-field col-2 ms-3 '>
+                                                            <button
+                                                                type='button'
+                                                                className='btn btn-success'
+                                                                disabled> Agregar Resultado
+                                                            </button>
+                                                        </div> :
+                                                        <div className='button-field col-2 ms-3 '>
+                                                            <button
+                                                                type='submit'
+                                                                className='btn btn-success'>
+                                                                Agregar Resultado
+                                                            </button>
+                                                        </div>}
+                                                </th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div>
+                                    <table className='table align-middle mt-5 col'>
+                                        <thead>
+                                            <tr>
+                                                <th colSpan={3}>Resultados Agregados</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th>Número</th>
+                                            </tr>
+                                            {resultados.map((resultado, index) => {
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>{resultado.numero}</td>
+                                                        <td>
+                                                            <div className="container">
+                                                                <div className="row justify-content-center">
+                                                                    <div className="col-12 col-md-6 d-flex justify-content-end align-items-start">
+                                                                        <i className='bi bi-x-square-fill closeX' onClick={() => removeFields(index)} />
+                                                                    </div>
                                                                 </div>
                                                             </div>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })}
+                                            <tr>
+                                                <th>
+                                                    <div className='container'>
+                                                        <div className='row justify-content-center'>
+                                                            {resultados.length === 1 ?
+                                                                <div className='button-field col-2 ms-3 '>
+                                                                    <button
+                                                                        type='submit'
+                                                                        className='btn btn-success'
+                                                                        onClick={handleSubmit}
+                                                                    >
+                                                                        Guardar Resultados
+                                                                    </button>
+                                                                </div> :
+                                                                <div className='button-field col-2 ms-3 '>
+                                                                    <button
+                                                                        type='button'
+                                                                        className='btn btn-success'
+                                                                        disabled> Guardar Resultados
+                                                                    </button>
+                                                                </div>}
                                                         </div>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        })}
-                                        <tr>
-                                            <th>
-                                                <div className='container'>
-                                                    <div className='row justify-content-center'>
-                                                        {resultados.length === 1 ?
-                                                            <div className='button-field col-2 ms-3 '>
-                                                                <button
-                                                                    type='submit'
-                                                                    className='btn btn-success'
-                                                                    onClick={handleSubmit}
-                                                                >
-                                                                    Guardar Resultados
-                                                                </button>
-                                                            </div> :
-                                                            <div className='button-field col-2 ms-3 '>
-                                                                <button
-                                                                    type='button'
-                                                                    className='btn btn-success'
-                                                                    disabled> Guardar Resultados
-                                                                </button>
-                                                            </div>}
                                                     </div>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </Form>
-                    </div>
-                )}
-            </Formik>
+                                                </th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </Form>
+                        </div>
+                    )}
+                </Formik>
 
-        </div >
+            </div>
+            <SuccessModal
+                show={showSuccessModal}
+                handleClose={handleCloseSuccessModal}
+                titulo={titulo}
+                mensaje={mensaje}
+            />
+        </>
     );
 }
 
