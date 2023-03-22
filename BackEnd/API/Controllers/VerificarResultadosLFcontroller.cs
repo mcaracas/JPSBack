@@ -23,6 +23,15 @@ namespace API.Controllers
             Resultado datos = conexion.GetResultadoSybase(id);
             return datos;
         }
+
+        [HttpPost]
+        public ActionResult Post([FromBody] List<Resultado> Resultados)
+        {
+        var context = new proyecto_bdContext();
+        context.Resultados.AddRange(Resultados);
+        context.SaveChanges();
+        return Ok();
+        }
     }
 
     //se ocupa post

@@ -1,25 +1,100 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
 import PlanPremios from '../PlanPremios';
+import { getPremioFromAdministracion, insertarPremios } from '../../../services/axiosService';
 
-const ResultadoLoteriaFisica = () => {
+const lottery = JSON.parse(sessionStorage.getItem('lottery'));
+const planPremios = JSON.parse(sessionStorage.getItem('planPremios'));
+const idPlanPremios = lottery?.planPremios;
+const idDatoSorteo = lottery?.idInterno;
+console.log('lottery:', lottery);
+console.log('PlanPremios:', planPremios);
+
+const ResultadoLoteriaFisica = ({ idSorteo }) => {
+    const [tipoPremio, setTipoPremio] = useState('');
+    const [numeroResultado, setNumeroResultado] = useState(1);
+
+    const handleTipoPremio = value => {
+        setTipoPremio(value);
+    };
+
     const [resultados, setResultados] = useState([]);
+    const [resultado, setResultado] = useState({
+        numeroResultado,
+        numPremioPlan : idPlanPremios,
+        idDatoSorteo,
+        numFavorecido : '',
+        seriePremio : '',
+        // tipoPremio,
+        verificado : true, //TODO: change this to the real data
+        verificaAcumulado : true, //TODO: change this to the real data
+        idDatoSorteoNavigation : null,
+        numPremioPlanNavigation : null,
+    });
 
-    const numeroRef = useRef('');
-    const serieRef = useRef('');
-    const tipoPremioRef = useRef('');
+    const formRef = useRef(null);
+
+    const obtenerResultadoAdminitracion = async (id) => {
+        try{
+            // const premio = await getPremioFromAdministracion(id);
+            // setResultado({
+            //     numero: premio.numFavorecido,
+            //     seriePremio: premio.seriePremio,
+            // });
+            //TODO: change this to the real data
+            setResultado({
+                ...resultado,
+                numFavorecido: 72,
+                seriePremio: 999,
+                // tipoPremio,
+            });
+            if (resultado) {
+                const formValues = {
+                    numFavorecido: resultado.numFavorecido,
+                    seriePremio: resultado.seriePremio,
+                    // tipoPremio,
+                };
+                console.log('resultado:',resultado)
+                formRef.current.values.numFavorecido = formValues.numFavorecido;
+                formRef.current.values.seriePremio = formValues.seriePremio;
+            }
+            // {
+            //     "tipoPremio":"",
+            //     "idResultado":0,
+            //     "numeroResultado":0,
+            //     "numPremioPlan":1,
+            //     "idDatoSorteo":1,
+            //     "numFavorecido":"00",
+            //     "seriePremio":"000",
+            //     "verificado":true,
+            //     "verificaAcumulado":true,
+            //     "idDatoSorteoNavigation": null,
+            //     "numPremioPlanNavigation": null
+            //  }
+            
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const agregarResultado = (values) => {
-        console.log('num:',values.numero.value); 
-        console.log('serie:',values.serie.value); 
         setResultados([...resultados,{
-            numero: values.numero.value,
-            serie: values.serie.value,
-            tipoPremio: '',
+            numeroResultado,
+            numPremioPlan : idPlanPremios,
+            idDatoSorteo,
+            numFavorecido : formRef.current.values.numFavorecido.toString(),
+            seriePremio : formRef.current.values.seriePremio.toString(),
+            verificado : true, //TODO: change this to the real data
+            verificaAcumulado : true, //TODO: change this to the real data
+            // tipoPremio,
+            idDatoSorteoNavigation : null,
+            numPremioPlanNavigation : null,
         }]);
-        console.log('resultados:',resultados);
+        setNumeroResultado(numeroResultado + 1);
+        // console.log('resultados:',resultados);
     }
 
     const removeFields = (index) => {
@@ -28,123 +103,145 @@ const ResultadoLoteriaFisica = () => {
         setResultados(data);
     }
 
-    const validateSerie = (serie) => {
-        if(!serie){
+    const validateSerie = (seriePremio) => {
+        if(!seriePremio || seriePremio === ''){
             return 'La serie es requerida';
         }
-        else if(isNaN(serie)){
+        else if(isNaN(seriePremio)){
             return 'La serie debe ser un número';
         }
-        else if(serie.length !== 3){
+        else if(seriePremio.length !== 3){
             return 'La serie debe tener 3 dígitos';
         }
         return '';
     }
     
-    const validateNumber = (numero) => {
-        if(!numero){
+    const validateNumber = (numFavorecido) => {
+        if(!numFavorecido || numFavorecido === ''){
             return 'El número es requerido';
         }
-        else if(isNaN(numero)){
+        else if(isNaN(numFavorecido)){
             return 'El número debe ser un número';
         }
-        else if(numero.length !== 2){
+        else if(numFavorecido.length !== 2){
             return 'El número debe tener 2 dígitos';
         }
         return '';
     }
-    
+
     return (
         <div className='container'>
             <Formik
-            initialValues={{
-                numero: '',
-                serie: '',
-                tipoPremio: '',
-            }}
+            initialValues={ resultado }
+            innerRef = { formRef }
             onSubmit={
-                async (values)=>{ 
-                    console.log('values:',values);
-                    console.log('resultados:',resultados);
+                async (values)=>{
+                    try{
+                        const response = await insertarPremios(resultados);
+                        console.log('resultados a enviar:',resultados);
+                        if(resultados.length === 0){
+                            alert('No se han agregado resultados');
+                        }
+                        if(response.status === 200 ){
+                            console.log('response:',response.data);
+                        } else {
+                            console.log('error');
+                        }
+                    }catch(error){
+                        console.log(error);
+                    }
                 }
             }
                 >
-                {({ errors, }) => (
+                {({ errors }) => (
                         <div className='container-fluid'>
                             <Form>
                                 <div className='row'>
-                                    <table className='table table-bordered align-middle mt-5 col'>
-                                        <thead>
-                                            <tr>
-                                                <th colSpan={2}>Resultados del Sorteo<br/> Números favorecidos</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th>
-                                                    <label htmlFor='numero'>Número</label>
-                                                    <Field 
-                                                        id='numero' 
-                                                        name='numero' 
-                                                        type='text' 
-                                                        className='form-control input-form-control' 
-                                                        validate={validateNumber}
-                                                        innerRef={numeroRef}
-                                                        />
-                                                    <ErrorMessage name='numero' component={() => {
-                                                        return (
-                                                            <div className='error'>{errors.numero}</div>
-                                                        )
-                                                    }}/>
-                                                </th>
-                                                <th>
-                                                    <label htmlFor='serie'>Serie</label>
-                                                    <Field 
-                                                        id='serie' 
-                                                        name='serie' 
-                                                        type='text' 
-                                                        className='form-control input-form-control' 
-                                                        validate={validateSerie}
-                                                        innerRef={serieRef}
-                                                        />
-                                                    <ErrorMessage name='serie' component={() => {
-                                                        return (
-                                                            <div className='error'>{errors.serie}</div>
-                                                        )
-                                                    }}/>
-                                                </th>
-                                                <td className='col-4'>
-                                                    <PlanPremios/>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <div className='button-field col-1 mt-5 '>
-                                        <button 
-                                            type='button' 
-                                            className='btn btn-success'
-                                            onClick={() => agregarResultado({numero:numeroRef.current,serie:serieRef.current})}
-                                        >
-                                            Agregar Resultado
-                                        </button>
+                                    <div className='col-10'>
+                                        <table className='table table-bordered align-middle mt-5 col'>
+                                            <thead>
+                                                <tr>
+                                                    <th colSpan={2}>Resultados del Sorteo<br/> Números favorecidos</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th>
+                                                        <label htmlFor='numFavorecido'>Número</label>
+                                                        <Field 
+                                                            id='numFavorecido' 
+                                                            name='numFavorecido' 
+                                                            type='text' 
+                                                            className='form-control input-form-control' 
+                                                            validate={validateNumber}
+                                                            />
+                                                        <ErrorMessage name='numFavorecido' component={() => {
+                                                            return (
+                                                                <div className='error'>{errors.numFavorecido}</div>
+                                                            )
+                                                        }}/>
+                                                    </th>
+                                                    <th>
+                                                        <label htmlFor='seriePremio'>Serie</label>
+                                                        <Field 
+                                                            id='seriePremio' 
+                                                            name='seriePremio' 
+                                                            type='text' 
+                                                            className='form-control input-form-control' 
+                                                            validate={validateSerie}
+                                                            />
+                                                        <ErrorMessage name='seriePremio' component={() => {
+                                                            return (
+                                                                <div className='error'>{errors.seriePremio}</div>
+                                                            )
+                                                        }}/>
+                                                    </th>
+                                                    <td className='col-4'>
+                                                        <PlanPremios idPlanPremios={ idPlanPremios } onSelectChange={ handleTipoPremio }/>
+                                                        {/* {console.log("tipoPremio:",tipoPremio)} */}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div className='col-2'>
+                                        <div className='button-field col-1 mt-5 '>
+                                            <button 
+                                                type='button' 
+                                                className='btn btn-success'
+                                                onClick={() => obtenerResultadoAdminitracion('1')}
+                                            >
+                                                Obtener Resultado
+                                            </button>
+                                        </div>
+                                        <div className='button-field col-1 mt-5 '>
+                                            <button 
+                                                type='button' 
+                                                className='btn btn-success'
+                                                onClick={() => agregarResultado(resultado)}
+                                            >
+                                                Agregar Resultado
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className='button-field'>
-                                    <button type="submit" className='btn'>Registrar Resultados</button>                                    
-                                </div>
-                            </Form>
-                        </div>
-                    )}
+                            <div className='button-field'>
+                                <button type="submit" className='btn'>Registrar Resultados</button>
+                            </div>
+                        </Form>
+                    </div>
+                )}
             </Formik>
-            <div>
+            <div style={{height: '300px', overflowY:'auto'}}>
                 <table className='table align-middle mt-5 col'>
                     <thead>
                         <tr>
-                            <th colSpan={3}>Resultados Agregados</th>
+                            <th colSpan={4}>Resultados Agregados</th>
                         </tr>  
                     </thead>
                     <tbody>
                         <tr>
+                            <th>Numero Resultado</th>
                             <th>Número</th>
                             <th>Serie</th>
                             <th>Tipo de Premio</th>
@@ -152,17 +249,17 @@ const ResultadoLoteriaFisica = () => {
                         {resultados.map((resultado, index) => {
                             return (
                                 <tr key={index}>
-                                    <td>{resultado.numero}</td>
-                                    <td>{resultado.serie}</td>
+                                    <td className='col-1'>{resultado.numeroResultado}</td>
+                                    <td>{resultado.numFavorecido}</td>
+                                    <td>{resultado.seriePremio}</td>
                                     <td>
-                                        <div class="container">
-                                            <div class="row justify-content-center">
-                                                <div class="col-12 col-md-6 text-center">
+                                        <div className="container m-auto">
+                                            <div className="row justify-content-center">
+                                                <div className="m-auto col-10">
                                                     {/* TODO: add the real premio */}
-                                                    {/* {resultado.tipoPremio} */}
-                                                    1.000.000
+                                                    {resultado.tipoPremio}
                                                 </div>
-                                                <div class="col-12 col-md-6 d-flex justify-content-end align-items-start">
+                                                <div className="col-1">
                                                     <i className='bi bi-x-square-fill closeX' onClick={() => removeFields(index)}/>
                                                 </div>
                                             </div>

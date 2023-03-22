@@ -88,8 +88,29 @@ export function insertListaPrueba(Lista) {
     return APIRequest.post('/Prueba/ListaPruebas', Lista);
 }
 
-export function getPlanPremios(id) {
-    return APIRequest.get('/PlanPremiosDetalle/' + id);
+export function getPlanPremios(id){
+    return APIRequest.get('/PlanPremiosDetalle/'+id);
+}
+
+export function getDatosPrevios(id){
+    return APIRequest.get('/DatosPreviosA/'+id);
+}
+
+export function getDatosParticipantes(id){
+    return APIRequest.get(`/Representate`);
+}
+
+export function insertDatosAdministracion(datos){
+    return APIRequest.post('/Representate',datos);
+}
+//get -> rellenar los campos en el formulario
+export function getPremioFromAdministracion(numeroResultado){
+    return APIRequest.get(`/VerificarResultadosLF/${numeroResultado}`);
+}
+
+//post -> mandar la tabla con resultados a insertar en la BD
+export function insertarPremios(premios){
+    return APIRequest.post('/VerificarResultadosLF',premios);
 }
 
 export function getCierreApuestas() {

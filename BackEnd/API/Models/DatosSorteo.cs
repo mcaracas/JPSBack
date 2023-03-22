@@ -15,6 +15,7 @@ namespace API
             Pruebas = new HashSet<Prueba>();
             Resultados = new HashSet<Resultado>();
             ActaDeFiscalizacions = new HashSet<ActaDeFiscalizacion>();
+            TomoFolios = new HashSet<TomoFolio>();
         }
 
         public int IdInterno { get; set; }
@@ -32,6 +33,7 @@ namespace API
         public virtual ICollection<Prueba> Pruebas { get; set; }
         public virtual ICollection<Resultado> Resultados { get; set; }
         public virtual ICollection<ActaDeFiscalizacion> ActaDeFiscalizacions { get; set; }
+        public virtual ICollection<TomoFolio> TomoFolios { get; set; }
 
         public virtual Usuario IdUsuarioNavigation { get; set; }
     }
