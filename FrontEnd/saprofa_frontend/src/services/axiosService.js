@@ -131,3 +131,18 @@ export function insertaMontoAcumulado(monto){
     console.log(monto);
     return APIRequest.post('/VerificarAcumGtecController/',monto)
 }
+export function getUltimoTomofolio(idInterno){
+    return APIRequest.get('/TomoFolio/UltimoTomofolio/'+idInterno);
+}
+
+export function postTomoFolio(data){
+    return APIRequest.post('/TomoFolio',data);
+}
+
+export function getUltimoTomofolio(idInterno){
+    return APIRequest.get('/TomoFolio/UltimoTomofolio/'+idInterno);
+}
+
+export function postTomoFolio(data){
+    return APIRequest.post('/TomoFolio',data);
+}

@@ -10,6 +10,7 @@ namespace API
         public int IdResultado { get; set; }
 
         public int NumeroResultado { get; set; }
+        public string tipoResultado { get; set; }
         public int? NumPremioPlan { get; set; }
         public int? IdDatoSorteo { get; set; }
         public string NumFavorecido { get; set; }

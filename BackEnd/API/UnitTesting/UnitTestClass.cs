@@ -78,7 +78,7 @@ namespace API.UnitTesting
             Assert.Empty(pruebas);
         }
 
-
+/*
         //Pruebas de Resultado
         [Fact]
         public void PassingResultadoGetTest()
@@ -102,6 +102,45 @@ namespace API.UnitTesting
             var context = new proyecto_bdContext();
             var resultados = context.Resultados.Where(x => x.IdDatoSorteo == 99999996).ToList();
             Assert.Empty(resultados);
+        }
+        */
+
+        //test de tomo folio
+        [Fact]
+        public void PassingTomoFolioGetTest()
+        {
+            var context = new proyecto_bdContext();
+            var result = context.TomoFolios.ToList();
+            Assert.NotEmpty(result);
+        }
+
+        [Fact]
+        public void PassingTomoFolioGet()
+        {
+            var context = new proyecto_bdContext();
+            var tomoFolios = context.TomoFolios.Where(x => x.IdTomoFolio == 1).ToList();
+            Assert.NotEmpty(tomoFolios);
+        }
+
+        [Fact]
+        public void FailingTomoFolioGet()
+        {
+            var context = new proyecto_bdContext();
+            var tomoFolios = context.TomoFolios.Where(x => x.IdTomoFolio == 99999996).ToList();
+            Assert.Empty(tomoFolios);
+        }
+
+        [Fact]
+        public void PassingTomoFolioUltimoGet()
+        {
+            var context = new proyecto_bdContext();
+
+            var DatosSorteo= context.DatosSorteos.FirstOrDefault(x => x.IdInterno == 1);
+            if(DatosSorteo == null)
+                return ;
+            var TomoFolio = context.TomoFolios.Where(x => (x.IdDatoSorteoNavigation.TipoLoteria == DatosSorteo.TipoLoteria && x.Estado=="Activo")  ).OrderByDescending(x => x.Tomo).ThenByDescending(x =>x.Folio).FirstOrDefault();
+            TomoFolio.IdDatoSorteoNavigation = null;
+            Assert.NotNull(TomoFolio);
         }
 
         
