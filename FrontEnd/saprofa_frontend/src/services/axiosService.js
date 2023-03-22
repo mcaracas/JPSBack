@@ -121,21 +121,3 @@ export function postTomoFolio(data){
     return APIRequest.post('/TomoFolio',data);
 }
 
-
-export function getCierreApuestas(id) {
-    return APIRequest.get('/CierreApuestas/'+id);
-}
-
-export function getMontoAcumulado(id) {
-    return APIRequest.get('/MontoAcumulado/'+id);
-}
-
-export function insertarApuestas(monto){
-    console.log(monto);
-    return APIRequest.post('/CierreApuestas/',monto)
-}
-
-export function insertaMontoAcumulado(monto){
-    console.log(monto);
-    return APIRequest.post('/VerificarAcumGtecController/',monto)
-}
