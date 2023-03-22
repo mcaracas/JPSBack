@@ -4,17 +4,26 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
 import PlanPremios from '../PlanPremios';
 import { getPremioFromAdministracion, insertarPremios } from '../../../services/axiosService';
+import SuccessModal from '../../modals/SuccessModal';
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
 const planPremios = JSON.parse(sessionStorage.getItem('planPremios'));
 const idPlanPremios = lottery?.planPremios;
 const idDatoSorteo = lottery?.idInterno;
 console.log('lottery:', lottery);
-console.log('PlanPremios:', planPremios);
+
 
 const ResultadoLoteriaFisica = ({ idSorteo }) => {
-    const [tipoPremio, setTipoPremio] = useState('');
+    const [tipoPremio, setTipoPremio] = useState('Premio Mayor');
     const [numeroResultado, setNumeroResultado] = useState(1);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [datosEnviados, setDatosEnviados] = useState(false);
+    const [titulo, setTitulo] = useState('');
+    const [mensaje, setMensaje] = useState('');
+
+    function handleCloseSuccessModal() {
+        setShowSuccessModal(false);
+      }
 
     const handleTipoPremio = value => {
         setTipoPremio(value);
@@ -27,7 +36,7 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
         idDatoSorteo,
         numFavorecido : '',
         seriePremio : '',
-        // tipoPremio,
+        tipoResultado: tipoPremio,
         verificado : true, //TODO: change this to the real data
         verificaAcumulado : true, //TODO: change this to the real data
         idDatoSorteoNavigation : null,
@@ -38,49 +47,47 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
 
     const obtenerResultadoAdminitracion = async (id) => {
         try{
-            // const premio = await getPremioFromAdministracion(id);
+            // const response = await getPremioFromAdministracion(id);
+            // const datos = response.data;
             // setResultado({
-            //     numero: premio.numFavorecido,
-            //     seriePremio: premio.seriePremio,
+            //     ...datos,
+            //     numFavorecido: datos.numFavorecido,
+            //     seriePremio: datos.seriePremio,
+            //     tipoResultado: datos.tipoResultado,
             // });
             //TODO: change this to the real data
             setResultado({
                 ...resultado,
                 numFavorecido: 72,
                 seriePremio: 999,
-                // tipoPremio,
+                tipoResultado: tipoPremio,
             });
             if (resultado) {
                 const formValues = {
                     numFavorecido: resultado.numFavorecido,
                     seriePremio: resultado.seriePremio,
-                    // tipoPremio,
+                    tipoResultado: tipoPremio,
                 };
+                formRef.current.values.numFavorecido = formValues.numFavorecido.toString();
+                formRef.current.values.seriePremio = formValues.seriePremio.toString();
                 console.log('resultado:',resultado)
-                formRef.current.values.numFavorecido = formValues.numFavorecido;
-                formRef.current.values.seriePremio = formValues.seriePremio;
             }
-            // {
-            //     "tipoPremio":"",
-            //     "idResultado":0,
-            //     "numeroResultado":0,
-            //     "numPremioPlan":1,
-            //     "idDatoSorteo":1,
-            //     "numFavorecido":"00",
-            //     "seriePremio":"000",
-            //     "verificado":true,
-            //     "verificaAcumulado":true,
-            //     "idDatoSorteoNavigation": null,
-            //     "numPremioPlanNavigation": null
-            //  }
-            
-
         } catch (error) {
-            console.log(error);
+            setDatosEnviados(false);
+            setTitulo('¡Error!');
+            setMensaje(error);
+            setShowSuccessModal(true);
         }
     }
 
     const agregarResultado = (values) => {
+        if (resultado.numFavorecido === '' || resultado.seriePremio === '') {
+            setDatosEnviados(false);
+            setTitulo('¡Error!');
+            setMensaje('Debe ingresar número y serie del premio');
+            setShowSuccessModal(true);
+            return;
+        }
         setResultados([...resultados,{
             numeroResultado,
             numPremioPlan : idPlanPremios,
@@ -89,7 +96,7 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
             seriePremio : formRef.current.values.seriePremio.toString(),
             verificado : true, //TODO: change this to the real data
             verificaAcumulado : true, //TODO: change this to the real data
-            // tipoPremio,
+            tipoResultado: tipoPremio,
             idDatoSorteoNavigation : null,
             numPremioPlanNavigation : null,
         }]);
@@ -130,6 +137,7 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
     }
 
     return (
+        <>
         <div className='container'>
             <Formik
             initialValues={ resultado }
@@ -140,10 +148,16 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                         const response = await insertarPremios(resultados);
                         console.log('resultados a enviar:',resultados);
                         if(resultados.length === 0){
-                            alert('No se han agregado resultados');
+                            setMensaje("No se han agregado resultados");
+                            setTitulo("¡Operación Fallida!");
+                            setShowSuccessModal(true);
+                            return;
                         }
                         if(response.status === 200 ){
-                            console.log('response:',response.data);
+                            setMensaje("Datos de Resultados guardados exitosamente");
+                            setTitulo("¡Operación Exitosa!");
+                            setDatosEnviados(true);
+                            setShowSuccessModal(true);
                         } else {
                             console.log('error');
                         }
@@ -153,7 +167,7 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                 }
             }
                 >
-                {({ errors }) => (
+                {({ errors, isSubmitting, isValidating }) => (
                         <div className='container-fluid'>
                             <Form>
                                 <div className='row'>
@@ -198,7 +212,6 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                                                     </th>
                                                     <td className='col-4'>
                                                         <PlanPremios idPlanPremios={ idPlanPremios } onSelectChange={ handleTipoPremio }/>
-                                                        {/* {console.log("tipoPremio:",tipoPremio)} */}
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -209,7 +222,7 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                                             <button 
                                                 type='button' 
                                                 className='btn btn-success'
-                                                onClick={() => obtenerResultadoAdminitracion('1')}
+                                                onClick={() => obtenerResultadoAdminitracion(numeroResultado)}
                                             >
                                                 Obtener Resultado
                                             </button>
@@ -226,13 +239,13 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                                     </div>
                                 </div>
                             <div className='button-field'>
-                                <button type="submit" className='btn'>Registrar Resultados</button>
+                                <button type="submit" className='btn' disabled={isSubmitting || isValidating || datosEnviados} >Registrar Resultados</button>
                             </div>
                         </Form>
                     </div>
                 )}
             </Formik>
-            <div style={{height: '300px', overflowY:'auto'}}>
+            <div className='mb-5' style={{height: '400px', overflowY:'auto'}}>
                 <table className='table align-middle mt-5 col'>
                     <thead>
                         <tr>
@@ -257,7 +270,7 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                                             <div className="row justify-content-center">
                                                 <div className="m-auto col-10">
                                                     {/* TODO: add the real premio */}
-                                                    {resultado.tipoPremio}
+                                                    {resultado.tipoResultado}
                                                 </div>
                                                 <div className="col-1">
                                                     <i className='bi bi-x-square-fill closeX' onClick={() => removeFields(index)}/>
@@ -272,6 +285,13 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                 </table>
             </div>
         </div>
+        <SuccessModal 
+            show={showSuccessModal}
+            handleClose={handleCloseSuccessModal}
+            titulo = {titulo}
+            mensaje = {mensaje}
+        />
+    </>
     );
 }
 

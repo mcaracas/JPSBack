@@ -102,8 +102,7 @@ const DatosParticipantes = ({ idSorteo }) => {
               setSubmitting(false);
               setDatosEnviados(true);
               setMensaje("Datos de Participantes guardados exitosamente");
-              setTitulo("Datos de Participantes");
-              //alert("Datos de administracion guardados");
+              setTitulo("¡Operación Exitosa!");
               setShowSuccessModal(true);
               console.log("Datos de administracion guardados",values);
             }
