@@ -116,3 +116,12 @@ export function insertarPremios(premios){
 export function postResultadosElectronica(resultado) {
     return APIRequest.post('/Resultado', resultado);
  }
+
+export function postTomoFolio(data){
+    return APIRequest.post('/TomoFolio',data);
+}
+
+export function getUltimoTomofolio(idInterno){
+    return APIRequest.get('/TomoFolio/UltimoTomofolio/'+idInterno);
+}
+
