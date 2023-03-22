@@ -14,6 +14,7 @@ console.log('PlanPremios:', planPremios);
 
 const ResultadoLoteriaFisica = ({ idSorteo }) => {
     const [tipoPremio, setTipoPremio] = useState('');
+    const [numeroResultado, setNumeroResultado] = useState(1);
 
     const handleTipoPremio = value => {
         setTipoPremio(value);
@@ -21,11 +22,12 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
 
     const [resultados, setResultados] = useState([]);
     const [resultado, setResultado] = useState({
-        numeroResultado : 1,
+        numeroResultado,
         numPremioPlan : idPlanPremios,
         idDatoSorteo,
         numFavorecido : '',
         seriePremio : '',
+        // tipoPremio,
         verificado : true, //TODO: change this to the real data
         verificaAcumulado : true, //TODO: change this to the real data
         idDatoSorteoNavigation : null,
@@ -43,16 +45,20 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
             // });
             //TODO: change this to the real data
             setResultado({
+                ...resultado,
                 numFavorecido: 72,
                 seriePremio: 999,
+                // tipoPremio,
             });
             if (resultado) {
                 const formValues = {
                     numFavorecido: resultado.numFavorecido,
                     seriePremio: resultado.seriePremio,
+                    // tipoPremio,
                 };
-                console.log('formValues:',formValues)
-                formRef.current.setValues(formValues);
+                console.log('resultado:',resultado)
+                formRef.current.values.numFavorecido = formValues.numFavorecido;
+                formRef.current.values.seriePremio = formValues.seriePremio;
             }
             // {
             //     "tipoPremio":"",
@@ -76,16 +82,18 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
 
     const agregarResultado = (values) => {
         setResultados([...resultados,{
-            numeroResultado : 1,
+            numeroResultado,
             numPremioPlan : idPlanPremios,
             idDatoSorteo,
-            numFavorecido : values.numFavorecido.toString(),
-            seriePremio : values.seriePremio.toString(),
+            numFavorecido : formRef.current.values.numFavorecido.toString(),
+            seriePremio : formRef.current.values.seriePremio.toString(),
             verificado : true, //TODO: change this to the real data
             verificaAcumulado : true, //TODO: change this to the real data
+            // tipoPremio,
             idDatoSorteoNavigation : null,
             numPremioPlanNavigation : null,
         }]);
+        setNumeroResultado(numeroResultado + 1);
         // console.log('resultados:',resultados);
     }
 
@@ -224,15 +232,16 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                     </div>
                 )}
             </Formik>
-            <div>
+            <div style={{height: '300px', overflowY:'auto'}}>
                 <table className='table align-middle mt-5 col'>
                     <thead>
                         <tr>
-                            <th colSpan={3}>Resultados Agregados</th>
+                            <th colSpan={4}>Resultados Agregados</th>
                         </tr>  
                     </thead>
                     <tbody>
                         <tr>
+                            <th>Numero Resultado</th>
                             <th>Número</th>
                             <th>Serie</th>
                             <th>Tipo de Premio</th>
@@ -240,17 +249,17 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                         {resultados.map((resultado, index) => {
                             return (
                                 <tr key={index}>
+                                    <td className='col-1'>{resultado.numeroResultado}</td>
                                     <td>{resultado.numFavorecido}</td>
                                     <td>{resultado.seriePremio}</td>
                                     <td>
-                                        <div className="container">
+                                        <div className="container m-auto">
                                             <div className="row justify-content-center">
-                                                <div className="col-12 col-md-6 text-center">
+                                                <div className="m-auto col-10">
                                                     {/* TODO: add the real premio */}
-                                                    {/* {resultado.tipoPremio} */}
-                                                    {tipoPremio}
+                                                    {resultado.tipoPremio}
                                                 </div>
-                                                <div className="col-12 col-md-6 d-flex justify-content-end align-items-start">
+                                                <div className="col-1">
                                                     <i className='bi bi-x-square-fill closeX' onClick={() => removeFields(index)}/>
                                                 </div>
                                             </div>

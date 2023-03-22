@@ -27,6 +27,7 @@ public class ConexionSybase
                 resultado.NumFavorecido = (string)myReader["NumFavorecido"];
                 resultado.SeriePremio = (string)myReader["SeriePremio"];
                 resultado.Verificado = (bool)myReader["Verificado"];
+                resultado.tipoResultado = (string)myReader["tipoResultado"];
             }
       conn.Close(); //close connection
       return resultado;   //return result object
