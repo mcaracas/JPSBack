@@ -70,6 +70,7 @@ public class TomoFolioController : ControllerBase
         if(DatosSorteo == null)
             return null;
         var TomoFolio = context.TomoFolios.Where(x => (x.IdDatoSorteoNavigation.TipoLoteria == DatosSorteo.TipoLoteria && x.Estado=="Activo")  ).OrderByDescending(x => x.Tomo).ThenByDescending(x =>x.Folio).FirstOrDefault();
+        TomoFolio.IdDatoSorteoNavigation = null;
         return TomoFolio;
     }
 }
