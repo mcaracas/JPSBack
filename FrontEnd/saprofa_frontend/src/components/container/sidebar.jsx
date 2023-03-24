@@ -2,16 +2,14 @@ import React, {useState} from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
-import { IconContext } from 'react-icons/lib';
 import * as AiIcons from 'react-icons/ai';
-import  './franja.scss'
-
-import { SidebarData } from '../menu/sidebarData';
-import SubMenu from '../menu/subMenu';
+import { SidebarData } from '../pure/menu/sidebarData';
+import SubMenu from '../pure/menu/subMenu';
+import { IconContext } from 'react-icons/lib';
 
 const Nav = styled.div`
-    background: #282828;
-    height: 100%;
+    background: #15171c;
+    height: 80px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -27,22 +25,21 @@ const NavIcon = styled(Link)`
 `;
 
 const SidebarNav = styled.nav`
-    background: #282828;
-    width: auto;
-    height: 100%;
+
+    background: #15171c;
+    width: 250px;
+    height: 100vh;
     display: flex;
     justify-content: center;
-    position: absolute;
-    top: 10;
+    position: fixed;
+    top: 0;
     left: ${({ sidebar }) => (sidebar ? '0' : '-100%')};
     transition: 350ms;
     z-index: 10;
 `;
 
-
 const SidebarWrap = styled.div`
     width: 100%;
-    height: 100%;
 `;
 
 const Sidebar = () => {
@@ -51,7 +48,7 @@ const Sidebar = () => {
     const showSidebar = () => setSidebar(!sidebar);
 
     return (
-        <header className='franja'>
+        <div>
             <IconContext.Provider value={{ color: '#fff' }}>
                 <Nav>
                     <NavIcon to='#'>
@@ -69,7 +66,7 @@ const Sidebar = () => {
                     </SidebarWrap>
                 </SidebarNav>
             </IconContext.Provider>
-        </header>
+        </div>
     );
 }
 
