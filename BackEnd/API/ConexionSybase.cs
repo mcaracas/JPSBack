@@ -45,7 +45,7 @@ public class ConexionSybase
           while (myReader.Read())
             {
               cierr.IdCierre = (int)myReader["id"];
-              cierr.Monto = (float)myReader["montoCierre"];
+              cierr.Monto = (double)myReader["montoCierre"];
               cierr.IdSort = (int)myReader["idSorteo"]; 
             }
       conn.Close();
