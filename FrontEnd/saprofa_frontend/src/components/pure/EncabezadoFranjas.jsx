@@ -3,14 +3,12 @@ import FranjaPrincipal from './header/Franja'
 import FranjaRoja from './header/FranjaR'
 import React from 'react';
 import PropTypes from 'prop-types'
-import Sidebar from '../container/sidebar';
 
 const EncabezadoFranjas = ({ title }) => {
   return (
     <div>
       <FranjaLogo />
-      <FranjaPrincipal /> 
-      {/* <Sidebar></Sidebar> */}
+      <FranjaPrincipal />
       <FranjaRoja title={title} />
     </div>
   );

@@ -28,7 +28,7 @@ import TomoFolioPage from './pages/TomoFolio/TomoFolioPage';
 function App() {
   return (
     <Router>
-      {/* <div className="App"> */}
+      <div className="App">
         <Routes>
           <Route path="/" element={<LoginPage/>} /> {/* Root page */}
           <Route path="/Register" element={<RegisterPage/>} />
@@ -56,7 +56,7 @@ function App() {
           <Route exact path="/DatosParticipantesPage" element={<DatosParticipantesPage/>} />
           <Route exact path="/TomoFolio" element={<TomoFolioPage/>} />
         </Routes>
-      {/* </div> */}
+      </div>
     </Router>
   );
 }
