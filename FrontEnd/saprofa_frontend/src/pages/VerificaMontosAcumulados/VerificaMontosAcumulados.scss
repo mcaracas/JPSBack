@@ -1,9 +1,9 @@
-.verificaAcumulado{
+.verificaAcumulado {
     display: flex;
-    flex-direction: column;   
+    flex-direction: column;
 }
 
-.boton{
+.boton {
     color: white;
     width: 17%;
     padding: 10px 50px 10px 50px;
@@ -17,19 +17,19 @@
 
 }
 
-.lbl{   
+.lbl1 {
     width: fit-content;
     align-self: center;
     border: 2px solid #393838;
     padding: 10px 12px;
     position: relative;
     font-size: 14px;
-    transition: border-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: border-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     border-radius: 100px;
     background-color: #fff;
-   
+
 }
 
-.check{
-    -webkit-transform: scale(1.5); 
-}    
+.check {
+    -webkit-transform: scale(1.5);
+}

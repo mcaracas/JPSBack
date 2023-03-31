@@ -41,7 +41,7 @@ const onAceptar = (e) => {
             <input className="check" onChange= {handleCheck} type="checkbox" name="nombre" id="nombre" />
             <hr/>
             <h6>En caso de error digite el monto correcto</h6>
-            <input className="lbl" disabled={checked? "disabled" : ""} onChange={manejarCambiodatos} type="text" />
+            <input className="lbl1" disabled={checked? "disabled" : ""} onChange={manejarCambiodatos} type="text" />
             <br />
             <button className="boton" disabled={!checked && checked? "disabled" : ""} onClick={onAceptar}>Aceptar</button>
         </section>
