@@ -88,40 +88,57 @@ export function insertListaPrueba(Lista) {
     return APIRequest.post('/Prueba/ListaPruebas', Lista);
 }
 
-export function getPlanPremios(id){
-    return APIRequest.get('/PlanPremiosDetalle/'+id);
+export function getPlanPremios(id) {
+    return APIRequest.get('/PlanPremiosDetalle/' + id);
 }
 
-export function getDatosPrevios(id){
-    return APIRequest.get('/DatosPreviosA/'+id);
+export function getDatosPrevios(id) {
+    return APIRequest.get('/DatosPreviosA/' + id);
 }
 
-export function getDatosParticipantes(id){
+export function getDatosParticipantes(id) {
     return APIRequest.get(`/Representate`);
 }
 
-export function insertDatosAdministracion(datos){
-    return APIRequest.post('/Representate',datos);
+export function insertDatosAdministracion(datos) {
+    return APIRequest.post('/Representate', datos);
 }
 //get -> rellenar los campos en el formulario
-export function getPremioFromAdministracion(numeroResultado){
+export function getPremioFromAdministracion(numeroResultado) {
     return APIRequest.get(`/VerificarResultadosLF/${numeroResultado}`);
 }
 
 //post -> mandar la tabla con resultados a insertar en la BD
-export function insertarPremios(premios){
-    return APIRequest.post('/VerificarResultadosLF',premios);
+export function insertarPremios(premios) {
+    return APIRequest.post('/VerificarResultadosLF', premios);
 }
 
 export function postResultadosElectronica(resultado) {
     return APIRequest.post('/Resultado', resultado);
- }
-
-export function postTomoFolio(data){
-    return APIRequest.post('/TomoFolio',data);
 }
 
-export function getUltimoTomofolio(idInterno){
-    return APIRequest.get('/TomoFolio/UltimoTomofolio/'+idInterno);
+export function postTomoFolio(data) {
+    return APIRequest.post('/TomoFolio', data);
 }
 
+export function getUltimoTomofolio(idInterno) {
+    return APIRequest.get('/TomoFolio/UltimoTomofolio/' + idInterno);
+}
+
+export function getCierreApuestas(id) {
+    return 1256250000666 //APIRequest.get('/CierreApuestas/' + id);
+}
+
+export function getMontoAcumulado(id) {
+    return 1256250000666 //APIRequest.get('/MontoAcumulado/' + id);
+}
+
+export function insertarApuestas(monto) {
+    console.log(monto);
+    return APIRequest.post('/CierreApuestas/', monto)
+}
+
+export function insertaMontoAcumulado(monto) {
+    console.log(monto);
+    return APIRequest.post('/VerificarAcumGtecController/', monto)
+}

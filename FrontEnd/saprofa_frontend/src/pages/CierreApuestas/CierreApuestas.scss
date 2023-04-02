@@ -15,7 +15,6 @@
         text-transform: capitalize;
         background-color: #C8283B;
         border: none;
-
 }
 
 .lbl1 {
@@ -29,8 +28,18 @@
         border-radius: 100px;
         background-color: #fff;
 
+        &:disabled {
+                background-color: #C8283B;
+                opacity: 0.5;
+                color: white;
+        }
 }
 
 .check {
         -webkit-transform: scale(1.5);
+}
+
+.required-message {
+        color: red;
+        font-size: 15px;
 }
