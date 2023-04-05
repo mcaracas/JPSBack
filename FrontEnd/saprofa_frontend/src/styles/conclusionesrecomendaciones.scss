@@ -72,10 +72,8 @@
 
 .fiscalizacion-container {
     border: 1px solid #ccc;
-    padding: 20px;
     margin: 20px;
     font-family: Arial, sans-serif;
-
     width: 40%;
     height: auto;
     padding: 20px 50px 50px 50px;
@@ -94,7 +92,7 @@
     transform: translateX(-50%);
 
     /* Center vertically */
-    top: 75%;
+    top: 90%;
     transform: translateY(-50%);
 
     @media screen and (max-width: 768px) {
@@ -106,7 +104,8 @@
     }
 }
 
-.fiscalizacion-container button{ //For the login button
+.fiscalizacion-container button {
+    //For the login button
     color: white;
     width: fit-content;
     padding: 10px 50px 10px 50px;
@@ -117,4 +116,11 @@
     text-transform: capitalize;
     background-color: #C8283B;
     border: none;
+}
+
+.fiscalizacion-container u {
+    font-size: 18px;
+    text-decoration: underline;
+    margin-top: 20px;
+    //font-style: italic;
 }

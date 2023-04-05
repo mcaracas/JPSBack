@@ -2,32 +2,31 @@ import React, { useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { actaFiscalizacion } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
-
-const initialValues = {
-    procesosConformeEstablecido: true,
-    otrasObservaciones: '',
-    detalles: '',
-    recomendaciones: true,
-    resultadosSorteo: ''
-};
+import { useNavigate } from 'react-router-dom';
 
 
-
-const handleerror = (value) => {
-    let error;
-    if (!value) {
-        error = 'Campo requerido';
-    }
-    return error;
-};
-
-
-
-const ConclusionesFiscalizacion = () => {
+const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha }) => {
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
+    const navigate = useNavigate();
+
+    const initialValues = {
+        procesosConformeEstablecido: true,
+        otrasObservaciones: '',
+        detalles: '',
+        recomendaciones: true,
+        resultadosSorteo: ''
+    };
+
+    const handleerror = (value) => {
+        let error;
+        if (!value) {
+            error = 'Campo requerido';
+        }
+        return error;
+    };
 
     const handleSubmit = async (values) => {
         try {
@@ -44,18 +43,20 @@ const ConclusionesFiscalizacion = () => {
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
+        navigate('/');      // Redirect to the next page
     }
+
     return (
         <>
             <div className="fiscalizacion-container">
-
                 <div className="fiscalizacion-header">
                     <b>AUDITORÍA INTERNA</b>
                     <br />
                     <b>ACTA DE FISCALIZACIÓN</b>
                     <br />
-                    <b>SORTEO:</b>
+                    <b>SORTEO: {sorteo}</b>
                     <br />
+                    <b>{fecha}</b>
                 </div>
 
                 <Formik
@@ -71,8 +72,8 @@ const ConclusionesFiscalizacion = () => {
                             </label>
                             <label>
                                 Otras:
-                                {values.procesosConformeEstablecido ? <Field type="text" name="otrasObservaciones" disabled /> :
-                                    <div><Field type="text" name="otrasObservaciones" validate={handleerror} />
+                                {values.procesosConformeEstablecido ? <Field type="text" className="inp" name="otrasObservaciones" disabled /> :
+                                    <div><Field type="text" name="otrasObservaciones" className="inp" validate={handleerror} />
                                         {errors.otrasObservaciones && touched.otrasObservaciones ?
                                             <div style={{ color: "red" }}>
                                                 <ErrorMessage name="otrasObservaciones" />
@@ -80,11 +81,11 @@ const ConclusionesFiscalizacion = () => {
                                             : null}
                                     </div>}
                             </label>
-                            <h6>Detallar:</h6>
+                            <h5>Detallar:</h5>
                             <label>
-                                {values.procesosConformeEstablecido ? <Field component="textarea" name="detalles" rows="4" cols="50" disabled /> :
+                                {values.procesosConformeEstablecido ? <Field component="textarea" className="inp" name="detalles" rows="4" cols="50" disabled /> :
                                     <div>
-                                        <Field component="textarea" name="detalles" rows="4" cols="50" validate={handleerror} />
+                                        <Field component="textarea" name="detalles" className="inp" rows="4" cols="50" validate={handleerror} />
                                         {errors.detalles && touched.detalles ?
                                             <div style={{ color: "red" }}>
                                                 <ErrorMessage name="detalles" />
@@ -99,9 +100,9 @@ const ConclusionesFiscalizacion = () => {
                             </label>
                             <label>
                                 Los resultados evidenciados en el sorteo serán analizados para ser eventualmente valorados en la formulación de un oficio de advertencia/asesoría o bien un informe de auditoría
-                                {values.recomendaciones ? <Field component="textarea" name="resultadosSorteo" rows="4" cols="50" disabled /> :
+                                {values.recomendaciones ? <Field component="textarea" name="resultadosSorteo" className="inp" rows="4" cols="50" disabled /> :
                                     <div>
-                                        <Field component="textarea" name="resultadosSorteo" rows="4" cols="50" validate={handleerror} />
+                                        <Field component="textarea" name="resultadosSorteo" className="inp" rows="4" cols="50" validate={handleerror} />
                                         {errors.resultadosSorteo && touched.resultadosSorteo ?
                                             <div style={{ color: "red" }}>
                                                 <ErrorMessage name="resultadosSorteo" />
@@ -123,11 +124,11 @@ const ConclusionesFiscalizacion = () => {
                                     </label>
                                 </li>
                             </ul>
-
+                            <u>{fiscalizador}</u>
                             <p>Fiscalizador de la Auditoría Interna</p>
 
                             <button type="submit" disabled={isSubmitting}>
-                                {isSubmitting ? 'Submitting...' : 'Submit'}
+                                {isSubmitting ? 'Submitting...' : 'Enviar'}
                             </button>
                         </Form>
                     )}
