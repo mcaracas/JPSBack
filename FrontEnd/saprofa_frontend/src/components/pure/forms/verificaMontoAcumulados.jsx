@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
-import '../VerificaMontosAcumulados/VerificaMontosAcumulados.scss';
+import './../../../styles/VerificaMontosAcumulados.scss';
 import { Formik, Form } from 'formik';
-import { getMontoAcumulado } from '../../services/axiosService';
-import { insertaMontoAcumulado } from '../../services/axiosService';
-import SuccessModal from '../../components/modals/SuccessModal';
+import { getMontoAcumulado } from '../../../services/axiosService';
+import { insertaMontoAcumulado } from '../../../services/axiosService';
+import SuccessModal from './../../modals/SuccessModal';
 
 const VerificaMontosAcumulado = () => {
 
@@ -92,7 +91,6 @@ const VerificaMontosAcumulado = () => {
                     onSubmit={handleSubmit}
                 >
                     <section className="verificaAcumulado">
-                        <EncabezadoFranjas title={"Monto Acumulado"}></EncabezadoFranjas>
                         <hr />
                         <h4>Monto total:</h4>
                         <h4>₡ {formattedDatos}</h4>
