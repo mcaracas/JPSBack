@@ -21,8 +21,8 @@ import ConfirmationCodeModal from './components/pure/forms/ConfirmationCodeModal
 import LoteriaFisicapage from './pages/Resultados/LoteriaFisicapage';
 import LoteriaElectronicaPage from './pages/Resultados/LoteriaElectronicaPage';
 import ConclusionesRecomendacionesPage from './pages/ConclusionesRecomendaciones/ConclusionesRecomendacionesPage';
-import CierreApuestas from './pages/CierreApuestas/CierreApuestas';
-import VerificaMontosAcumulados from './pages/VerificaMontosAcumulados/VerificaMontosAcumulados';
+import CierreApuestas from './pages/CierreApuestas/CierreApuestasPage';
+import VerificaMontosAcumulados from './pages/VerificaMontosAcumulados/VerificaMontosAcumuladosPage';
 import DatosParticipantesPage from './pages/DatosParticipantes/DatosParticipantesPage';
 import TomoFolioPage from './pages/TomoFolio/TomoFolioPage';
 function App() {
