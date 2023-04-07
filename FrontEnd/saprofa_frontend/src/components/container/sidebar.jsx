@@ -25,22 +25,16 @@ const Sidebar = () => {
         <ul className="list-group">
             <li className="list-group-item">
                 <a className="menu-opc" href="/ChooseLottery">
-                    {/* <i className="bi bi-house"></i> */}
-                    {/* &nbsp; */}
                     Seleccionar sorteo
                 </a>
             </li>
             <li className="list-group-item">
-                <a className="menu-opc" href="/NombreFiscalizadores">
-                    {/* <i className="bi bi-house"></i> */}
-                    {/* &nbsp; */}
+                <a className="menu-opc" href="/DatosParticipantesPage">
                     Nombre de fiscalizadores
                 </a>
             </li>
             <li className="list-group-item">
                 <a className="menu-opc" href="/DatosPrevios">
-                    {/* <i className="bi bi-house"></i> */}
-                    {/* &nbsp; */}
                     Lista de Chequeo
                 </a>
             </li>
@@ -105,8 +99,6 @@ const Sidebar = () => {
             </li>
             <li className='list-group-item'>
                 <a className="menu-opc" href="/CierreApuestas">
-                    {/* <i className="bi bi-house"></i> */}
-                    {/* &nbsp; */}
                     Cierre de Apuestas
                 </a>
 
@@ -118,7 +110,7 @@ const Sidebar = () => {
                     id="dropdownMenuButton"
                     onClick={handleOpenResultados}
                 >
-                    Ingreso de Resultados
+                    Ingreso de <br></br>Resultados
                 </a>
                 {showResultados ?
                     <div className='dropdown'>
@@ -135,43 +127,22 @@ const Sidebar = () => {
             {/* @TODO: Ingreso de escrutinio */}
             <li className="list-group-item">
                 <a className="menu-opc" href="/ConclusionesRecomendaciones">
-                    {/* <i className="bi bi-house"></i> */}
-                    {/* &nbsp; */}
                     Conclusiones y Recomendaciones
                 </a>
             </li>
+            {/* @TODO: Actas */}
+            <li className="list-group-item">
+                <a className="menu-opc dropdown-toggle"
+                    type="button"
+                    id="dropdownMenuButton"
+                // onClick={handleOpenResultados}
+                >
+                    Actas
+                </a>
 
+            </li>
         </ul>
     );
 }
 
 export default Sidebar;
-
-//Pruebas (Submenu), Actas, Seleccionar sorteo, lista chequeo
-
-
-//Pages to add link:
-// ChooseLottery
-// DatosPrevios
-// DROPDOWN MENU:
-//          MarchamoPopular
-//          MarchamoNacional
-//          MarchamoLotto
-//          MarchamoNuevosTiempos
-//          Marchamo3Monazos
-// NombreFiscalizadores
-// Valija3Monazos
-// ValijaNuevosTiempos
-// DROPDOWN MENU:
-//      PruebasLotto
-//      Pruebas3Monazos
-//      PruebasNuevosTiempos
-// PlanPremios
-// DROPDOWN MENU:
-//      ResultadosLoteriaFisica
-//      ResultadosLoteriaElectronica
-// ConclusionesRecomendaciones
-// CierreApuestas
-// VerificaMontosAcumulados
-// DatosParticipantesPage
-// TomoFolio
