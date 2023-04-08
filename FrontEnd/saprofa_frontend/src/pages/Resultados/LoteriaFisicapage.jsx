@@ -1,6 +1,7 @@
 import React from 'react';
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import ResultadoLoteriaFisica from '../../components/pure/Resultados/ResultadoLoteriaFisica';
+import Container from '../../components/container/container';
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
 const numSorteo = lottery?.numSorteo;
@@ -12,7 +13,7 @@ const LoteriaFisicapage = () => {
     return (
         <div>
             <EncabezadoFranjas title={"Resultados Loteria Fisica"}/>
-            <ResultadoLoteriaFisica idSorteo={idSorteo}/>
+            <Container  component={<ResultadoLoteriaFisica idSorteo={idSorteo}/>} />
         </div>
     );
 }

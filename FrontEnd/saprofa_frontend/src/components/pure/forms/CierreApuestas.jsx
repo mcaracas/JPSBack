@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
-import '../CierreApuestas/CierreApuestas.scss';
+import './../../../styles/CierreApuestas.scss';
 import { Formik, Form } from 'formik';
-import { getCierreApuestas } from '../../services/axiosService';
-import { insertarApuestas } from '../../services/axiosService';
-import SuccessModal from '../../components/modals/SuccessModal';
+import { getCierreApuestas } from '../../../services/axiosService';
+import { insertarApuestas } from '../../../services/axiosService';
+import SuccessModal from '../../modals/SuccessModal';
 
 const CierreApuestas = () => {
 
@@ -92,7 +91,6 @@ const CierreApuestas = () => {
                     onSubmit={handleSubmit}
                 >
                     <section className="cierreApuestas">
-                        <EncabezadoFranjas title={"Cierre de las apuestas"}></EncabezadoFranjas>
                         <hr />
                         <h4>Monto total:</h4>
                         <h4>₡ {formattedDatos}</h4>
