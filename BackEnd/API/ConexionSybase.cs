@@ -72,7 +72,26 @@ public class ConexionSybase
             return acum;
     }
 
-    
+    public Ventas GetVentas(int predicate)
+    {
+      string connStr;
+      connStr = V;
+      OleDbConnection conn = new OleDbConnection(connStr);
+      conn.Open();
+      OleDbCommand myCommand = new OleDbCommand("select * from ReporteVentas where idsorteo = " + predicate.ToString(), conn);
+      OleDbDataReader myReader = myCommand.ExecuteReader();
+      Ventas ventas = new Ventas();
+          while (myReader.Read())
+            {
+              ventas.id = (int)myReader["id"];
+              ventas.idSorteo = (int)myReader["idSorteo"];
+              ventas.montoVentas = (double)myReader["montoVentas"];
+            }
+      conn.Close();
+      return ventas;
+    }
+
+
 }
 
     
