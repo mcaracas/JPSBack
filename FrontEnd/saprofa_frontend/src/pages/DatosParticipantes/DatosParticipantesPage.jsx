@@ -2,6 +2,7 @@ import React from 'react';
 import DatosParticipantes from '../../components/pure/datosParticipantes/DatosParticipantes';
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import { getDatosParticipantes } from '../../services/axiosService';
+import Container from '../../components/container/container';
 
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
@@ -13,14 +14,16 @@ const idSorteo = `${tipoLoteria}${numSorteo}`;
 const obtenerDatosAdministracion = (idSorteo) => {
     // TODO: check the value returned by the endpoint
     return getDatosParticipantes(idSorteo);
-  }
+}
 
 const DatosParticipantesPage = () => {
     // TODO: change props sent to DatosParticipantes to use sessionStorage
     return (
         <div>
-            <EncabezadoFranjas title={"Datos de los participantes"}/>
-            <DatosParticipantes idSorteo={ idSorteo } obtenerDatosAdministracion={ obtenerDatosAdministracion }/>
+            <EncabezadoFranjas title={"Datos de los participantes"} />
+            <Container
+                component={<DatosParticipantes idSorteo={idSorteo} obtenerDatosAdministracion={obtenerDatosAdministracion} />}
+            />
         </div>
     );
 }

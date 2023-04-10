@@ -388,6 +388,11 @@ namespace API
                     .HasColumnType("int(11)")
                     .HasColumnName("id_plan");
 
+                
+                entity.Property(e => e.CantidadPremios)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("CantidadPremios");
+
                 entity.Property(e => e.MontoUnitario).HasColumnName("monto_unitario");
 
                 entity.HasOne(d => d.IdPlanNavigation)

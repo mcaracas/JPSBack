@@ -2,6 +2,7 @@ import React from 'react';
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import ConclusionesRecomendaciones from '../../components/pure/conclusionesRecomendaciones/ConclusionesFiscalizacion';
 import '../../styles/conclusionesrecomendaciones.scss';
+import Container from '../../components/container/container';
 
 function fecha(dateString) {
     const date = new Date(dateString);
@@ -25,7 +26,9 @@ const ConclusionesRecomendacionesPage = () => {
     return (
         <div>
             <EncabezadoFranjas title={"Conclusiones y Recomendaciones"} />
-            <ConclusionesRecomendaciones sorteo={sorteo} fiscalizador={fiscalizador} fecha={fecha(fechaSorteo)} />
+            <Container 
+            component={<ConclusionesRecomendaciones sorteo={sorteo} fiscalizador={fiscalizador} fecha={fecha(fechaSorteo)} />}
+            />
         </div>
     );
 }

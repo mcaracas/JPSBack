@@ -1,0 +1,51 @@
+.fiscalizacion-containerS input[type="text"] {
+    width: 30%;
+    height: 10%;
+    margin: auto 5px;
+}
+
+.fiscalizacion-containerS input[name^="no_juegan"] {
+    width: 100%;
+    height: 10%;
+    margin: auto 5px;
+}
+
+.fiscalizacion-containerS input[name^="ser_"] {
+    width: 45%;
+    height: 10%;
+    margin: auto 5px;
+}
+
+.fiscalizacion-containerS {
+    border: 1px solid #ccc;
+    margin: 20px;
+    font-family: Arial, sans-serif;
+    width: 45%;
+    height: auto;
+    padding: 20px 50px 50px 50px;
+    position: absolute;
+    min-width: 400px;
+    min-height: 420px;
+    border-radius: 20px;
+    margin-bottom: 50px;
+    background-color: white;
+    color: black;
+    box-shadow: 0px 3px 16px 0px rgba(154, 152, 152, 0.75);
+    text-align: center;
+
+    /* Center horizontally */
+    left: 30%;
+    transform: translateX(-50%);
+
+    /* Center vertically */
+    top: 90%;
+    transform: translateY(-50%);
+
+    @media screen and (max-width: 768px) {
+        .fiscalizacion-container {
+            width: 80%;
+            min-width: 300px;
+            padding: 30px;
+        }
+    }
+}
