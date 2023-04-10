@@ -27,6 +27,6 @@ public class VentasController : ControllerBase
         ConexionSybase conexion = new ConexionSybase();
             Ventas datos = conexion.GetVentas(id);
         return datos;
-    }
+    }   
 }
 
