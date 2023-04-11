@@ -15,7 +15,8 @@ namespace API
         public int Id { get; set; }
         public string Descripcion { get; set; }
         public string TipoLoteria { get; set; }
-
+        public string TipoListaChequeo { get; set; }
+        public int? Orden { get; set; }
         public virtual TipoLoterium TipoLoteriaNavigation { get; set; }
         public virtual ICollection<ListaChequeoSorteo> ListaChequeoSorteos { get; set; }
     }

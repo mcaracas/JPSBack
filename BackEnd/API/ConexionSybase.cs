@@ -4,7 +4,7 @@ using System.Data.OleDb;
 
 namespace API;
 
-//create data base connection class 
+
 public class ConexionSybase
 {
     private const string V = "Provider=ASEOLEDB;Data Source=DESKTOP-G368AIS:5000;Catalog=master;User Id=sa;Password=root123;";
@@ -72,7 +72,47 @@ public class ConexionSybase
             return acum;
     }
 
-    
+    public Ventas GetVentas(int predicate)
+    {
+      string connStr;
+      connStr = V;
+      OleDbConnection conn = new OleDbConnection(connStr);
+      conn.Open();
+      OleDbCommand myCommand = new OleDbCommand("select * from ReporteVentas where idsorteo = " + predicate.ToString(), conn);
+      OleDbDataReader myReader = myCommand.ExecuteReader();
+      Ventas ventas = new Ventas();
+          while (myReader.Read())
+            {
+              ventas.id = (int)myReader["id"];
+              ventas.idSorteo = (int)myReader["idSorteo"];
+              ventas.montoVentas = (double)myReader["montoVentas"];
+            }
+      conn.Close();
+      return ventas;
+    }
+
+    public List<Series> GetSeries(int predicate, int Vendido)
+    {
+      string connStr;
+      connStr = V;
+      OleDbConnection conn = new OleDbConnection(connStr);
+      conn.Open();
+      OleDbCommand myCommand = new OleDbCommand("select * from Serie where idSorteo = " + predicate.ToString() + "and Vendido = " + Vendido.ToString(), conn);
+      OleDbDataReader myReader = myCommand.ExecuteReader();
+      List<Series> series = new List<Series>();
+          while (myReader.Read())
+            {
+              Series serie = new Series();
+              serie.id = (int)myReader["id"];
+              serie.idSorteo = (int)myReader["idSorteo"];
+              serie.SerieEnJuego = (int)myReader["SerieEnJuego"];
+              serie.Vendido = (bool)myReader["Vendido"];
+              series.Add(serie);
+            }
+      conn.Close();
+      return series;
+    }
+
 }
 
     
