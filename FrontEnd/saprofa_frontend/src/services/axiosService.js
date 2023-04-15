@@ -73,7 +73,7 @@ export function insertMarchamo(marchamoList) {
 }
 
 export function getMarchamos() {
-    return APIRequest.get('/Marchamo');
+    return APIRequest.get('/Series');
 }
 
 export function getActualLotteryInfo() {
