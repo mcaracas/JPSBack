@@ -34,12 +34,6 @@ public IActionResult GetLatestResult()
             select d2.IdInterno
         ).FirstOrDefault()
         select new {
-            d.IdInterno,
-            d.IdUsuario,
-            d.NumSorteo,
-            d.TipoLoteria,
-            d.PlanPremios,
-            d.FechaHora,
             m.Id,
             m.IdSorteo,
             m.Tipo,
