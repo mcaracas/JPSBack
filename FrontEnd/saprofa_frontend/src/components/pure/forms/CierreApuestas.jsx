@@ -48,9 +48,9 @@ const CierreApuestas = () => {
 
     const getDatos = async () => {
         try {
-            const response = getCierreApuestas(); //response.data y ocupa el ID
-            console.log(response); //response.data
-            setDatos(response); //response.data
+            const response = await getCierreApuestas(123);
+            console.log(response.data);
+            setDatos(response.data);
         }
         catch (error) {
             setTitulo('Operación fallida');

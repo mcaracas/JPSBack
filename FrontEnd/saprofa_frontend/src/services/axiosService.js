@@ -130,11 +130,11 @@ export function getUltimoTomofolio(idInterno) {
 }
 
 export function getCierreApuestas(id) {
-    return 1256250000666 //APIRequest.get('/CierreApuestas/' + id);
+    return APIRequest.get('/CierreApuestas/' + id);
 }
 
 export function getMontoAcumulado(id) {
-    return 1256250000666 //APIRequest.get('/MontoAcumulado/' + id);
+    return APIRequest.get('/MontoAcumulado/' + id);
 }
 
 export function insertarApuestas(monto) {
