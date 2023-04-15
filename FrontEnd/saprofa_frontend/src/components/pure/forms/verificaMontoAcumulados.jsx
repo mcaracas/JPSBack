@@ -48,7 +48,7 @@ const VerificaMontosAcumulado = () => {
 
     const getDatos = async () => {
         try {
-            const response = await getMontoAcumulado(); //response.data y ocupa el ID
+            const response = await getMontoAcumulado(1); //response.data y ocupa el ID
             console.log(response.data); //response.data
             setDatos(response.data); //response.data
         }
