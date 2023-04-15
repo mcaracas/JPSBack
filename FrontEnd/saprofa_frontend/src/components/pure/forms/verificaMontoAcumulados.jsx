@@ -48,9 +48,9 @@ const VerificaMontosAcumulado = () => {
 
     const getDatos = async () => {
         try {
-            const response = getMontoAcumulado(); //response.data y ocupa el ID
-            console.log(response); //response.data
-            setDatos(response); //response.data
+            const response = await getMontoAcumulado(); //response.data y ocupa el ID
+            console.log(response.data); //response.data
+            setDatos(response.data); //response.data
         }
         catch (error) {
             setTitulo('Operación fallida');

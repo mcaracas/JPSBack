@@ -48,7 +48,7 @@ const CierreApuestas = () => {
 
     const getDatos = async () => {
         try {
-            const response = await getCierreApuestas(123);
+            const response = await getCierreApuestas(1);
             console.log(response.data);
             setDatos(response.data);
         }

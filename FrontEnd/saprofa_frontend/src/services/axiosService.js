@@ -134,7 +134,7 @@ export function getCierreApuestas(id) {
 }
 
 export function getMontoAcumulado(id) {
-    return APIRequest.get('/MontoAcumulado/' + id);
+    return APIRequest.get('/VerificarAcumGtec/' + id);
 }
 
 export function insertarApuestas(monto) {
