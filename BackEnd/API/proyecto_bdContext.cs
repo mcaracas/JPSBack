@@ -234,6 +234,14 @@ namespace API
                 entity.Property(e => e.Descripcion)
                     .HasColumnType("varchar(5000)")
                     .HasColumnName("descripcion");
+                    
+                entity.Property(e => e.Orden)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("orden");
+
+                entity.Property(e => e.TipoListaChequeo)
+                    .HasMaxLength(45)
+                    .HasColumnName("tipo_lista_chequeo");
 
                 entity.Property(e => e.TipoLoteria)
                     .HasMaxLength(10)
@@ -379,6 +387,11 @@ namespace API
                 entity.Property(e => e.IdPlan)
                     .HasColumnType("int(11)")
                     .HasColumnName("id_plan");
+
+                
+                entity.Property(e => e.CantidadPremios)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("CantidadPremios");
 
                 entity.Property(e => e.MontoUnitario).HasColumnName("monto_unitario");
 
