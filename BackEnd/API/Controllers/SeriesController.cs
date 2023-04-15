@@ -24,9 +24,13 @@ public IActionResult GetLatestResult()
         join m in context.Marchamos on d.IdInterno equals m.IdSorteo
         where d.TipoLoteria == "LN" || d.TipoLoteria == "LP"
         && d.IdInterno == (
-            from d2 in context.DatosSorteos
-            where d2.TipoLoteria == "LN" || d2.TipoLoteria == "LP"
-            orderby d2.IdInterno descending
+            from d2 in (
+                from d3 in context.DatosSorteos
+                where d3.TipoLoteria == "LN" || d3.TipoLoteria == "LP"
+                orderby d3.IdInterno descending
+                select d3
+            ).Take(2)
+            orderby d2.IdInterno ascending
             select d2.IdInterno
         ).FirstOrDefault()
         select new {
