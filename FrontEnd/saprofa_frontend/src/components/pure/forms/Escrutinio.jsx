@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import './../../../styles/VerificaMontosAcumulados.scss';
+import './../../../styles/Escrutinio.scss';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { getMontoAcumulado } from '../../../services/axiosService';
-import { insertaMontoAcumulado } from '../../../services/axiosService';
+import { getEscrutinio } from '../../../services/axiosService';
+import { insertarEscrutinio } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
 
-const VerificaMontoAcumulado = () => {
+const Escrutinio = () => {
 
     const [datos, setDatos] = React.useState();
     const [checked, setChecked] = React.useState(true);
@@ -50,7 +50,7 @@ const VerificaMontoAcumulado = () => {
 
     const getDatos = async () => {
         try {
-            const response = getMontoAcumulado(1);
+            const response = getEscrutinio(1);
             setDatos(response);
         }
         catch (error) {
@@ -71,10 +71,10 @@ const VerificaMontoAcumulado = () => {
     const handleSubmit = async () => {
         try {
             if (!checked) {
-                await insertaMontoAcumulado(datos);
+                await insertarEscrutinio(datos);
             } else {
                 const numberWithoutDots = Number(datos2.replace(/\./g, ''));
-                await insertaMontoAcumulado(numberWithoutDots);
+                await insertarEscrutinio(numberWithoutDots);
             }
             setTitulo('Operación exitosa');
             setMensaje('Monto Acumulado guardado exitosamente');
@@ -96,7 +96,6 @@ const VerificaMontoAcumulado = () => {
         montoNuevo: ''
     };
 
-
     const formattedDatos = datos ? datos.toLocaleString('es-ES').replace(/,/g, '.') : '';
     const formattedDatos2 = datos2 ? datos2.toLocaleString('es-ES').replace(/,/g, '.') : '';
     return (
@@ -108,7 +107,7 @@ const VerificaMontoAcumulado = () => {
                 >
                     {({ errors, touched }) => (
                         <Form>
-                            < section className="verificaMontoacumulado">
+                            < section className="escrutinio">
                                 <hr />
                                 <h4>Monto total:</h4>
                                 <h4>₡ {formattedDatos}</h4>
@@ -172,4 +171,4 @@ const VerificaMontoAcumulado = () => {
     );
 }
 
-export default VerificaMontoAcumulado;
+export default Escrutinio;

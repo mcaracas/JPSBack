@@ -130,11 +130,11 @@ export function getUltimoTomofolio(idInterno) {
 }
 
 export function getCierreApuestas(id) {
-    return APIRequest.get('/CierreApuestas/' + id);
+    return 10000000000//APIRequest.get('/CierreApuestas/' + id);
 }
 
 export function getMontoAcumulado(id) {
-    return APIRequest.get('/VerificarAcumGtec/' + id);
+    return 10000000000//APIRequest.get('/VerificarAcumGtec/' + id);
 }
 
 export function insertarApuestas(monto) {
@@ -150,4 +150,12 @@ export function insertaMontoAcumulado(monto) {
 export function insertarFicheros(ficheros) {
     console.log(ficheros);
     return APIRequest.post('/Ficheros', ficheros);
+}
+
+export function getEscrutinio(id) {
+    return 10000000000//APIRequest.get('/Escrutinio' + id);
+}
+
+export function insertarEscrutinio(escrutinio) {
+    return APIRequest.post('/Escrutinio', escrutinio);
 }
