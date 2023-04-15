@@ -9,7 +9,6 @@ namespace API
     {
         public string TipoLoteria { get; set; }
         public double? Monto { get; set; }
-
         public virtual TipoLoterium TipoLoteriaNavigation { get; set; }
     }
 }

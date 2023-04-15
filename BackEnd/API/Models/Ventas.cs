@@ -10,5 +10,7 @@ namespace API
         public int id { get; set; }
         public int idSorteo { get; set; }
         public double montoVentas { get; set; }
+
+        public double montoComprado { get; set; }	
     }
 }
