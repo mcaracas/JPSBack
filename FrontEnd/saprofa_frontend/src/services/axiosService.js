@@ -72,6 +72,10 @@ export function insertMarchamo(marchamoList) {
     return APIRequest.post('/Marchamo', marchamoList);
 }
 
+export function getMarchamos() {
+    return APIRequest.get('/Marchamo');
+}
+
 export function getActualLotteryInfo() {
     return APIRequest.get('/DatosSorteo/SorteoActual');
 }
@@ -141,4 +145,9 @@ export function insertarApuestas(monto) {
 export function insertaMontoAcumulado(monto) {
     console.log(monto);
     return APIRequest.post('/VerificarAcumGtecController/', monto)
+}
+
+export function insertarFicheros(ficheros) {
+    console.log(ficheros);
+    return APIRequest.post('/Ficheros', ficheros);
 }

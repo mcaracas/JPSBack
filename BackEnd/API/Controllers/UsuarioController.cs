@@ -80,7 +80,7 @@ public class UsuarioController : ControllerBase
         else
         {
             ConfirmEmail generateMail = new ConfirmEmail();
-            var code = "L0-" + Guid.NewGuid().ToString();
+            var code = "L0-" + Guid.NewGuid().ToString().Substring(0, 8);
             generateMail.Page_Load("cabezasvizcaino@gmail.com", code, "Su código de recuperación es:");
             return code;
         }
@@ -98,7 +98,7 @@ public class UsuarioController : ControllerBase
         else
         {
             ConfirmEmail generateMail = new ConfirmEmail();
-            var code = "L0-" + Guid.NewGuid().ToString();
+            var code = "L0-" + Guid.NewGuid().ToString().Substring(0, 8);
             generateMail.Page_Load("cabezasvizcaino@gmail.com", code, "Su contraseña es:");
             usuarioUpdate.Clave = Utilidades.Utilidades.Encrypt(code.ToString());
             context.SaveChanges();

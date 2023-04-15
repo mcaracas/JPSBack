@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './../../../styles/CierreApuestas.scss';
-import { Formik, Form } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { getCierreApuestas } from '../../../services/axiosService';
 import { insertarApuestas } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
@@ -59,6 +59,14 @@ const CierreApuestas = () => {
         }
     }
 
+    const handleerror = (value) => {
+        let error;
+        if (!value) {
+            error = 'Campo requerido';
+        }
+        return error;
+    };
+
     const handleSubmit = async () => {
         try {
             await insertarApuestas(datos);
@@ -78,11 +86,10 @@ const CierreApuestas = () => {
     }, []);
 
     const initialValues = {
-        montoTotal: datos
+        montoTotal: ''
     };
 
     const formattedDatos = datos ? datos.toLocaleString('es-ES').replace(/,/g, '.') : '';
-
     return (
         <>
             <div>
@@ -90,34 +97,46 @@ const CierreApuestas = () => {
                     initialValues={initialValues}
                     onSubmit={handleSubmit}
                 >
-                    <section className="cierreApuestas">
-                        <hr />
-                        <h4>Monto total:</h4>
-                        <h4>₡ {formattedDatos}</h4>
-                        <div className="cierreApuestas">
-                            <h5>¿Es correcto?</h5>
-                            <input className="check" onChange={handleCheck} type="checkbox" name="nombre" id="nombre" />
-                            {checked && <span className="required-message">Debes marcar esta opción</span>}
-                        </div>
-                        <hr />
-                        <label>
-                            <h5>En caso de error digite el monto correcto: </h5>
-                            <input className="check" onChange={handleCheck2} type="checkbox" name="edita" id="edita" />
-                        </label>
-                        <br />
-                        <input className="lbl1" disabled={checked2} onChange={manejarCambiodatos} type="text"
-                            onKeyPress={(event) => {
-                                if (!/[0-9]/.test(event.key)) {
-                                    event.preventDefault();
-                                }
-                            }}
-                        />
-                        <br />
+                    {({ isSubmitting, errors, touched, values }) => (
                         <Form>
-                            <button type="submit" className="btn" disabled={checked}>Aceptar
-                            </button>
+                            <section className="cierreApuestas">
+                                <hr />
+                                <h4>Monto total:</h4>
+                                <h4>₡ {formattedDatos}</h4>
+                                <div className="cierreApuestas">
+                                    <h5>¿Es correcto?</h5>
+                                    <input className="check" onChange={handleCheck} type="checkbox" name="nombre" id="nombre" />
+                                    {checked && <span className="required-message">Debes marcar esta opción</span>}
+                                </div>
+                                <hr />
+                                <label>
+                                    <h5>En caso de error digite el monto correcto: </h5>
+                                    <input className="check" onChange={handleCheck2} type="checkbox" name="edita" id="edita" />
+                                </label>
+                                <br />
+                                <div>
+                                    <input validate={handleerror} className="lbl1" disabled={checked2} onChange={manejarCambiodatos} type="text"
+                                        onKeyPress={(event) => {
+                                            if (!/[0-9]/.test(event.key)) {
+                                                event.preventDefault();
+                                            }
+                                        }}
+                                    />
+                                    {errors.montoTotal && touched.montoTotal ?
+                                        <div style={{ color: 'red' }}>
+                                            <ErrorMessage name="montoTotal" />
+                                        </div>
+                                        : null}
+                                </div>
+                                <br />
+
+                                <button type="submit" className="btn" disabled={checked}>Aceptar
+
+                                </button>
+
+                            </section>
                         </Form>
-                    </section>
+                    )}
                 </Formik>
             </div>
             <SuccessModal

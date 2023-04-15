@@ -9,6 +9,7 @@ const SeriesEnJuegoPage = () => {
     const numeroSorteo = lottery?.numSorteo;
     const tipoLoteria = lottery?.tipoLoteria;
     const sorteo = `${tipoLoteria}${' Nº ' + numeroSorteo}`;
+    const idInterno = lottery?.idInterno;
     const fechaSorteo = lottery?.fechaHora;
     //const fiscalizador = lottery?.fiscalizador;
     const fiscalizador = 'Andrés Villalobos Montero';
@@ -17,7 +18,7 @@ const SeriesEnJuegoPage = () => {
     return (
         <div>
             <EncabezadoFranjas title={"Series en juego"} />
-            <SeriesEnJuego sorteo={sorteo} fiscalizador={fiscalizador} fecha={"2023-04-06"} hora={hora} />
+            <SeriesEnJuego idInterno={idInterno} sorteo={sorteo} fiscalizador={fiscalizador} fecha={"2023-04-06"} hora={hora} />
         </div>
     );
 }
