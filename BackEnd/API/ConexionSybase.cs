@@ -4,7 +4,7 @@ using System.Data.OleDb;
 
 namespace API;
 
-
+//create data base connection class 
 public class ConexionSybase
 {
     private const string V = "Provider=ASEOLEDB;Data Source=DESKTOP-G368AIS:5000;Catalog=master;User Id=sa;Password=root123;";
@@ -45,7 +45,7 @@ public class ConexionSybase
           while (myReader.Read())
             {
               cierr.IdCierre = (int)myReader["id"];
-              cierr.Monto = (double)myReader["montoCierre"];
+              cierr.Monto = (float)myReader["montoCierre"];
               cierr.IdSort = (int)myReader["idSorteo"]; 
             }
       conn.Close();
@@ -86,6 +86,7 @@ public class ConexionSybase
               ventas.id = (int)myReader["id"];
               ventas.idSorteo = (int)myReader["idSorteo"];
               ventas.montoVentas = (double)myReader["montoVentas"];
+              ventas.montoComprado = (double)myReader["montoComprado"];
             }
       conn.Close();
       return ventas;
@@ -113,6 +114,26 @@ public class ConexionSybase
       return series;
     }
 
+  public Escrutinio GetEscrutinio(int predicate)
+  {
+    string connStr;
+    connStr = V;
+    OleDbConnection conn = new OleDbConnection(connStr);
+    conn.Open();
+    OleDbCommand myCommand = new OleDbCommand("select * from Escrutinio where idsorteo = " + predicate.ToString(), conn);
+    OleDbDataReader myReader = myCommand.ExecuteReader();
+    Escrutinio escrutinio = new Escrutinio();
+        while (myReader.Read())
+          {
+            escrutinio.id = (int)myReader["id"];
+            escrutinio.idsorteo = (int)myReader["idsorteo"];
+            escrutinio.escrutinio = (double)myReader["escrutinio"];
+          }
+    conn.Close();
+    return escrutinio;
+  }
+
+    
 }
 
     
