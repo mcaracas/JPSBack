@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './../../../styles/CierreApuestas.scss';
-import { Formik, Form } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { getCierreApuestas } from '../../../services/axiosService';
 import { insertarApuestas } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
@@ -9,16 +9,18 @@ const CierreApuestas = () => {
 
     const [datos, setDatos] = React.useState();
     const [checked, setChecked] = React.useState(true);
-    const [checked2, setChecked2] = React.useState(true);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
+    const [checked2, setChecked2] = React.useState(false);
+    const [datos2, setDatos2] = React.useState();
 
     const handleCheck = (e) => {
         const isChecked = e.target.checked;
         console.log(isChecked);
         if (isChecked) {
             setChecked(false);
+            setChecked2(false);
         }
         else {
             setChecked(true);
@@ -29,10 +31,10 @@ const CierreApuestas = () => {
         const isChecked = e.target.checked;
         console.log(isChecked);
         if (isChecked) {
-            setChecked2(false);
+            setChecked2(true);
         }
         else {
-            setChecked2(true);
+            setChecked2(false);
         }
     }
 
@@ -43,14 +45,13 @@ const CierreApuestas = () => {
     const manejarCambiodatos = (e) => {
         const value = e.target.value;
         const formattedValue = value ? parseFloat(value).toLocaleString('es-ES').replace(/,/g, '.') : '';
-        setDatos(formattedValue);
+        setDatos2(formattedValue);
     }
 
     const getDatos = async () => {
         try {
-            const response = getCierreApuestas(); //response.data y ocupa el ID
-            console.log(response); //response.data
-            setDatos(response); //response.data
+            const response = getCierreApuestas(1);
+            setDatos(response);
         }
         catch (error) {
             setTitulo('Operación fallida');
@@ -59,9 +60,22 @@ const CierreApuestas = () => {
         }
     }
 
+    const handleerror = (value) => {
+        let error;
+        if (!value) {
+            error = 'Campo requerido';
+        }
+        return error;
+    };
+
     const handleSubmit = async () => {
         try {
-            await insertarApuestas(datos);
+            if (!checked) {
+                await insertarApuestas(datos);
+            } else {
+                const numberWithoutDots = Number(datos2.replace(/\./g, ''));
+                await insertarApuestas(numberWithoutDots);
+            }
             setTitulo('Operación exitosa');
             setMensaje('Cierre de Apuestas guardado exitosamente');
             setShowSuccessModal(true);
@@ -78,11 +92,12 @@ const CierreApuestas = () => {
     }, []);
 
     const initialValues = {
-        montoTotal: datos
+        montoTotal: '',
+        montoNuevo: ''
     };
 
     const formattedDatos = datos ? datos.toLocaleString('es-ES').replace(/,/g, '.') : '';
-
+    const formattedDatos2 = datos2 ? datos2.toLocaleString('es-ES').replace(/,/g, '.') : '';
     return (
         <>
             <div>
@@ -90,36 +105,62 @@ const CierreApuestas = () => {
                     initialValues={initialValues}
                     onSubmit={handleSubmit}
                 >
-                    <section className="cierreApuestas">
-                        <hr />
-                        <h4>Monto total:</h4>
-                        <h4>₡ {formattedDatos}</h4>
-                        <div className="cierreApuestas">
-                            <h5>¿Es correcto?</h5>
-                            <input className="check" onChange={handleCheck} type="checkbox" name="nombre" id="nombre" />
-                            {checked && <span className="required-message">Debes marcar esta opción</span>}
-                        </div>
-                        <hr />
-                        <label>
-                            <h5>En caso de error digite el monto correcto: </h5>
-                            <input className="check" onChange={handleCheck2} type="checkbox" name="edita" id="edita" />
-                        </label>
-                        <br />
-                        <input className="lbl1" disabled={checked2} onChange={manejarCambiodatos} type="text"
-                            onKeyPress={(event) => {
-                                if (!/[0-9]/.test(event.key)) {
-                                    event.preventDefault();
-                                }
-                            }}
-                        />
-                        <br />
+                    {({ errors, touched }) => (
                         <Form>
-                            <button type="submit" className="btn" disabled={checked}>Aceptar
-                            </button>
+                            < section className="cierreApuestas">
+                                <hr />
+                                <h4>Monto total:</h4>
+                                <h4>₡ {formattedDatos}</h4>
+
+                                <h5>¿Es correcto?</h5>
+                                <input className="check" onChange={handleCheck} type="checkbox" name="nombre" id="nombre" />
+                                {checked && <span className="required-message">Debes marcar esta opción caso de que el monto sea correcto</span>}
+
+                                <hr />
+                                <br />
+
+                                {checked ?
+                                    <div>
+                                        <label>
+                                            <h5>En caso de error digite el monto correcto: </h5>
+                                            <input className="check" onChange={handleCheck2} type="checkbox" name="edita" id="edita" />
+                                            <br />
+                                            {!checked2 && <span className="required-message">Marcar solamente en caso de que el monto sea incorrecto</span>}
+                                        </label>
+                                        <br />
+                                        <br />
+                                        {checked2 ?
+                                            <div>
+                                                <h4>Nuevo Monto:</h4>
+                                                <h4>₡ {formattedDatos2}</h4>
+                                                <Field className="lbl1" name='montoNuevo' placeholder='Digite el monto' disabled={!checked2} validate={handleerror} onInput={manejarCambiodatos} type="text"
+                                                    onKeyPress={(event) => {
+                                                        if (!/[0-9]/.test(event.key)) {
+                                                            event.preventDefault();
+                                                        }
+                                                    }}
+                                                />
+                                                {errors.montoNuevo && touched.montoNuevo ?
+                                                    <div style={{ color: 'red' }}>
+                                                        <ErrorMessage name="montoNuevo" />
+                                                    </div>
+                                                    : null}
+                                                <div>
+                                                    <br />
+                                                    <button type="submit" className="btn">Aceptar</button>
+                                                </div>
+                                            </div>
+                                            : <div></div>}
+                                    </div> :
+                                    <div>
+                                        <button type="submit" className="btn">Aceptar</button>
+                                    </div>
+                                }
+                            </section>
                         </Form>
-                    </section>
+                    )}
                 </Formik>
-            </div>
+            </div >
             <SuccessModal
                 show={showSuccessModal}
                 handleClose={handleCloseSuccessModal}
