@@ -25,6 +25,8 @@ import CierreApuestas from './pages/CierreApuestas/CierreApuestasPage';
 import VerificaMontosAcumulados from './pages/VerificaMontosAcumulados/VerificaMontosAcumuladosPage';
 import DatosParticipantesPage from './pages/DatosParticipantes/DatosParticipantesPage';
 import TomoFolioPage from './pages/TomoFolio/TomoFolioPage';
+import CompararVentasPage from './pages/CompararVentas/CompararVentasPage';
+
 function App() {
   return (
     <Router>
@@ -55,6 +57,7 @@ function App() {
           <Route exact path="/VerificaMontosAcumulados" element={<VerificaMontosAcumulados />} />
           <Route exact path="/DatosParticipantesPage" element={<DatosParticipantesPage/>} />
           <Route exact path="/TomoFolio" element={<TomoFolioPage/>} />
+          <Route exact path="/CompararVentas" element={<CompararVentasPage/>} />
         </Routes>
       </div>
     </Router>
