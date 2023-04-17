@@ -142,3 +142,7 @@ export function insertaMontoAcumulado(monto) {
     console.log(monto);
     return APIRequest.post('/VerificarAcumGtecController/', monto)
 }
+
+export function getListaChequeo(idInterno) {
+    return APIRequest.get('/ListaChequeoDetalle/ListaChequeoParaSorteo/' + idInterno);
+}
