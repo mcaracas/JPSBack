@@ -50,6 +50,8 @@ public class ListaChequeoSorteoController : ControllerBase
         ListaChequeoSorteoUpdate.Id = listaChequeoSorteo.Id;
         context.SaveChanges();
     }
+
+    
     [HttpDelete("{id}")]    
     public void Delete(int id)
     {
