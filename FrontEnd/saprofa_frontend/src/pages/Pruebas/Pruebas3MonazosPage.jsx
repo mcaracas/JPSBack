@@ -7,7 +7,7 @@ const Pruebas3MonazosPage = () => {
     return (
         <div>
             <EncabezadoFranjas title={"Pruebas 3 Monazos"} />
-            <Container component={<Pruebas3MonazosForm IdDatoSorteo={151} />} />
+            <Container component={<Pruebas3MonazosForm />} />
         </div>
     );
 }

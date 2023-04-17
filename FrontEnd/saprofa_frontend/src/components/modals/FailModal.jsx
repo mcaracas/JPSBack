@@ -1,15 +1,8 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-const SuccessModal = ({ show, handleClose, titulo, mensaje }) => {
+const FailModal = ({ show, handleClose, titulo, mensaje }) => {
   return (
-    /**
-     * @param show: boolean
-     * @param handleClose: function
-     * @param titulo: string
-     * @param mensaje: string
-     * @returns Modal
-     */
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>{titulo}</Modal.Title>
@@ -26,4 +19,4 @@ const SuccessModal = ({ show, handleClose, titulo, mensaje }) => {
   );
 }
 
-export default SuccessModal;
+export default FailModal;

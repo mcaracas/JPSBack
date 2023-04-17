@@ -28,6 +28,7 @@ import TomoFolioPage from './pages/TomoFolio/TomoFolioPage';
 import ListaChequeoPage from './pages/ListaChequeo/ListaChequeoPage';
 import SeriesEnJuegoPage from './pages/seriesEnJuego/seriesEnJuegoPage';
 import EscrutinioPage from './pages/Escrutinio/EscrutinioPage';
+
 function App() {
   return (
     <Router>
@@ -45,7 +46,7 @@ function App() {
           <Route exact path="/NombreFiscalizadores" element={<NombreFiscalizadores />} /> {/* Name of the inspectors page */}
           <Route exact path="/Valija3Monazos" element={<Valija3Monazos />} /> {/* Name of the inspectors page */}
           <Route exact path="/ValijaNuevosTiempos" element={<ValijaNuevosTiempos />} /> {/* Name of the inspectors page */}
-          <Route exact path="/PruebasLotto" element={<PruebasLottoPage />} /> 
+          <Route exact path="/PruebasLotto" element={<PruebasLottoPage />} />   
           <Route exact path="/Pruebas3Monazos" element={<Pruebas3MonazosPage />} /> 
           <Route exact path="/PruebasNuevosTiempos" element={<PruebasNTPage />} /> 
           <Route exact path="/PlanPremios" element={<PlanPremiosPage />} />
