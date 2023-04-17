@@ -27,8 +27,6 @@ import DatosParticipantesPage from './pages/DatosParticipantes/DatosParticipante
 import TomoFolioPage from './pages/TomoFolio/TomoFolioPage';
 import SeriesEnJuegoPage from './pages/seriesEnJuego/seriesEnJuegoPage';
 import EscrutinioPage from './pages/Escrutinio/EscrutinioPage';
-import Test from './components/pure/forms/Test';
-import Test2 from './components/pure/forms/Test2';
 
 function App() {
   return (
@@ -62,8 +60,6 @@ function App() {
           <Route exact path="/TomoFolio" element={<TomoFolioPage/>} />
           <Route exact path="/SeriesEnJuego" element={<SeriesEnJuegoPage/>} />
           <Route exact path="/Escrutinio" element={<EscrutinioPage/>} />
-          <Route exact path="/Test" element={<Test/>}/>
-          <Route exact path="/Test" element={<Test2/>}/>
         </Routes>
       </div>
     </Router>

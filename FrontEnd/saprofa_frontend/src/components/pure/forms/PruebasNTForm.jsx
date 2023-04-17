@@ -3,6 +3,9 @@ import { Formik, FieldArray, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { insertListaPrueba } from '../../../services/axiosService';
 import SuccessModal from "../../modals/SuccessModal";
+import LoadingModal from "../../modals/LoadingModal";
+import FailModal from "../../modals/FailModal";
+import { useNavigate } from 'react-router-dom';
 
 // TODO: Esto se debe recibir desde el Backend para ser dinámico
 const CANT_BOLITAS = 2;
@@ -70,12 +73,21 @@ const PruebasNTForm = () => {
 
   const [valija, setValija] = useState("A");
   const [pruebas, setPruebas] = useState(initialValues.pruebas);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [datosEnviados, setDatosEnviados] = useState(false);
   const [titulo, setTitulo] = useState('');
   const [mensaje, setMensaje] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showLoadingModal, setShowLoadingModal] = useState(false);
+  const [showFailModal, setShowFailModal] = useState(false);
+  const navigate = useNavigate();
+
   function handleCloseSuccessModal() {
     setShowSuccessModal(false);
+    navigate('/MarchamoNuevosTiempos');
+  }
+
+  function handleCloseFailModal() {
+    setShowFailModal(false);
   }
 
   const insertaPrueba = (formik) => {
@@ -141,17 +153,24 @@ const PruebasNTForm = () => {
             async (values) => {
               try {
                 const listaSubmit = formatListaPruebas(pruebas);
+                setShowLoadingModal(true);
                 const response = await insertListaPrueba(listaSubmit);
-                console.log("toSubmit: ", listaSubmit);
+                setShowLoadingModal(false);
                 if (response.status === 200) {
                   setMensaje("Pruebas guardadas exitosamente");
                   setTitulo("¡Operación Exitosa!");
                   setDatosEnviados(true);
                   setShowSuccessModal(true);
                 } else {
+                  setShowLoadingModal(false);
                   console.log('error');
                 }
               } catch (error) {
+                setShowLoadingModal(false);
+                setMensaje(`Error al guardar las pruebas. ${error.message}`);
+                setTitulo("¡Operación Fallida!");
+                setDatosEnviados(false);
+                setShowFailModal(true);
                 console.log(error);
               }
             }
@@ -249,9 +268,20 @@ const PruebasNTForm = () => {
       </div>
       <SuccessModal
         show={showSuccessModal}
-        handleClose={handleCloseSuccessModal}
         titulo={titulo}
         mensaje={mensaje}
+        handleClose={handleCloseSuccessModal}
+      />
+      <LoadingModal
+        show={showLoadingModal}
+        titulo='Guardando Pruebas'
+        mensaje='Por favor espere...'
+      />
+      <FailModal
+        show={showFailModal}
+        titulo={titulo}
+        mensaje={mensaje}
+        handleClose={handleCloseFailModal}
       />
     </>
   );
