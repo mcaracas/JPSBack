@@ -26,7 +26,6 @@ import VerificaMontosAcumulados from './pages/VerificaMontosAcumulados/VerificaM
 import DatosParticipantesPage from './pages/DatosParticipantes/DatosParticipantesPage';
 import TomoFolioPage from './pages/TomoFolio/TomoFolioPage';
 import ListaChequeoPage from './pages/ListaChequeo/ListaChequeoPage';
-
 import SeriesEnJuegoPage from './pages/seriesEnJuego/seriesEnJuegoPage';
 import EscrutinioPage from './pages/Escrutinio/EscrutinioPage';
 function App() {
@@ -59,6 +58,7 @@ function App() {
           <Route exact path="/VerificaMontosAcumulados" element={<VerificaMontosAcumulados />} />
           <Route exact path="/DatosParticipantesPage" element={<DatosParticipantesPage/>} />
           <Route exact path="/TomoFolio" element={<TomoFolioPage/>} />
+          <Route exact path="/ListaChequeo" element={<ListaChequeoPage/>} />
         </Routes>
       </div>
     </Router>
