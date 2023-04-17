@@ -5,6 +5,7 @@ import { insertListaPrueba } from '../../../services/axiosService';
 import SuccessModal from "../../modals/SuccessModal";
 import LoadingModal from "../../modals/LoadingModal";
 import FailModal from "../../modals/FailModal";
+import ConfirmationModal from "../../modals/ConfirmationModal";
 import { useNavigate } from 'react-router-dom';
 
 // TODO: Esto se debe recibir desde el Backend para ser dinámico
@@ -79,6 +80,8 @@ const PruebasNTForm = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [showFailModal, setShowFailModal] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [confirmationAction, setConfirmationAction] = useState(() => { });
   const navigate = useNavigate();
 
   function handleCloseSuccessModal() {
@@ -88,6 +91,22 @@ const PruebasNTForm = () => {
 
   function handleCloseFailModal() {
     setShowFailModal(false);
+  }
+
+  const handleConfirmation = async(confirmed) => {
+    if (!confirmed) {
+      setShowConfirmation(false);
+      return;
+    }
+    await confirmationAction();
+    setShowConfirmation(false);
+  }
+
+  const handleShowConfirmation = async(action) => {
+    setShowConfirmation(true);
+    setConfirmationAction(() => () => {
+      action();
+    });
   }
 
   const insertaPrueba = (formik) => {
@@ -142,7 +161,32 @@ const PruebasNTForm = () => {
     console.log(list);
     return list;
   }
-  let a;
+  
+  const handleSubmit = async () => {
+    try {
+      const listaSubmit = formatListaPruebas(pruebas);
+      setShowLoadingModal(true);
+      const response = await insertListaPrueba(listaSubmit);
+      setShowLoadingModal(false);
+      if (response.status === 200) {
+        setShowLoadingModal(false);
+        setMensaje("Pruebas guardadas exitosamente");
+        setTitulo("¡Operación Exitosa!");
+        setDatosEnviados(true);
+        setShowSuccessModal(true);
+      } else {
+        setShowLoadingModal(false);
+        console.log('error');
+      }
+    } catch (error) {
+      setShowLoadingModal(false);
+      setMensaje(`Error al guardar las pruebas. ${error.message}`);
+      setTitulo("¡Operación Fallida!");
+      setDatosEnviados(false);
+      setShowFailModal(true);
+    }
+  };
+
   return (
     <>
       <div className="container">
@@ -151,28 +195,7 @@ const PruebasNTForm = () => {
           validationSchema={validationSchema}
           onSubmit={
             async (values) => {
-              try {
-                const listaSubmit = formatListaPruebas(pruebas);
-                setShowLoadingModal(true);
-                const response = await insertListaPrueba(listaSubmit);
-                setShowLoadingModal(false);
-                if (response.status === 200) {
-                  setMensaje("Pruebas guardadas exitosamente");
-                  setTitulo("¡Operación Exitosa!");
-                  setDatosEnviados(true);
-                  setShowSuccessModal(true);
-                } else {
-                  setShowLoadingModal(false);
-                  console.log('error');
-                }
-              } catch (error) {
-                setShowLoadingModal(false);
-                setMensaje(`Error al guardar las pruebas. ${error.message}`);
-                setTitulo("¡Operación Fallida!");
-                setDatosEnviados(false);
-                setShowFailModal(true);
-                console.log(error);
-              }
+              await handleShowConfirmation(() => handleSubmit());
             }
           }>
           {(formik, isSubmitting, isValidating, touched) => (
@@ -282,6 +305,12 @@ const PruebasNTForm = () => {
         titulo={titulo}
         mensaje={mensaje}
         handleClose={handleCloseFailModal}
+      />
+       <ConfirmationModal
+        show={showConfirmation}
+        titulo='Confirmación'
+        mensaje='¿Está seguro que desea registrar las pruebas?'
+        handleConfirmation={handleConfirmation}
       />
     </>
   );
