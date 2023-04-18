@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { insertMarchamo } from '../../../services/axiosService';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import './../../../styles/icon.scss';
+import SuccessModal from "../../modals/SuccessModal";
+import LoadingModal from "../../modals/LoadingModal";
+import FailModal from "../../modals/FailModal";
+import ConfirmationModal from "../../modals/ConfirmationModal";
+import { useNavigate } from 'react-router-dom';
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
 const numSorteo = lottery?.numSorteo;
@@ -19,23 +24,23 @@ const idDatoSorteo = lottery?.idInterno;
  */
 
 const marchamoSchema = Yup.object().shape({
-	aperturaS1: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1, 'El número no puede ser menor que 0'),
-	cierreS: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1, 'El número no puede ser menor que 0'),
-	aperturaS2: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1, 'El número no puede ser menor que 0'),
-	aperturaS3: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1, 'El número no puede ser menor que 0'),
-	aperturaS4: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1, 'El número no puede ser menor que 0'),
-	aperturaN: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1, 'El número no puede ser menor que 0'),
-	cierreN: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1, 'El número no puede ser menor que 0'),
-	aperturaAcumFich: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1, 'El número no puede ser menor que 0'),
-	cierreAcumFich: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1, 'El número no puede ser menor que 0'),
-	aperturaAcumTula: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1, 'El número no puede ser menor que 0'),
-	cierreAcumTula: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1, 'El número no puede ser menor que 0'),
-	noJuegan: Yup.number().max(9999, 'El número debe ser de 4 dígitos').min(1, 'El número no puede ser menor que 0')
+	aperturaS1: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	cierreS: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	aperturaS2: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	aperturaS3: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	aperturaS4: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	aperturaN: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	cierreN: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	aperturaAcumFich: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	cierreAcumFich: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	aperturaAcumTula: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	cierreAcumTula: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	noJuegan: Yup.number().max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos')
 
 });
 
 let marchamoDefault = {
-	idSorteo,
+	idSorteo : idDatoSorteo,
 	tipo: 'Apertura',
 	valija: '',
 	tipoMarchamo: 'Serie',
@@ -102,44 +107,95 @@ const buildMarchamoList = (values) => {
 		},
 		{
 			...marchamoDefault,
-			tipoMarchamo: 'noJuegan',
+			tipoMarchamo: 'NoJuegan',
 			tipo: 'Cierre',
-			numeroMarchamo: `JPS-SLT-OTROS 000${values.noJuegan}`,
+			numeroMarchamo: values.noJuegan ? `JPS-SLT-S 000${values.noJuegan}` : null,
 		},
 	];
 }
 
 const MarchamoPopular = () => {
-	const [checked, setChecked] = useState(false);
+	const [datosEnviados, setDatosEnviados] = useState(false);
+  const [titulo, setTitulo] = useState('');
+  const [mensaje, setMensaje] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showLoadingModal, setShowLoadingModal] = useState(false);
+  const [showFailModal, setShowFailModal] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [confirmationAction, setConfirmationAction] = useState(() => { });
+  const [checked, setChecked] = useState(false);
+  const navigate = useNavigate();
 
-	const handleCheck = (e) => {
-		const isChecked = e.target.checked;
-		isChecked ? setChecked(true) : setChecked(false);
-	}
+  const handleCheck = (e) => {
+    const isChecked = e.target.checked;
+    isChecked ? setChecked(true) : setChecked(false);
+  }
+
+  function handleCloseSuccessModal() {
+    setShowSuccessModal(false);
+    navigate('/CierreApuestas');
+  }
+
+  function handleCloseFailModal() {
+    setShowFailModal(false);
+  }
+
+  const handleConfirmation = async (confirmed) => {
+    if (!confirmed) {
+      setShowConfirmation(false);
+      return;
+    }
+    await confirmationAction();
+    setShowConfirmation(false);
+  }
+
+  const handleShowConfirmation = async (action) => {
+    setShowConfirmation(true);
+    setConfirmationAction(() => () => {
+      action();
+    });
+  }
+
+  const handleSubmit = async (values) => {
+    try {
+      const marchamoList = buildMarchamoList(values);
+      setShowLoadingModal(true);
+      const response = await insertMarchamo(marchamoList);
+      setShowLoadingModal(false);
+      if (response.status === 200) {
+        setShowLoadingModal(false);
+        setMensaje("Marchamos guardados exitosamente");
+        setTitulo("¡Operación Exitosa!");
+        setDatosEnviados(true);
+        setShowSuccessModal(true);
+      } else {
+        setShowLoadingModal(false);
+      }
+    } catch (error) {
+      setShowLoadingModal(false);
+      setMensaje(`Error al guardar los marchamos. ${error.message}`);
+      setTitulo("¡Operación Fallida!");
+      setDatosEnviados(false);
+      setShowFailModal(true);
+    }
+  }
 
 	return (
+		<>
 		<div className='container'>
 			<Formik
 				initialValues={{}}
 				validationSchema={marchamoSchema}
-				onSubmit={async (values) => {
-					try {
-						const marchamoList = buildMarchamoList(values);
-						const response = await insertMarchamo(marchamoList);
-						if (response.status === 200) {
-							alert('Marchamos guardados con éxito');
-						} else {
-							throw new Error('Marchamo no insertado');
-						}
-					} catch (error) {
-						alert(`Algo salió mal: ${error}`);
-					}
-				}}
-			>
+				onSubmit={
+            async (values) => {
+              await handleShowConfirmation(() => handleSubmit(values));
+            }
+          }>
 				{({ values,
 					touched,
 					errors,
 					isSubmitting,
+					isValidating,
 					handleChange,
 					handleBlur }) => (
 					<Form>
@@ -372,13 +428,36 @@ const MarchamoPopular = () => {
 							</tbody>
 						</table>
 						<div className='button-field'>
-							<button type="submit" className='btn'>Registrar Marchamos</button>
-							{isSubmitting ? <p>Submitting...</p> : null}
-						</div>
-					</Form>
-				)}
-			</Formik>
-		</div>
+                <button type="submit" className='btn' disabled={isSubmitting || isValidating || datosEnviados}>Registrar Marchamos</button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
+      <SuccessModal
+        show={showSuccessModal}
+        titulo={titulo}
+        mensaje={mensaje}
+        handleClose={handleCloseSuccessModal}
+      />
+      <LoadingModal
+        show={showLoadingModal}
+        titulo='Guardando Marchamos'
+        mensaje='Por favor espere...'
+      />
+      <FailModal
+        show={showFailModal}
+        titulo={titulo}
+        mensaje={mensaje}
+        handleClose={handleCloseFailModal}
+      />
+      <ConfirmationModal
+        show={showConfirmation}
+        titulo='Confirmación'
+        mensaje='¿Está seguro que desea registrar las pruebas?'
+        handleConfirmation={handleConfirmation}
+      />
+    </>
 	);
 };
 
