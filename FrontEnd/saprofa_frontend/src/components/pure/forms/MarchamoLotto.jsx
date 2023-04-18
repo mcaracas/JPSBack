@@ -1,9 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { insertMarchamo } from '../../../services/axiosService';
+import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import './../../../styles/icon.scss';
+import SuccessModal from "../../modals/SuccessModal";
+import LoadingModal from "../../modals/LoadingModal";
+import FailModal from "../../modals/FailModal";
+import ConfirmationModal from "../../modals/ConfirmationModal";
+import { useNavigate } from 'react-router-dom';
 
+const lottery = JSON.parse(sessionStorage.getItem('lottery'));
+const numSorteo = lottery?.numSorteo;
+const tipoLoteria = lottery?.tipoLoteria;
+const idSorteo = `${tipoLoteria}${numSorteo}`;
+const idDatoSorteo = lottery?.idInterno;
 
 /**
  * Validation schema for the form
@@ -13,157 +24,211 @@ import { insertMarchamo } from '../../../services/axiosService';
  */
 
 const marchamoSchema = Yup.object().shape({
-    // tomoAnterior: Yup.number().required('El campo es requerido'),
-    // tomoActual: Yup.number().required('El campo es requerido'),
-    apertura: Yup.number().required('El campo es requerido'),
-    cierre: Yup.number().required('El campo es requerido'),
-    contingencia: Yup.number()
+	apertura: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	cierre: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	contingencia: Yup.number().max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
 });
 
 let marchamoDefault = {
-    idSorteo : 1,
-    tipo : 'Apertura',
-    valija : '',
-    tipoMarchamo : 'Electronica',
-    numeroMarchamo : '1525',
+	idSorteo: idDatoSorteo,
+	tipo: 'Apertura',
+	valija: '',
+	tipoMarchamo: 'Electronica',
+	numeroMarchamo: '1525',
 }
 
 
 const buildMarchamoList = (values) => {
 
-    const marchamos = [];
-
-    marchamos.push(
-        {
-            ...marchamoDefault,
-            numeroMarchamo : `JPS-SLE-000${values.apertura}`,
-        }
-    );
-    marchamos.push(
-        {
-            ...marchamoDefault,
-            tipo : 'Cierre',
-            numeroMarchamo : `JPS-SLE-000${values.cierre}`,
-        }
-    );
-    marchamos.push(
-        {
-            ...marchamoDefault,
-            tipo : 'Contingencia',
-            numeroMarchamo : `JPS-SLE-000${values.contingencia}`,
-        }
-    );
-    
-    return marchamos;
+	return [
+		{
+			...marchamoDefault,
+			numeroMarchamo: `JPS-SLE-000${values.apertura}`,
+		}
+		,
+		{
+			...marchamoDefault,
+			tipo: 'Cierre',
+			numeroMarchamo: `JPS-SLE-000${values.cierre}`,
+		}
+		,
+		{
+			...marchamoDefault,
+			tipo: 'Contingencia',
+			numeroMarchamo: values.contingencia ? `JPS-SLE-000${values.contingencia} ` : null,
+		},
+	];
 }
 
-const MarchamoLotto = (id) => {
-    return (
-        <div className='container'>
-            <Formik
-                initialValues={{}}
-                validationSchema={marchamoSchema}
-                onSubmit={async (values)=>{
-                    const marchamoList = buildMarchamoList(values);
-                    console.log(marchamoList);
-                    insertMarchamo(marchamoList)
-                        .then((response) => { 
-                            if(response.status === 200){
-                                alert('Marchamos guardados con éxito');
-                            }else{
-                                throw new Error('Marchamo no insertado');
-                            }
-                        }).catch((error) => { 
-                            alert(`Algo salió mal: ${error}`);
-                        })
-                }}
-                >
-                {({ values,
-                    touched,
-                    errors,
-                    isSubmitting,
-                    handleChange,
-                    handleBlur }) => (
-                        <Form>
-                            <table className='table table-bordered align-middle'>
-                                <thead className='thead-dark'>
-                                    <tr>
-                                        {/* <th rowSpan={2} colSpan={2}>Número de Acta donde se consigna el resultado oficial del sorteo, suscrita por los fiscalizadores del Sorteo</th> */}
-                                        <th colSpan={3}>Número de marchamo para el fichero</th>
-                                    </tr>
-                                    <tr>
-                                        <th></th>
-                                        <th>Ficheros en uso</th>
-                                        <th>Ficheros de contingencia</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        {/* <td>Sorteo anterior</td>
-                                        <td>Tomo <Field id='tomoAnterior' name='tomoAnterior' type='number' className='form-control'/>
-                                            {
-                                                errors.tomoAnterior && touched.tomoAnterior && 
-                                                (
-                                                    <div style={{color:'red'}}>
-                                                        <ErrorMessage name='tomoAnterior'></ErrorMessage>
-                                                    </div>
-                                                )
-                                            }
-                                        </td> */}
-                                        <td>Apertura</td>
-                                        <td>JPS-SLE-000 <Field id='apertura' name='apertura' type='number' className='form-control'/>
-                                            {
-                                                errors.apertura && touched.apertura && 
-                                                (
-                                                    <div style={{color:'red'}}>
-                                                        <ErrorMessage name='apertura'></ErrorMessage>
-                                                    </div>
-                                                )
-                                            }
-                                        </td>
-                                        <td rowSpan={2}>JPS-SLE-000 <Field id='contingencia' name='contingencia' type='number' className='form-control'/></td>
-                                    </tr>
-                                    <tr>
-                                        {/* <td>Sorteo actual</td>
-                                        <td>Tomo <Field id='tomoActual' name='tomoActual' type='number' className='form-control'/>
-                                            {
-                                                errors.tomoActual && touched.tomoActual && 
-                                                (
-                                                    <div style={{color:'red'}}>
-                                                        <ErrorMessage name='tomoActual'></ErrorMessage>
-                                                    </div>
-                                                )
-                                            }
-                                        </td> */}
-                                        <td>Cierre</td>
-                                        <td>JPS-SLE-000 <Field id='cierre' name='cierre' type='number' className='form-control'/>
-                                            {
-                                                errors.cierre && touched.cierre && 
-                                                (
-                                                    <div style={{color:'red'}}>
-                                                        <ErrorMessage name='cierre'></ErrorMessage>
-                                                    </div>
-                                                )
-                                            }
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div className='button-field'>
-                                <button type="submit" className='btn'>Registrar Marchamos</button>
-                                {isSubmitting ? <p>Submitting...</p> : null}
-                            </div>
-                        </Form>
-                    )}
-            </Formik>
-        </div>
-    );
+const MarchamoLotto = () => {
+
+	const [datosEnviados, setDatosEnviados] = useState(false);
+	const [titulo, setTitulo] = useState('');
+	const [mensaje, setMensaje] = useState('');
+	const [showSuccessModal, setShowSuccessModal] = useState(false);
+	const [showLoadingModal, setShowLoadingModal] = useState(false);
+	const [showFailModal, setShowFailModal] = useState(false);
+	const [showConfirmation, setShowConfirmation] = useState(false);
+	const [confirmationAction, setConfirmationAction] = useState(() => { });
+	const navigate = useNavigate();
+
+	function handleCloseSuccessModal() {
+		setShowSuccessModal(false);
+		navigate('/CierreApuestas');
+	}
+
+	function handleCloseFailModal() {
+		setShowFailModal(false);
+	}
+
+	const handleConfirmation = async (confirmed) => {
+		if (!confirmed) {
+			setShowConfirmation(false);
+			return;
+		}
+		await confirmationAction();
+		setShowConfirmation(false);
+	}
+
+	const handleShowConfirmation = async (action) => {
+		setShowConfirmation(true);
+		setConfirmationAction(() => () => {
+			action();
+		});
+	}
+
+	const handleSubmit = async (values) => {
+		try {
+			const marchamoList = buildMarchamoList(values);
+			setShowLoadingModal(true);
+			const response = await insertMarchamo(marchamoList);
+			setShowLoadingModal(false);
+			if (response.status === 200) {
+				setShowLoadingModal(false);
+				setMensaje("Marchamos guardados exitosamente");
+				setTitulo("¡Operación Exitosa!");
+				setDatosEnviados(true);
+				setShowSuccessModal(true);
+			} else {
+				setShowLoadingModal(false);
+			}
+		} catch (error) {
+			setShowLoadingModal(false);
+			setMensaje(`Error al guardar los marchamos. ${error.message}`);
+			setTitulo("¡Operación Fallida!");
+			setDatosEnviados(false);
+			setShowFailModal(true);
+		}
+	}
+
+	return (
+		<>
+			<div className='container'>
+				<Formik
+					initialValues={{}}
+					validationSchema={marchamoSchema}
+					onSubmit={
+						async (values) => {
+							await handleShowConfirmation(() => handleSubmit(values));
+						}
+					}>
+					{({ values,
+						touched,
+						errors,
+						isSubmitting,
+						isValidating,
+						handleChange,
+						handleBlur }) => (
+						<Form>
+							<table className='table table-bordered align-middle'>
+								<thead className='thead-dark'>
+									<tr>
+										{/* <th rowSpan={2} colSpan={2}>Número de Acta donde se consigna el resultado oficial del sorteo, suscrita por los fiscalizadores del Sorteo</th> */}
+										<th colSpan={3}>Número de marchamo para el fichero</th>
+									</tr>
+									<tr>
+										<th></th>
+										<th><h4>Ficheros en uso</h4></th>
+										<th><h4>Ficheros de contingencia</h4></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<h4>Apertura</h4>
+										</td>
+										<td>
+											<label htmlFor="apertura" className="label-with-icon">
+												<span className="label-text">JPS-SLT-S-0000</span>
+												<div className="required-icon">
+													{!touched.apertura && <AiOutlineExclamationCircle />}
+												</div>
+											</label>
+											<Field id='apertura' name='apertura' type='number' className='form-control' />
+											{errors.apertura && touched.apertura && (
+												<div className='error'>
+													<ErrorMessage name='apertura'></ErrorMessage>
+												</div>
+											)}
+										</td>
+										<td rowSpan={2}>JPS-SLE-000 <Field id='contingencia' name='contingencia' type='number' className='form-control' /></td>
+									</tr>
+									<tr>
+										<td>
+											<h4>Cierre</h4>
+										</td>
+										<td>
+											<label htmlFor="cierre" className="label-with-icon">
+												<span className="label-text">JPS-SLT-S-0000</span>
+												<div className="required-icon">
+													{!touched.cierre && <AiOutlineExclamationCircle />}
+												</div>
+											</label>
+											<Field id='cierre' name='cierre' type='number' className='form-control' />
+											{
+												errors.cierre && touched.cierre &&
+												(
+													<div className='error'>
+														<ErrorMessage name='cierre'></ErrorMessage>
+													</div>
+												)
+											}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<div className='button-field'>
+								<button type="submit" className='btn' disabled={isSubmitting || isValidating || datosEnviados}>Registrar Marchamos</button>
+							</div>
+						</Form>
+					)}
+				</Formik>
+			</div>
+			<SuccessModal
+				show={showSuccessModal}
+				titulo={titulo}
+				mensaje={mensaje}
+				handleClose={handleCloseSuccessModal}
+			/>
+			<LoadingModal
+				show={showLoadingModal}
+				titulo='Guardando Marchamos'
+				mensaje='Por favor espere...'
+			/>
+			<FailModal
+				show={showFailModal}
+				titulo={titulo}
+				mensaje={mensaje}
+				handleClose={handleCloseFailModal}
+			/>
+			<ConfirmationModal
+				show={showConfirmation}
+				titulo='Confirmación'
+				mensaje='¿Está seguro que desea registrar las pruebas?'
+				handleConfirmation={handleConfirmation}
+			/>
+		</>
+	);
 };
-
-
-MarchamoLotto.propTypes = {
-
-};
-
 
 export default MarchamoLotto;
