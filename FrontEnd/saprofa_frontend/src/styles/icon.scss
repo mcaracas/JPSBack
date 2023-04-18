@@ -1,0 +1,45 @@
+.label-with-icon {
+    display: inline-flex;
+    align-items: center;
+  }
+
+.required-icon {
+    color: rgb(255, 0, 0);
+    font-size: 1.1em;
+    font-weight: bold;
+    position: relative;
+
+    &:hover {
+        &:before {
+            content: 'Campo requerido. Número de 4 dígitos';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 5px;
+            background-color: #363636;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 14px;
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 5px;
+        background-color: #363636;
+        color: #fff;
+        border-radius: 5px;
+        font-size: 14px;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+}
