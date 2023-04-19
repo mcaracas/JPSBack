@@ -44,9 +44,9 @@ function validateNumber(value) {
   let error;
   if (!value) {
     error = 'Número requerido';
-  } else if (!/^[0-9]$/.test(value)) {
-    error = 'Debe ser un número entre 0 y 9';
-  }
+  } else if (!/^([0-9]|[1-9][0-9]|99|0[0-9])$/.test(value)) {
+    error = 'Debe ser un número entre 00 y 99';
+}
   return error;
 }
 
@@ -158,7 +158,6 @@ const PruebasNTForm = () => {
         };
       });
     });
-    console.log(list);
     return list;
   }
   
