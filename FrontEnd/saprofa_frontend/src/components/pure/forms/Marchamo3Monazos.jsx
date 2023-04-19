@@ -177,7 +177,7 @@ const Marchamo3Monazos = (id) => {
                                         <td><h4>Plástico</h4></td>
                                         <td>
                                             <label htmlFor="aperturaValjA" className="label-with-icon">
-                                                <span className="label-text">JPS-SLT-S-0000</span>
+                                                <span className="label-text">JPS-SLE-0000</span>
                                                 <div className="required-icon">
                                                     {!touched.aperturaValjA && <AiOutlineExclamationCircle />}
                                                 </div>
@@ -191,7 +191,7 @@ const Marchamo3Monazos = (id) => {
                                         </td>
                                         <td>
                                             <label htmlFor="aperturaValjB" className="label-with-icon">
-                                                <span className="label-text">JPS-SLT-S-0000</span>
+                                                <span className="label-text">JPS-SLE-0000</span>
                                                 <div className="required-icon">
                                                     {!touched.aperturaValjB && <AiOutlineExclamationCircle />}
                                                 </div>
@@ -205,7 +205,7 @@ const Marchamo3Monazos = (id) => {
                                         </td>
                                         <td>
                                             <label htmlFor="cierrejValjA" className="label-with-icon">
-                                                <span className="label-text">JPS-SLT-S-0000</span>
+                                                <span className="label-text">JPS-SLE-0000</span>
                                                 <div className="required-icon">
                                                     {!touched.cierrejValjA && <AiOutlineExclamationCircle />}
                                                 </div>
@@ -222,7 +222,7 @@ const Marchamo3Monazos = (id) => {
                                         </td>
                                         <td>
                                             <label htmlFor="cierrejValjB" className="label-with-icon">
-                                                <span className="label-text">JPS-SLT-S-0000</span>
+                                                <span className="label-text">JPS-SLE-0000</span>
                                                 <div className="required-icon">
                                                     {!touched.cierrejValjB && <AiOutlineExclamationCircle />}
                                                 </div>

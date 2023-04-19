@@ -159,7 +159,7 @@ const MarchamoLotto = () => {
 										</td>
 										<td>
 											<label htmlFor="apertura" className="label-with-icon">
-												<span className="label-text">JPS-SLT-S-0000</span>
+												<span className="label-text">JPS-SLE-0000</span>
 												<div className="required-icon">
 													{!touched.apertura && <AiOutlineExclamationCircle />}
 												</div>
@@ -179,7 +179,7 @@ const MarchamoLotto = () => {
 										</td>
 										<td>
 											<label htmlFor="cierre" className="label-with-icon">
-												<span className="label-text">JPS-SLT-S-0000</span>
+												<span className="label-text">JPS-SLE-0000</span>
 												<div className="required-icon">
 													{!touched.cierre && <AiOutlineExclamationCircle />}
 												</div>
