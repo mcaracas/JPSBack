@@ -2,27 +2,34 @@ import React from 'react';
 import { Field, ErrorMessage } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
 
-const InputPrueba = ({ index, input, handleFormChange, removeFields, name, errorMsg }) => {
+function validateNumber(value) {
+  let error;
+  if (!value) {
+    error = 'Número requerido';
+  } else if (!/^[0-9]$/.test(value)) {
+    error = 'Debe ser un número entre 0 y 9';
+  }
+  return error;
+}
 
-    return (
-        <td key={index}>
-            <div className='row'>
-                <Field  id={index} 
-                        name={name}
-                        type='text' 
-                        className='form-control col' 
-                        value={input[name]}
-                        onChange={event => handleFormChange(index, event)}
-                />
-                <i 
-                    className='bi bi-x-square-fill col-2 closeX'
-                    onClick={() => removeFields(index)}                />
-            </div>
-            <ErrorMessage name={name} component={() => {
-                return <div className='error'>{errorMsg}</div>
-            }}/> 
-        </td>
-    );
+const InputPrueba = ({ name, value, handlePruebaChange, idxPrueba, idxResultado, formik }) => {
+  return (
+    <div>
+      <Field
+        name={name}
+        type='text'
+        value={value}
+        className='form-control mx-auto'
+        onChange={(event) => handlePruebaChange(event.currentTarget.value, idxPrueba, idxResultado)}
+        validate={validateNumber}
+      />
+      { formik.errors && formik.touched?.pruebas?.[idxPrueba]?.resultados?.[idxResultado] && 
+        <ErrorMessage name={name} component={() => {
+          return <div className='error'>{formik.touched?.pruebas?.[idxPrueba]?.resultados?.[idxResultado]}</div>
+        }} />
+      }
+    </div>
+  );
 }
 
 

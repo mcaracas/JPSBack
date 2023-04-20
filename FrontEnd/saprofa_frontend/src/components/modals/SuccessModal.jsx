@@ -3,7 +3,14 @@ import { Modal, Button } from 'react-bootstrap';
 
 const SuccessModal = ({ show, handleClose, titulo, mensaje }) => {
   return (
-    <Modal show={show} onHide={handleClose}>
+    /**
+     * @param show: boolean
+     * @param handleClose: function
+     * @param titulo: string
+     * @param mensaje: string
+     * @returns Modal
+     */
+    <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>{titulo}</Modal.Title>
       </Modal.Header>

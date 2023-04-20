@@ -1,5 +1,5 @@
 .fiscalizacion-containerS input[type="text"] {
-    width: 30%;
+    width: 35%;
     height: 10%;
     margin: auto 5px;
 }
@@ -10,10 +10,22 @@
     margin: auto 5px;
 }
 
-.fiscalizacion-containerS input[name^="ser_"] {
-    width: 45%;
+.fiscalizacion-containerS input[name="premio_total"] {
+    width: 20%;
     height: 10%;
     margin: auto 5px;
+}
+
+.fiscalizacion-containerS input[name^="ser_"] {
+    width: 60%;
+    height: 10%;
+    margin: auto 5px;
+}
+.fiscalizacion-headerS {
+    display: flex;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
 .fiscalizacion-containerS {
@@ -34,15 +46,15 @@
     text-align: center;
 
     /* Center horizontally */
-    left: 30%;
+    left: 26.95%;
     transform: translateX(-50%);
 
     /* Center vertically */
-    top: 90%;
+    top: 135%;
     transform: translateY(-50%);
 
     @media screen and (max-width: 768px) {
-        .fiscalizacion-container {
+        .fiscalizacion-containerS {
             width: 80%;
             min-width: 300px;
             padding: 30px;

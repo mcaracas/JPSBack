@@ -274,7 +274,7 @@ namespace API
                     .HasColumnName("id_dato_sorteo");
 
                 entity.Property(e => e.Verificado)
-                    .HasColumnType("bit(1)")
+                    .HasMaxLength(20)
                     .HasColumnName("verificado");
 
                 entity.HasOne(d => d.IdChequeoDetalleNavigation)

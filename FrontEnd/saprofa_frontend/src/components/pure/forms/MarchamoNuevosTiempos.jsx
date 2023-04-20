@@ -1,8 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { insertMarchamo } from '../../../services/axiosService';
+import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import './../../../styles/icon.scss';
+import SuccessModal from "../../modals/SuccessModal";
+import LoadingModal from "../../modals/LoadingModal";
+import FailModal from "../../modals/FailModal";
+import ConfirmationModal from "../../modals/ConfirmationModal";
+import { useNavigate } from 'react-router-dom';
+
+const lottery = JSON.parse(sessionStorage.getItem('lottery'));
+const numSorteo = lottery?.numSorteo;
+const tipoLoteria = lottery?.tipoLoteria;
+const idSorteo = `${tipoLoteria}${numSorteo}`;
+const idDatoSorteo = lottery?.idInterno;
 
 /**
  * Validation schema for the form
@@ -12,228 +24,312 @@ import { insertMarchamo } from '../../../services/axiosService';
  */
 
 const marchamoSchema = Yup.object().shape({
-    aperturaNT : Yup.number().required('Este campo es requerido'),
-    aperturaNTR : Yup.number().required('Este campo es requerido'),
-    cierreNT : Yup.number().required('Este campo es requerido'),
-    cierreNTR : Yup.number().required('Este campo es requerido'),
-    contingencia1NT : Yup.number(),
-    contingencia2NT : Yup.number(),
-    contingenciaNTR : Yup.number()
+	aperturaNT: Yup.number().required('Este campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	aperturaNTR: Yup.number().required('Este campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	cierreNT: Yup.number().required('Este campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	cierreNTR: Yup.number().required('Este campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	contingencia1NT: Yup.number().max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	contingencia2NT: Yup.number().max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	contingenciaNTR: Yup.number().max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
 });
 
 let marchamoDefault = {
-    idSorteo : 3,
-    tipo : 'Apertura',
-    valija : '',
-    tipoMarchamo : 'ElectronicaNT',
-    numeroMarchamo : '1525',
+	idSorteo: idDatoSorteo,
+	tipo: 'Apertura',
+	valija: '',
+	tipoMarchamo: 'ElectronicaNT',
+	numeroMarchamo: '1525',
 }
 
 
 const buildMarchamoList = (values) => {
 
-    const marchamos = [];
-
-    marchamos.push(
-        {
-            ...marchamoDefault,
-            numeroMarchamo : `JPS-SLE-000${values.aperturaNT}`,
-        }
-    );
-    marchamos.push(
-        {
-            ...marchamoDefault,
-            tipo : 'Cierre',
-            numeroMarchamo : `JPS-SLE-000${values.cierreNT}`,
-        }
-    );
-    //TODO verificar NT y NTR
-    marchamos.push(
-        {
-            ...marchamoDefault,
-            tipoMarchamo : 'ElectronicaNTR',
-            numeroMarchamo : `JPS-SLE-000${values.aperturaNTR}`,
-        }
-    );
-    marchamos.push(
-        {
-            ...marchamoDefault,
-            tipoMarchamo : 'ElectronicaNTR',
-            tipo : 'Cierre',
-            numeroMarchamo : `JPS-SLE-000${values.cierreNTR}`,
-        }
-    );
-    marchamos.push(
-        {
-            ...marchamoDefault,
-            tipo : 'Contingencia',
-            numeroMarchamo : `JPS-SLE-000${values.contingencia1NT}`,
-        }
-    );
-    marchamos.push(
-        {
-            ...marchamoDefault,
-            tipo : 'Contingencia',
-            numeroMarchamo : `JPS-SLE-000${values.contingencia2NT}`,
-        }
-    );
-    marchamos.push(
-        {
-            ...marchamoDefault,
-            tipoMarchamo : 'ElectronicaNTR',
-            tipo : 'Contingencia',
-            numeroMarchamo : `JPS-SLE-000${values.contingenciaNTR}`,
-        }
-    );
-    
-    return marchamos;
+	return [
+		{
+			...marchamoDefault,
+			numeroMarchamo: `JPS-SLE-000${values.aperturaNT}`,
+		},
+		{
+			...marchamoDefault,
+			tipo: 'Cierre',
+			numeroMarchamo: `JPS-SLE-000${values.cierreNT}`,
+		},
+		{
+			...marchamoDefault,
+			numeroMarchamo: `JPS-SLE-000${values.aperturaNTR}`,
+		},
+		{
+			...marchamoDefault,
+			tipo: 'Cierre',
+			numeroMarchamo: `JPS-SLE-000${values.cierreNTR}`,
+		},
+		{
+			...marchamoDefault,
+			tipo: 'Contingencia',
+			numeroMarchamo: values.contingencia ? `JPS-SLE-000${values.contingencia1NT} ` : null,
+		},
+		{
+			...marchamoDefault,
+			tipo: 'Contingencia',
+			numeroMarchamo: values.contingencia ? `JPS-SLE-000${values.contingencia2NT} ` : null,
+		},
+		{
+			...marchamoDefault,
+			tipoMarchamo: 'ElectronicaNTR',
+			tipo: 'Contingencia',
+			numeroMarchamo: values.contingencia ? `JPS-SLE-000${values.contingenciaNTR} ` : null,
+		}
+	]
 }
 
-const MarchamoNuevosTiempos = (id) => {
-    return (
-        <div className='container'>
-            <Formik
-                initialValues={{}}
-                validationSchema={marchamoSchema}
-                onSubmit={async (values)=>{
-                    const marchamoList = buildMarchamoList(values);
-                    console.log(marchamoList);
-                    insertMarchamo(marchamoList)
-                        .then((response) => { 
-                            if(response.status === 200){
-                                alert('Marchamos guardados con éxito');
-                            }else{
-                                throw new Error('Marchamo no insertado');
-                            }
-                        }).catch((error) => { 
-                            alert(`Algo salió mal: ${error}`);
-                        })
-                }}
-                >
-                {({ values,
-                    touched,
-                    errors,
-                    isSubmitting,
-                    handleChange,
-                    handleBlur }) => (
-                        <Form>
-                            <table className='table table-bordered align-middle'>
-                                <thead>
-                                    <tr>
-                                        <th colSpan={5} >        
-                                            Numero de marchamos utilizados para los ficheros
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr style={{fontWeight : 'bold'}}>
-                                        <td rowSpan={3} className='text-center'>Marchamos</td>
-                                        <td style={{color: 'red'}}>Nuevos Tiempos</td>
-                                        <td style={{color: 'red'}}>Nuevos Tiempos Reventados</td>
-                                    </tr>
-                                    <tr style={{fontWeight : 'bold'}}>
-                                        <td>Ficheros en Uso</td>
-                                        <td>Ficheros en Uso</td>
-                                    </tr>
-                                    <tr style={{fontWeight : 'bold'}}>
-                                        <td>Plastico</td>
-                                        <td>Plastico</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Apertura</td>
-                                        <td>JPS-SLE-000 <Field id='aperturaNT' name='aperturaNT' type='number' className='form-control'/>
-                                            {
-                                                errors.aperturaNT && touched.aperturaNT && 
-                                                (
-                                                    <div style={{color:'red'}}>
-                                                        <ErrorMessage name='aperturaNT'></ErrorMessage>
-                                                    </div>
-                                                )
-                                            }
-                                        </td>
-                                        <td>JPS-SLE-000 <Field id='aperturaNTR' name='aperturaNTR' type='number' className='form-control'/>
-                                        {
-                                                errors.aperturaNTR && touched.aperturaNTR && 
-                                                (
-                                                    <div style={{color:'red'}}>
-                                                        <ErrorMessage name='aperturaNTR'></ErrorMessage>
-                                                    </div>
-                                                )
-                                            }
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Cierre</td>
-                                        <td>JPS-SLE-000 <Field id='cierreNT' name='cierreNT' type='number' className='form-control'/>
-                                            {
-                                                errors.cierreNT && touched.cierreNT && 
-                                                (
-                                                    <div style={{color:'red'}}>
-                                                        <ErrorMessage name='cierreNT'></ErrorMessage>
-                                                    </div>
-                                                )
-                                            }</td>
-                                        <td>JPS-SLE-000 <Field id='cierreNTR' name='cierreNTR' type='number' className='form-control'/>
-                                            {
-                                                errors.cierreNTR && touched.cierreNTR && 
-                                                (
-                                                    <div style={{color:'red'}}>
-                                                        <ErrorMessage name='cierreNTR'></ErrorMessage>
-                                                    </div>
-                                                )
-                                            }
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Contingencia</td>
-                                        <td style={{fontWeight : 'bold'}}>JPS-SLE-000 <Field id='contingencia1NT' name='contingencia1NT' type='number' className='form-control'/> JPS-SLE-000 <Field id='contingencia2NT' name='contingencia2NT' type='number' className='form-control'/>
-                                            {
-                                                errors.contingencia1NT && touched.contingencia1NT && 
-                                                (
-                                                    <div style={{color:'red'}}>
-                                                        <ErrorMessage name='contingencia1NT'></ErrorMessage>
-                                                    </div>
-                                                )
- 
-                                            }
-                                            {
-                                                errors.contingencia2NT && touched.contingencia2NT && 
-                                                (
-                                                    <div style={{color:'red'}}>
-                                                        <ErrorMessage name='contingencia2NT'></ErrorMessage>
-                                                    </div>
-                                                )
-                                            }
-                                        </td>
-                                        <td style={{fontWeight : 'bold'}}>JPS-SLE-000 <Field id='contingenciaNTR' name='contingenciaNTR' type='number' className='form-control'/>
-                                            {
-                                                errors.contingenciaNTR && touched.contingenciaNTR && 
-                                                (
-                                                    <div style={{color:'red'}}>
-                                                        <ErrorMessage name='contingenciaNTR'></ErrorMessage>
-                                                    </div>
-                                                )
-                                            }
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div className='button-field'>
-                                <button type="submit" className='btn'>Registrar Marchamos</button>
-                                {isSubmitting ? <p>Submitting...</p> : null}
-                            </div>
-                        </Form>
-                    )}
-            </Formik>
-        </div> 
-    );
+const MarchamoNuevosTiempos = () => {
+
+	const [datosEnviados, setDatosEnviados] = useState(false);
+	const [titulo, setTitulo] = useState('');
+	const [mensaje, setMensaje] = useState('');
+	const [showSuccessModal, setShowSuccessModal] = useState(false);
+	const [showLoadingModal, setShowLoadingModal] = useState(false);
+	const [showFailModal, setShowFailModal] = useState(false);
+	const [showConfirmation, setShowConfirmation] = useState(false);
+	const [confirmationAction, setConfirmationAction] = useState(() => { });
+	const navigate = useNavigate();
+
+	function handleCloseSuccessModal() {
+		setShowSuccessModal(false);
+		navigate('/CierreApuestas');
+	}
+
+	function handleCloseFailModal() {
+		setShowFailModal(false);
+	}
+
+	const handleConfirmation = async (confirmed) => {
+		if (!confirmed) {
+			setShowConfirmation(false);
+			return;
+		}
+		await confirmationAction();
+		setShowConfirmation(false);
+	}
+
+	const handleShowConfirmation = async (action) => {
+		setShowConfirmation(true);
+		setConfirmationAction(() => () => {
+			action();
+		});
+	}
+
+	const handleSubmit = async (values) => {
+		try {
+			const marchamoList = buildMarchamoList(values);
+			setShowLoadingModal(true);
+			const response = await insertMarchamo(marchamoList);
+			setShowLoadingModal(false);
+			if (response.status === 200) {
+				setShowLoadingModal(false);
+				setMensaje("Marchamos guardados exitosamente");
+				setTitulo("¡Operación Exitosa!");
+				setDatosEnviados(true);
+				setShowSuccessModal(true);
+			} else {
+				setShowLoadingModal(false);
+			}
+		} catch (error) {
+			setShowLoadingModal(false);
+			setMensaje(`Error al guardar los marchamos. ${error.message}`);
+			setTitulo("¡Operación Fallida!");
+			setDatosEnviados(false);
+			setShowFailModal(true);
+		}
+	}
+
+	return (
+		<>
+			<div className='container'>
+				<Formik
+					initialValues={{}}
+					validationSchema={marchamoSchema}
+					onSubmit={
+						async (values) => {
+							await handleShowConfirmation(() => handleSubmit(values));
+						}
+					}>
+					{({ values,
+						touched,
+						errors,
+						isValidating,
+						isSubmitting,
+						handleChange,
+						handleBlur }) => (
+						<Form>
+							<table className='table table-bordered align-middle'>
+								<thead>
+									<tr>
+										<th colSpan={5} >
+											<h3>Numero de marchamos utilizados para los ficheros</h3>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr style={{ fontWeight: 'bold' }}>
+										<td rowSpan={3} className='text-center'><h4>Marchamos</h4></td>
+										<td style={{ color: 'red' }}><h4>Nuevos Tiempos</h4></td>
+										<td style={{ color: 'red' }}><h4>Nuevos Tiempos Reventados</h4></td>
+									</tr>
+									<tr style={{ fontWeight: 'bold' }}>
+										<td><h4>Ficheros en Uso</h4></td>
+										<td><h4>Ficheros en Uso</h4></td>
+									</tr>
+									<tr style={{ fontWeight: 'bold' }}>
+										<td><h4>Plástico</h4></td>
+										<td><h4>Plástico</h4></td>
+									</tr>
+									<tr>
+										<td><h4>Apertura</h4></td>
+										<td>
+											<label htmlFor="aperturaNT" className="label-with-icon">
+												<span className="label-text">JPS-SLE-0000</span>
+												<div className="required-icon">
+													{!touched.aperturaNT && <AiOutlineExclamationCircle />}
+												</div>
+											</label>
+											<Field id='aperturaNT' name='aperturaNT' type='number' className='form-control' />
+											{errors.aperturaNT && touched.aperturaNT && (
+												<div className='error'>
+													<ErrorMessage name='aperturaNT'></ErrorMessage>
+												</div>
+											)}
+										</td>
+										<td>
+											<label htmlFor="aperturaNTR" className="label-with-icon">
+												<span className="label-text">JPS-SLE-0000</span>
+												<div className="required-icon">
+													{!touched.aperturaNTR && <AiOutlineExclamationCircle />}
+												</div>
+											</label>
+											<Field id='aperturaNTR' name='aperturaNTR' type='number' className='form-control' />
+											{errors.aperturaNTR && touched.aperturaNTR && (
+												<div className='error'>
+													<ErrorMessage name='aperturaNTR'></ErrorMessage>
+												</div>
+											)}
+										</td>
+									</tr>
+									<tr>
+										<td><h4>Cierre</h4></td>
+										<td>
+											<label htmlFor="cierreNT" className="label-with-icon">
+												<span className="label-text">JPS-SLE-0000</span>
+												<div className="required-icon">
+													{!touched.cierreNT && <AiOutlineExclamationCircle />}
+												</div>
+											</label>
+											<Field id='cierreNT' name='cierreNT' type='number' className='form-control' />
+											{
+												errors.cierreNT && touched.cierreNT &&
+												(
+													<div className='error'>
+														<ErrorMessage name='cierreNT'></ErrorMessage>
+													</div>
+												)
+											}
+										</td>
+										<td>
+											<label htmlFor="cierreNTR" className="label-with-icon">
+												<span className="label-text">JPS-SLE-0000</span>
+												<div className="required-icon">
+													{!touched.cierreNTR && <AiOutlineExclamationCircle />}
+												</div>
+											</label>
+											<Field id='cierreNTR' name='cierreNTR' type='number' className='form-control' />
+											{
+												errors.cierreNTR && touched.cierreNTR &&
+												(
+													<div className='error'>
+														<ErrorMessage name='cierreNTR'></ErrorMessage>
+													</div>
+												)
+											}
+										</td>
+									</tr>
+									<tr>
+										<td><h4>Contingencia</h4></td>
+										<td>
+											<label htmlFor="contingencia1NT" className="label-with-icon">
+												<span className="label-text">JPS-SLE-0000</span>
+											</label>
+											<Field id='contingencia1NT' name='contingencia1NT' type='number' className='form-control' />
+											{
+												errors.contingencia1NT && touched.contingencia1NT &&
+												(
+													<div className='error'>
+														<ErrorMessage name='contingencia1NT'></ErrorMessage>
+													</div>
+												)
+
+											}
+											<label htmlFor="contingencia2NT" className="label-with-icon">
+												<span className="label-text">JPS-SLE-0000</span>
+											</label>
+											<Field id='contingencia2NT' name='contingencia2NT' type='number' className='form-control' />
+											{
+												errors.contingencia2NT && touched.contingencia2NT &&
+												(
+													<div className='error'>
+														<ErrorMessage name='contingencia2NT'></ErrorMessage>
+													</div>
+												)
+											}
+										</td>
+										<td>
+										<label htmlFor="contingenciaNTR" className="label-with-icon">
+												<span className="label-text">JPS-SLE-0000</span>
+											</label> 
+										<Field id='contingenciaNTR' name='contingenciaNTR' type='number' className='form-control' />
+											{
+												errors.contingenciaNTR && touched.contingenciaNTR &&
+												(
+													<div style={{ color: 'red' }}>
+														<ErrorMessage name='contingenciaNTR'></ErrorMessage>
+													</div>
+												)
+											}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<div className='button-field'>
+								<button type="submit" className='btn' disabled={isSubmitting || isValidating || datosEnviados}>Registrar Marchamos</button>
+							</div>
+						</Form>
+					)}
+				</Formik>
+			</div>
+			<SuccessModal
+				show={showSuccessModal}
+				titulo={titulo}
+				mensaje={mensaje}
+				handleClose={handleCloseSuccessModal}
+			/>
+			<LoadingModal
+				show={showLoadingModal}
+				titulo='Guardando Marchamos'
+				mensaje='Por favor espere...'
+			/>
+			<FailModal
+				show={showFailModal}
+				titulo={titulo}
+				mensaje={mensaje}
+				handleClose={handleCloseFailModal}
+			/>
+			<ConfirmationModal
+				show={showConfirmation}
+				titulo='Confirmación'
+				mensaje='¿Está seguro que desea registrar las pruebas?'
+				handleConfirmation={handleConfirmation}
+			/>
+		</>
+	);
 };
-
-
-MarchamoNuevosTiempos.propTypes = {
-    marchamoApertNT: PropTypes.string,
-    marchamoApertNTR: PropTypes.string,
-};
-
 
 export default MarchamoNuevosTiempos;

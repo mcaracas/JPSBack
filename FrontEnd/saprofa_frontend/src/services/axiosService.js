@@ -72,6 +72,10 @@ export function insertMarchamo(marchamoList) {
     return APIRequest.post('/Marchamo', marchamoList);
 }
 
+export function getMarchamos() {
+    return APIRequest.get('/Series');
+}
+
 export function getActualLotteryInfo() {
     return APIRequest.get('/DatosSorteo/SorteoActual');
 }
@@ -126,11 +130,11 @@ export function getUltimoTomofolio(idInterno) {
 }
 
 export function getCierreApuestas(id) {
-    return 1256250000666 //APIRequest.get('/CierreApuestas/' + id);
+    return APIRequest.get('/CierreApuestas/' + id);
 }
 
 export function getMontoAcumulado(id) {
-    return 1256250000666 //APIRequest.get('/MontoAcumulado/' + id);
+    return APIRequest.get('/VerificarAcumGtec/' + id);
 }
 
 export function insertarApuestas(monto) {
@@ -141,4 +145,29 @@ export function insertarApuestas(monto) {
 export function insertaMontoAcumulado(monto) {
     console.log(monto);
     return APIRequest.post('/VerificarAcumGtecController/', monto)
+}
+
+export function getListaChequeo(idInterno) {
+    return APIRequest.get('/ListaChequeoDetalle/ListaChequeoParaSorteo/' + idInterno);
+}
+export function insertarFicheros(ficheros) {
+    console.log(ficheros);
+    return APIRequest.post('/Ficheros', ficheros);
+}
+
+export function getEscrutinio(id) {
+    return APIRequest.get('/Escrutinio' + id);
+}
+
+export function insertarEscrutinio(escrutinio) {
+    return APIRequest.post('/Escrutinio', escrutinio);
+}
+
+export function getPremios() {
+    return APIRequest.get('/PlanPremiosDetalle');
+}
+
+export function insertaProcedimiento(procedimiento) {
+    console.log("Data: ",procedimiento);
+    return APIRequest.post('/ListaChequeoSorteo', procedimiento);
 }

@@ -34,7 +34,7 @@ const Sidebar = () => {
                 </a>
             </li>
             <li className="list-group-item">
-                <a className="menu-opc" href="/DatosPrevios">
+                <a className="menu-opc" href="/ListaChequeo">
                     Lista de Chequeo
                 </a>
             </li>
