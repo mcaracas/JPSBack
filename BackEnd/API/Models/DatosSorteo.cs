@@ -36,5 +36,7 @@ namespace API
         public virtual ICollection<TomoFolio> TomoFolios { get; set; }
 
         public virtual Usuario IdUsuarioNavigation { get; set; }
+
+        //public virtual ICollection<ALO> ALO { get; set; }
     }
 }

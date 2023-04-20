@@ -52,4 +52,13 @@ public IActionResult GetLatestResult()
         return NotFound();
     }
 }
+
+    [HttpPost]
+    public IActionResult Post([FromBody] ALO model)
+    {
+        var context = new proyecto_bdContext();
+        context.ALO.Add(model);
+        context.SaveChanges();
+        return Ok();
+    }
 }
