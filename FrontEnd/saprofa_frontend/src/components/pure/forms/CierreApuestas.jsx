@@ -50,7 +50,7 @@ const CierreApuestas = () => {
 
     const getDatos = async () => {
         try {
-            const response = getCierreApuestas(1);
+            const response = await getCierreApuestas(1);
             setDatos(response);
         }
         catch (error) {

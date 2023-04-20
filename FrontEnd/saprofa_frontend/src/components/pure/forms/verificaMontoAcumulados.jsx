@@ -50,7 +50,7 @@ const VerificaMontoAcumulado = () => {
 
     const getDatos = async () => {
         try {
-            const response = getMontoAcumulado(1);
+            const response = await getMontoAcumulado(1);
             setDatos(response);
         }
         catch (error) {
