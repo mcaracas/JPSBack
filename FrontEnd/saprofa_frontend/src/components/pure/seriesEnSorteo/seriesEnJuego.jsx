@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import SuccessModal from '../../modals/SuccessModal';
 import { useNavigate } from 'react-router-dom';
-import { getMarchamos, insertarFicheros } from '../../../services/axiosService';
+import { getMarchamos, insertarFicheros, getPremios } from '../../../services/axiosService';
 
 
 const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
@@ -13,6 +13,7 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
     const navigate = useNavigate();
     const [marchamos, setMarchamos] = useState([]);
     const [series, setSeries] = useState([]);
+    const [premios, setPremios] = useState([]);
 
     const initialValues = {
         ser_numeros_o_f: '',
@@ -50,10 +51,29 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
         }
         catch (error) {
             setTitulo('Operación fallida');
-            setMensaje('No se pudo guardar los datos de Cierre de Apuestas');
+            setMensaje('No se pudo cargar los datos de Serie en Juego');
             setShowSuccessModal(true);
         }
     }
+
+    async function getPremioLoteria() {
+        try {
+            const response = await getPremios();
+            console.log(response.data);
+            const filteredData = response.data.filter((item) => item.idPlan === 1);
+            console.log(filteredData);
+            setPremios(filteredData);
+        }
+        catch (error) {
+            setTitulo('Operación fallida');
+            setMensaje('No se pudo cargar los premios');
+            setShowSuccessModal(true);
+        }
+    }
+
+    useEffect(() => {
+        getPremioLoteria();
+    }, []);
 
     useEffect(() => {
         getDatos();
@@ -120,11 +140,33 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
             );
         }
         return rows;
-        //<h5>Se cuenta además con la presencia de las siguientes personas:</h5>
-        //<Field component="textarea" name="detalles" className="inp" rows="4" cols="50" />
+    }
+    function cargarTabla(premios) {
+        let tablaHtml = '<table class="table table-bordered table-responsive">';
+        tablaHtml += '<thead><tr><th>Cantidad</th><th>Premio</th></tr></thead>';
+        tablaHtml += '<tbody>';
+
+        // Cargar filas de la tabla con los valores del vector de premios
+        premios.forEach((premio) => {
+            tablaHtml += `<tr><td>1</td><td>${premio.montoUnitario}</td></tr>`;
+        });
+
+        tablaHtml += '</tbody>';
+
+        // Calcular y cargar el valor total del premio
+        const totalPremio = premios.reduce((total, premio) => total + premio.montoUnitario, 0);
+
+        tablaHtml += '<tfoot><tr>';
+        tablaHtml += `<td>Total</td><td><input type="text" class="inp" name="premio_total" placeholder="¢${totalPremio}"></td>`;
+        tablaHtml += '</tr></tfoot></table>';
+
+        // Agregar la tabla al elemento HTML deseado (por ejemplo, el elemento con ID "tablaPremios")
+        document.getElementById('tablaPremios').innerHTML = tablaHtml;
     }
 
 
+    //<h5>Se cuenta además con la presencia de las siguientes personas:</h5>
+    //<Field component="textarea" name="detalles" className="inp" rows="4" cols="50" />
     return (
         <>
             <div className="fiscalizacion-containerS">
@@ -151,7 +193,7 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
                                 <h5>Números de marchamos utilizados en la custodia del sorteo anterior:</h5>
                             </label>
 
-                            <table className='table table-bordered align-middle'>
+                            <table className='table table-bordered table-responsive'>
                                 {
                                     [
                                         {
@@ -163,37 +205,47 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
                                         { title: 'Premio Acumulado Fichero:', value: marchamos[2] },
                                         { title: 'Tula:', value: marchamos[3] },
                                     ].map((item) => (
-                                        <tr key={item.title}>
-                                            <td>{item.title}</td>
-                                            <td>{item.value}</td>
-                                        </tr>
+                                        <tbody>
+                                            <tr key={item.title}>
+                                                <td>{item.title}</td>
+                                                <td>{item.value}</td>
+                                            </tr>
+                                        </tbody>
                                     ))}
                             </table>
                             <label >
                                 <h5>Números de marchamos utilizados en la custodia de los ficheros:</h5>
                             </label>
-                            <tr>
-                                <td>Números ordenados y fiscalizados: Del 00 al 99 Marchamo N° JPS-SLT-N-</td>
-                                <td><Field className="inp" type="text" name="ser_numeros_o_f" placeholder="______________" validate={handleerror} onKeyPress={(event) => {
-                                    if (!/[0-9]/.test(event.key)) {
-                                        event.preventDefault();
-                                    }
-                                }} {...errors.ser_numeros_o_f && touched.ser_numeros_o_f ?
-                                    <div style={{ color: "red" }}>
-                                        <ErrorMessage name="ser_numeros_o_f" />
-                                    </div>
-                                    : null}
-                                ></Field></td>
-                            </tr>
-                            <tr>
-                                <td>Premios Marchamo N° JPS-SLT-P-</td>
-                                <td><Field className="inp" type="text" name="ser_premios_marchamos" placeholder="______________" onKeyPress={(event) => {
-                                    if (!/[0-9]/.test(event.key)) {
-                                        event.preventDefault();
-                                    }
-                                }} required title="Campo requerido"></Field></td>
-                            </tr>
-
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Números ordenados y fiscalizados: Del 00 al 99 Marchamo N° JPS-SLT-N-</td>
+                                        <td><Field className="inp" type="text" name="ser_numeros_o_f" placeholder="______________" validate={handleerror} onKeyPress={(event) => {
+                                            if (!/[0-9]/.test(event.key)) {
+                                                event.preventDefault();
+                                            }
+                                        }} {...errors.ser_numeros_o_f && touched.ser_numeros_o_f ?
+                                            <div style={{ color: "red" }}>
+                                                <ErrorMessage name="ser_numeros_o_f" />
+                                            </div>
+                                            : null}
+                                        ></Field></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Premios Marchamo N° JPS-SLT-P-</td>
+                                        <td><Field className="inp" type="text" name="ser_premios_marchamos" placeholder="______________" onKeyPress={(event) => {
+                                            if (!/[0-9]/.test(event.key)) {
+                                                event.preventDefault();
+                                            }
+                                        }} required title="Campo requerido"></Field></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            {cargarTabla(premios)}
                             <br />
                             <table className="table table-bordered align-middle">
                                 <thead>
@@ -205,93 +257,64 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
                                 </thead>
                                 <tbody>{generateRows()}</tbody>
                             </table>
-                            <tr>
-                                <td>Total de series que juegan</td>
-                                <td><Field className="inp" type="text" name="ser_cant_juegan" placeholder="______________" onKeyPress={(event) => {
-                                    if (!/[0-9]/.test(event.key)) {
-                                        event.preventDefault();
-                                    }
-                                }} /></td>
-                            </tr>
-                            <tr>
-                                <td>Total de series que no juegan</td>
-                                <td><Field className="inp" type="text" name="ser_cant_no_juegan" placeholder="______________" onKeyPress={(event) => {
-                                    if (!/[0-9]/.test(event.key)) {
-                                        event.preventDefault();
-                                    }
-                                }} /></td>
-                            </tr>
-                            <tr>
-                                <td>Custodiadas con marchamo N° JPS-SLT-S- </td>
-                                <td><Field className="inp" type="text" name="ser_custodiado" placeholder="______________" onKeyPress={(event) => {
-                                    if (!/[0-9]/.test(event.key)) {
-                                        event.preventDefault();
-                                    }
-                                }} /></td>
-                            </tr>
-                            <br />
-                            <table className="table table-bordered table-responsive">
-                                <thead>
-                                    <tr>
-                                        <th>Cantidad</th>
-                                        <th>Premio</th>
-                                    </tr>
-                                </thead>
+                            <table>
                                 <tbody>
                                     <tr>
-                                        <td>1</td>
-                                        <td>Mayor</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>¢18.000.000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>¢8.000.000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>¢2.000.000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>¢1.000.000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>30</td>
-                                        <td>¢300.000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>60</td>
-                                        <td>¢200.000</td>
+                                        <td>Total de series que juegan</td>
+                                        <td><Field className="inp" type="text" name="ser_cant_juegan" placeholder="______________" onKeyPress={(event) => {
+                                            if (!/[0-9]/.test(event.key)) {
+                                                event.preventDefault();
+                                            }
+                                        }} /></td>
                                     </tr>
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td>Total</td>
-                                        <td><Field type="text" className="inp" name="premio_total" placeholder="¢___________________"></Field></td>
-                                    </tr>
-                                </tfoot>
                             </table>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Total de series que no juegan</td>
+                                        <td><Field className="inp" type="text" name="ser_cant_no_juegan" placeholder="______________" onKeyPress={(event) => {
+                                            if (!/[0-9]/.test(event.key)) {
+                                                event.preventDefault();
+                                            }
+                                        }} /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Custodiadas con marchamo N° JPS-SLT-S- </td>
+                                        <td><Field className="inp" type="text" name="ser_custodiado" placeholder="______________" onKeyPress={(event) => {
+                                            if (!/[0-9]/.test(event.key)) {
+                                                event.preventDefault();
+                                            }
+                                        }} /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br />
+
                             <label for="observaciones">Observaciones adicionales:</label>
                             <br />
                             <Field component="textarea" id="observaciones" className="inp" name="observaciones"></Field>
                             <br />
 
                             <table className="table table-bordered align-middle">
-                                <tr>
-                                    <td>Hora de finalización Auditorio</td>
-                                    <td><Field type="time" name="hora" className="inp"></Field></td>
-                                </tr>
-                                <tr>
-                                    <td>Firma de auditor fiscalizador</td>
-                                    <td><Field type="text" name="ser_firma" className="inp" placeholder="____________________"></Field></td>
-                                </tr>
-                                <tr>
-                                    <td>Bolita con la leyenda</td>
-                                    <td><Field name="bolita_leyenda" type="text" className="inp" placeholder="____________"></Field></td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>Hora de finalización Auditorio</td>
+                                        <td><Field type="time" name="hora" className="inp"></Field></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Firma de auditor fiscalizador</td>
+                                        <td><Field type="text" name="ser_firma" className="inp" placeholder="____________________"></Field></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bolita con la leyenda</td>
+                                        <td><Field name="bolita_leyenda" type="text" className="inp" placeholder="____________"></Field></td>
+                                    </tr>
+                                </tbody>
                             </table>
                             <button type="submit" className="btn" >Enviar
                             </button>
