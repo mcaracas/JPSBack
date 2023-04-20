@@ -60,6 +60,8 @@ function App() {
           <Route exact path="/DatosParticipantesPage" element={<DatosParticipantesPage/>} />
           <Route exact path="/TomoFolio" element={<TomoFolioPage/>} />
           <Route exact path="/ListaChequeo" element={<ListaChequeoPage/>} />
+          <Route exact path="/SeriesEnJuego" element={<SeriesEnJuegoPage/>} />
+          <Route exact path="/Escrutinio" element={<EscrutinioPage/>} />
         </Routes>
       </div>
     </Router>
