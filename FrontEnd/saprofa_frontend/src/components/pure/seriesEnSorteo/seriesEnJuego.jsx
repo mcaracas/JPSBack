@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { getMarchamos, insertarFicheros, getPremios } from '../../../services/axiosService';
 
 
-const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
+const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) => {
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [titulo, setTitulo] = useState('');
@@ -70,6 +70,39 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
             setShowSuccessModal(true);
         }
     }
+
+    function TablaPremios() {
+        return (
+            <table className='table table-bordered table-responsive'>
+                <thead>
+                    <tr>
+                        <th colSpan="3">Bolitas de premios</th>
+                    </tr>
+                    <tr>
+                        <th>Cantidad</th>
+                        <th>Premio</th>
+                        <th> Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {premios.map((item) => (
+                        <tr key={item.id}>
+                            <td>{item.cantidadPremios}</td>
+                            <td>¢ {item.montoUnitario}</td>
+                            <td>{item.descripcion}</td>
+                        </tr>
+                    ))}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><b>Total: {premios.reduce((a, b) => a + (b['cantidadPremios'] || 0), 0)}</b></td>
+                        <td colSpan="3"><b>¢ {premios.reduce((a, b) => a + (b['montoUnitario'] || 0), 0)}</b></td>
+                    </tr>
+                </tfoot>
+            </table>
+        );
+    }
+
 
     useEffect(() => {
         getPremioLoteria();
@@ -141,27 +174,73 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
         }
         return rows;
     }
-    function cargarTabla(premios) {
-        let tablaHtml = '<table class="table table-bordered table-responsive">';
-        tablaHtml += '<thead><tr><th>Cantidad</th><th>Premio</th></tr></thead>';
-        tablaHtml += '<tbody>';
 
-        // Cargar filas de la tabla con los valores del vector de premios
-        premios.forEach((premio) => {
-            tablaHtml += `<tr><td>1</td><td>${premio.montoUnitario}</td></tr>`;
-        });
+    function MiTabla() {
+        const [seriesInput, setSeriesInput] = useState(
+            series.length === 2 ? series[0] + " " + " " + series[1] : series[0]
+        );
+        const [marchamosInput, setMarchamosInput] = useState(marchamos);
+        const [editingEnabled, setEditingEnabled] = useState(false);
 
-        tablaHtml += '</tbody>';
+        const onEnableEditing = () => {
+            setEditingEnabled(true);
+        };
 
-        // Calcular y cargar el valor total del premio
-        const totalPremio = premios.reduce((total, premio) => total + premio.montoUnitario, 0);
+        const onDisableEditing = () => {
+            setEditingEnabled(false);
+        };
 
-        tablaHtml += '<tfoot><tr>';
-        tablaHtml += `<td>Total</td><td><input type="text" class="inp" name="premio_total" placeholder="¢${totalPremio}"></td>`;
-        tablaHtml += '</tr></tfoot></table>';
-
-        // Agregar la tabla al elemento HTML deseado (por ejemplo, el elemento con ID "tablaPremios")
-        document.getElementById('tablaPremios').innerHTML = tablaHtml;
+        return (
+            <div>
+                <table className="table table-bordered table-responsive">
+                    {[
+                        { title: "Series:", value: seriesInput },
+                        { title: "Números:", value: marchamosInput[0] },
+                        { title: "Premios:", value: marchamosInput[1] },
+                        {
+                            title: "Premio Acumulado Fichero:",
+                            value: marchamosInput[2],
+                        },
+                        { title: "Tula:", value: marchamosInput[3] },
+                    ].map((item) => (
+                        <tbody key={item.title}>
+                            <tr>
+                                <td>{item.title}</td>
+                                <td
+                                    contentEditable={editingEnabled && item.title !== ""}
+                                    suppressContentEditableWarning={true}
+                                    onInput={(e) => {
+                                        if (item.title === "Series:") {
+                                            setSeriesInput(e.target.innerText);
+                                        } else {
+                                            // Copiamos el array de marchamos y actualizamos el valor correspondiente
+                                            const newMarchamos = [...marchamosInput];
+                                            newMarchamos[
+                                                item.title === "Números:"
+                                                    ? 0
+                                                    : item.title === "Premios:"
+                                                        ? 1
+                                                        : item.title === "Premio Acumulado Fichero:"
+                                                            ? 2
+                                                            : 3
+                                            ] = e.target.innerText;
+                                            setMarchamosInput(newMarchamos);
+                                        }
+                                    }}
+                                >
+                                    {item.value}
+                                </td>
+                            </tr>
+                        </tbody>
+                    ))}
+                </table>
+                {editingEnabled ? (
+                    <button className="btn" onClick={onDisableEditing}>Guardar cambios</button>
+                ) : (
+                    <button className="btn" onClick={onEnableEditing}>Editar</button>
+                )}
+            </div>
+        );
     }
 
 
@@ -192,27 +271,10 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
                             <label >
                                 <h5>Números de marchamos utilizados en la custodia del sorteo anterior:</h5>
                             </label>
-
-                            <table className='table table-bordered table-responsive'>
-                                {
-                                    [
-                                        {
-                                            // eslint-disable-next-line no-useless-concat
-                                            title: 'Series:', value: series.length === 2 ? series[0] + ' ' + ' ' + series[1] : series[0]
-                                        },
-                                        { title: 'Números:', value: marchamos[0] },
-                                        { title: 'Premios:', value: marchamos[1] },
-                                        { title: 'Premio Acumulado Fichero:', value: marchamos[2] },
-                                        { title: 'Tula:', value: marchamos[3] },
-                                    ].map((item) => (
-                                        <tbody>
-                                            <tr key={item.title}>
-                                                <td>{item.title}</td>
-                                                <td>{item.value}</td>
-                                            </tr>
-                                        </tbody>
-                                    ))}
-                            </table>
+                            <div>
+                                <MiTabla series={series} marchamos={marchamos} />
+                            </div>
+                            <br />
                             <label >
                                 <h5>Números de marchamos utilizados en la custodia de los ficheros:</h5>
                             </label>
@@ -245,7 +307,8 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
                                     </tr>
                                 </tbody>
                             </table>
-                            {cargarTabla(premios)}
+                            <br />
+                            {tipoLoteria === 'LN' ? TablaPremios() : null}
                             <br />
                             <table className="table table-bordered align-middle">
                                 <thead>
@@ -308,7 +371,7 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, hora }) => {
                                     </tr>
                                     <tr>
                                         <td>Firma de auditor fiscalizador</td>
-                                        <td><Field type="text" name="ser_firma" className="inp" placeholder="____________________"></Field></td>
+                                        <td><Field type="text" name="ser_firma" className="inp" value={fiscalizador} placeholder="____________________"></Field></td>
                                     </tr>
                                     <tr>
                                         <td>Bolita con la leyenda</td>
