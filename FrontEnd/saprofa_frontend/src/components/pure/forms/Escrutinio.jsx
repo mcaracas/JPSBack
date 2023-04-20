@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import './../../../styles/CierreApuestas.scss';
+import './../../../styles/Escrutinio.scss';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { getCierreApuestas } from '../../../services/axiosService';
-import { insertarApuestas } from '../../../services/axiosService';
+import { getEscrutinio } from '../../../services/axiosService';
+import { insertarEscrutinio } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
 
-const CierreApuestas = () => {
+const Escrutinio = () => {
 
     const [datos, setDatos] = React.useState();
     const [checked, setChecked] = React.useState(true);
@@ -50,12 +50,12 @@ const CierreApuestas = () => {
 
     const getDatos = async () => {
         try {
-            const response = await getCierreApuestas(1);
+            const response = await getEscrutinio(1);
             setDatos(response);
         }
         catch (error) {
             setTitulo('Operación fallida');
-            setMensaje('No se pudo guardar los datos de Cierre de Apuestas');
+            setMensaje('No se pudo guardar los datos de Monto Acumulado');
             setShowSuccessModal(true);
         }
     }
@@ -71,18 +71,18 @@ const CierreApuestas = () => {
     const handleSubmit = async () => {
         try {
             if (!checked) {
-                await insertarApuestas(datos);
+                await insertarEscrutinio(datos);
             } else {
                 const numberWithoutDots = Number(datos2.replace(/\./g, ''));
-                await insertarApuestas(numberWithoutDots);
+                await insertarEscrutinio(numberWithoutDots);
             }
             setTitulo('Operación exitosa');
-            setMensaje('Cierre de Apuestas guardado exitosamente');
+            setMensaje('Monto Acumulado guardado exitosamente');
             setShowSuccessModal(true);
         }
         catch (error) {
             setTitulo('Operación fallida');
-            setMensaje('No se pudo guardar los datos de Cierre de Apuestas');
+            setMensaje('No se pudo guardar los datos de Monto Acumulado');
             setShowSuccessModal(true);
         }
     }
@@ -107,7 +107,7 @@ const CierreApuestas = () => {
                 >
                     {({ errors, touched }) => (
                         <Form>
-                            < section className="cierreApuestas">
+                            < section className="escrutinio">
                                 <hr />
                                 <h4>Monto total:</h4>
                                 <h4>₡ {formattedDatos}</h4>
@@ -171,4 +171,4 @@ const CierreApuestas = () => {
     );
 }
 
-export default CierreApuestas;
+export default Escrutinio;

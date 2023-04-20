@@ -1,5 +1,5 @@
 .fiscalizacion-containerS input[type="text"] {
-    width: 30%;
+    width: 35%;
     height: 10%;
     margin: auto 5px;
 }
@@ -17,7 +17,7 @@
 }
 
 .fiscalizacion-containerS input[name^="ser_"] {
-    width: 45%;
+    width: 60%;
     height: 10%;
     margin: auto 5px;
 }
@@ -50,7 +50,7 @@
     transform: translateX(-50%);
 
     /* Center vertically */
-    top: 125%;
+    top: 135%;
     transform: translateY(-50%);
 
     @media screen and (max-width: 768px) {

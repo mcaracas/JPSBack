@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from 'react'
 import './../../../styles/VerificaMontosAcumulados.scss';
-import { Formik, Form } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { getMontoAcumulado } from '../../../services/axiosService';
 import { insertaMontoAcumulado } from '../../../services/axiosService';
-import SuccessModal from './../../modals/SuccessModal';
+import SuccessModal from '../../modals/SuccessModal';
 
-const VerificaMontosAcumulado = () => {
+const VerificaMontoAcumulado = () => {
 
     const [datos, setDatos] = React.useState();
     const [checked, setChecked] = React.useState(true);
-    const [checked2, setChecked2] = React.useState(true);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
+    const [checked2, setChecked2] = React.useState(false);
+    const [datos2, setDatos2] = React.useState();
 
     const handleCheck = (e) => {
         const isChecked = e.target.checked;
         console.log(isChecked);
         if (isChecked) {
             setChecked(false);
+            setChecked2(false);
         }
         else {
             setChecked(true);
@@ -29,10 +31,10 @@ const VerificaMontosAcumulado = () => {
         const isChecked = e.target.checked;
         console.log(isChecked);
         if (isChecked) {
-            setChecked2(false);
+            setChecked2(true);
         }
         else {
-            setChecked2(true);
+            setChecked2(false);
         }
     }
 
@@ -43,32 +45,44 @@ const VerificaMontosAcumulado = () => {
     const manejarCambiodatos = (e) => {
         const value = e.target.value;
         const formattedValue = value ? parseFloat(value).toLocaleString('es-ES').replace(/,/g, '.') : '';
-        setDatos(formattedValue);
+        setDatos2(formattedValue);
     }
 
     const getDatos = async () => {
         try {
-            const response = await getMontoAcumulado(1); //response.data y ocupa el ID
-            console.log(response.data); //response.data
-            setDatos(response.data); //response.data
+            const response = await getMontoAcumulado(1);
+            setDatos(response);
         }
         catch (error) {
             setTitulo('Operación fallida');
-            setMensaje('No se pudo guardar los datos de Acumulado');
+            setMensaje('No se pudo guardar los datos de Monto Acumulado');
             setShowSuccessModal(true);
         }
     }
 
+    const handleerror = (value) => {
+        let error;
+        if (!value) {
+            error = 'Campo requerido';
+        }
+        return error;
+    };
+
     const handleSubmit = async () => {
         try {
-            await insertaMontoAcumulado(datos);
+            if (!checked) {
+                await insertaMontoAcumulado(datos);
+            } else {
+                const numberWithoutDots = Number(datos2.replace(/\./g, ''));
+                await insertaMontoAcumulado(numberWithoutDots);
+            }
             setTitulo('Operación exitosa');
-            setMensaje('Acumulado guardado exitosamente');
+            setMensaje('Monto Acumulado guardado exitosamente');
             setShowSuccessModal(true);
         }
         catch (error) {
             setTitulo('Operación fallida');
-            setMensaje('No se pudo guardar los datos de Acumulado');
+            setMensaje('No se pudo guardar los datos de Monto Acumulado');
             setShowSuccessModal(true);
         }
     }
@@ -78,11 +92,13 @@ const VerificaMontosAcumulado = () => {
     }, []);
 
     const initialValues = {
-        montoTotal: datos
+        montoTotal: '',
+        montoNuevo: ''
     };
 
-    const formattedDatos = datos ? datos.toLocaleString('es-ES').replace(/,/g, '.') : '';
 
+    const formattedDatos = datos ? datos.toLocaleString('es-ES').replace(/,/g, '.') : '';
+    const formattedDatos2 = datos2 ? datos2.toLocaleString('es-ES').replace(/,/g, '.') : '';
     return (
         <>
             <div>
@@ -90,36 +106,62 @@ const VerificaMontosAcumulado = () => {
                     initialValues={initialValues}
                     onSubmit={handleSubmit}
                 >
-                    <section className="verificaAcumulado">
-                        <hr />
-                        <h4>Monto total:</h4>
-                        <h4>₡ {formattedDatos}</h4>
-                        <div className="verificaAcumulado">
-                            <h5>¿Es correcto?</h5>
-                            <input className="check" onChange={handleCheck} type="checkbox" name="nombre" id="nombre" />
-                            {checked && <span className="required-message">Debes marcar esta opción</span>}
-                        </div>
-                        <hr />
-                        <label>
-                            <h5>En caso de error digite el monto correcto: </h5>
-                            <input className="check" onChange={handleCheck2} type="checkbox" name="edita" id="edita" />
-                        </label>
-                        <br />
-                        <input className="lbl1" disabled={checked2} onChange={manejarCambiodatos} type="text"
-                            onKeyPress={(event) => {
-                                if (!/[0-9]/.test(event.key)) {
-                                    event.preventDefault();
-                                }
-                            }}
-                        />
-                        <br />
+                    {({ errors, touched }) => (
                         <Form>
-                            <button type="submit" className="btn" disabled={checked}>Aceptar
-                            </button>
+                            < section className="verificaMontoacumulado">
+                                <hr />
+                                <h4>Monto total:</h4>
+                                <h4>₡ {formattedDatos}</h4>
+
+                                <h5>¿Es correcto?</h5>
+                                <input className="check" onChange={handleCheck} type="checkbox" name="nombre" id="nombre" />
+                                {checked && <span className="required-message">Debes marcar esta opción caso de que el monto sea correcto</span>}
+
+                                <hr />
+                                <br />
+
+                                {checked ?
+                                    <div>
+                                        <label>
+                                            <h5>En caso de error digite el monto correcto: </h5>
+                                            <input className="check" onChange={handleCheck2} type="checkbox" name="edita" id="edita" />
+                                            <br />
+                                            {!checked2 && <span className="required-message">Marcar solamente en caso de que el monto sea incorrecto</span>}
+                                        </label>
+                                        <br />
+                                        <br />
+                                        {checked2 ?
+                                            <div>
+                                                <h4>Nuevo Monto:</h4>
+                                                <h4>₡ {formattedDatos2}</h4>
+                                                <Field className="lbl1" name='montoNuevo' placeholder='Digite el monto' disabled={!checked2} validate={handleerror} onInput={manejarCambiodatos} type="text"
+                                                    onKeyPress={(event) => {
+                                                        if (!/[0-9]/.test(event.key)) {
+                                                            event.preventDefault();
+                                                        }
+                                                    }}
+                                                />
+                                                {errors.montoNuevo && touched.montoNuevo ?
+                                                    <div style={{ color: 'red' }}>
+                                                        <ErrorMessage name="montoNuevo" />
+                                                    </div>
+                                                    : null}
+                                                <div>
+                                                    <br />
+                                                    <button type="submit" className="btn">Aceptar</button>
+                                                </div>
+                                            </div>
+                                            : <div></div>}
+                                    </div> :
+                                    <div>
+                                        <button type="submit" className="btn">Aceptar</button>
+                                    </div>
+                                }
+                            </section>
                         </Form>
-                    </section>
+                    )}
                 </Formik>
-            </div>
+            </div >
             <SuccessModal
                 show={showSuccessModal}
                 handleClose={handleCloseSuccessModal}
@@ -130,4 +172,4 @@ const VerificaMontosAcumulado = () => {
     );
 }
 
-export default VerificaMontosAcumulado;
+export default VerificaMontoAcumulado;
