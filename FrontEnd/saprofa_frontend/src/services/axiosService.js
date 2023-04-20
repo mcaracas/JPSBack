@@ -147,6 +147,9 @@ export function insertaMontoAcumulado(monto) {
     return APIRequest.post('/VerificarAcumGtecController/', monto)
 }
 
+export function getListaChequeo(idInterno) {
+    return APIRequest.get('/ListaChequeoDetalle/ListaChequeoParaSorteo/' + idInterno);
+}
 export function insertarFicheros(ficheros) {
     console.log(ficheros);
     return APIRequest.post('/Ficheros', ficheros);
@@ -162,4 +165,9 @@ export function insertarEscrutinio(escrutinio) {
 
 export function getPremios() {
     return APIRequest.get('/PlanPremiosDetalle');
+}
+
+export function insertaProcedimiento(procedimiento) {
+    console.log("Data: ",procedimiento);
+    return APIRequest.post('/ListaChequeoSorteo', procedimiento);
 }
