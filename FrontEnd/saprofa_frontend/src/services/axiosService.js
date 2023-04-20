@@ -162,3 +162,8 @@ export function getEscrutinio(id) {
 export function insertarEscrutinio(escrutinio) {
     return APIRequest.post('/Escrutinio', escrutinio);
 }
+
+export function insertaProcedimiento(procedimiento) {
+    console.log("Data: ",procedimiento);
+    return APIRequest.post('/ListaChequeoSorteo', procedimiento);
+}
