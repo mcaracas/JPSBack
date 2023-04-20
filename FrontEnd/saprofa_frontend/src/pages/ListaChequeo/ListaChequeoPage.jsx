@@ -1,7 +1,7 @@
 import React from 'react';
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import Container from '../../components/container/container';
-import ListaChequeoPopular from '../../components/listaChequeo/listaChequeoPopular';
+import ListaChequeo from '../../components/listaChequeo/listaChequeo';
 
 const ListaChequeoPage = () => {
 
@@ -11,7 +11,7 @@ const ListaChequeoPage = () => {
     return (
         <div>
             <EncabezadoFranjas title={"Lista de Chequeo"} />
-            <Container component={<ListaChequeoPopular idDatoSorteo={idInterno} />} />
+            <Container component={<ListaChequeo idDatoSorteo={idInterno} />} />
         </div>
     );
 }

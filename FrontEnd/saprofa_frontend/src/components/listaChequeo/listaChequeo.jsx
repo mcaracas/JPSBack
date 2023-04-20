@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { getListaChequeo, insertaProcedimiento } from '../../services/axiosService';
 import { Form, Formik } from 'formik';
 import PropTypes from 'prop-types';
-import SuccessModal from "./../modals/SuccessModal";
-import LoadingModal from "./../modals/LoadingModal";
-import FailModal from "./../modals/FailModal";
-import ConfirmationModal from "./../modals/ConfirmationModal";
+import SuccessModal from "../modals/SuccessModal";
+import LoadingModal from "../modals/LoadingModal";
+import FailModal from "../modals/FailModal";
+import ConfirmationModal from "../modals/ConfirmationModal";
 import { useNavigate } from 'react-router-dom';
 
 const ListaChequeoPopular = ({ idDatoSorteo }) => {
