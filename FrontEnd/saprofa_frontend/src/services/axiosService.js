@@ -171,3 +171,7 @@ export function insertaProcedimiento(procedimiento) {
     console.log("Data: ",procedimiento);
     return APIRequest.post('/ListaChequeoSorteo', procedimiento);
 }
+
+export function getVentas(id) {
+    return APIRequest.get('/Ventas/'+ id);
+}
