@@ -1,14 +1,19 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SuccessModal from '../../modals/SuccessModal';
+import { getVentas } from '../../../services/axiosService';
+import PropTypes from 'prop-types';
 
-const CompararVentas = () => {
+const CompararVentas = ({idSorteo}) => {
 
     const [montoVentas, setMontoVentas] = useState(0);
     const [montoPagar, setMontoPagar] = useState(0);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
+
+    const [montoVentasCorregido, setMontoVentasCorregido] = useState(0);
+    const [montoPagarCorregido, setMontoPagarCorregido] = useState(0);
 
     const initialValues = {
         montoVentas: montoVentas,
@@ -26,6 +31,28 @@ const CompararVentas = () => {
         }
     }
 
+    useEffect(() => {
+        getVentas(idSorteo)
+            .then(response => {
+                setMontoVentas(response.data.montoVentas);
+                setMontoPagar(response.data.montoComprado);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, []);
+
+    const handleChangeMontoPagar = (e) => {
+        if (!handleError(e.target.value)) {
+            setMontoPagarCorregido(e.target.value);
+        }
+    }
+
+    const handleChangeMontoVentas = (e) => {
+        if (!handleError(e.target.value)) {
+            setMontoVentasCorregido(e.target.value);
+        }
+    }
 
     const handleSubmit = (values) => {
         if (!values.confirmar) {    // If the checkbox is not checked
@@ -124,6 +151,7 @@ const CompararVentas = () => {
                                                 style={{
                                                     width: "40%"
                                                 }}
+                                                onChange={handleChangeMontoVentas}
                                             />
                                             {errors.montoVentasCorregido && touched.montoVentasCorregido ?
                                                 <div style={{ color: "red" }}>
@@ -139,10 +167,11 @@ const CompararVentas = () => {
                                                 id="montoPagarCorregido"
                                                 className="form-control-sm inp"
                                                 placeholder="Monto a pagar"
-                                                validate={handleError}
+                                                //validate={handleError}
                                                 style={{
                                                     width: "40%"
                                                 }}
+                                                onChange={handleChangeMontoPagar}
                                             />
                                             {errors.montoPagarCorregido && touched.montoPagarCorregido ?
                                                 <div style={{ color: "red" }}>
@@ -150,15 +179,7 @@ const CompararVentas = () => {
                                                 </div>
                                                 : null}
 
-                                            {values.montoVentasCorregido && values.montoPagarCorregido ?
-                                                <div>
-                                                    <br></br>
-                                                    <button
-                                                        type="submit"
-                                                        className="btn btn-primary">
-                                                        Guardar
-                                                    </button>
-                                                </div> : null}
+                                            {/* if montoVentasCorregido and montoPagarCorregido */}
                                         </div>
                                     }
                                 </div>
@@ -175,6 +196,10 @@ const CompararVentas = () => {
             />
         </>
     );
+}
+
+CompararVentas.propTypes = {
+    idSorteo: PropTypes.number.isRequired
 }
 
 export default CompararVentas;
