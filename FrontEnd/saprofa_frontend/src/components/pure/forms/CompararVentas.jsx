@@ -1,19 +1,29 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import React, { useState, useEffect } from 'react';
 import SuccessModal from '../../modals/SuccessModal';
-import { getVentas } from '../../../services/axiosService';
+import LoadingModal from "../../modals/LoadingModal";
+import FailModal from "../../modals/FailModal";
+import ConfirmationModal from "../../modals/ConfirmationModal";
+import { getVentas, insertaVentas } from '../../../services/axiosService';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
-const CompararVentas = ({idSorteo}) => {
+const CompararVentas = ({ idSorteo }) => {
 
     const [montoVentas, setMontoVentas] = useState(0);
     const [montoPagar, setMontoPagar] = useState(0);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [titulo, setTitulo] = useState('');
-    const [mensaje, setMensaje] = useState('');
 
     const [montoVentasCorregido, setMontoVentasCorregido] = useState(0);
     const [montoPagarCorregido, setMontoPagarCorregido] = useState(0);
+
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [titulo, setTitulo] = useState('');
+    const [mensaje, setMensaje] = useState('');
+    const [showLoadingModal, setShowLoadingModal] = useState(false);
+    const [showFailModal, setShowFailModal] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [confirmationAction, setConfirmationAction] = useState(() => { });
+    const navigate = useNavigate();
 
     const initialValues = {
         montoVentas: montoVentas,
@@ -43,34 +53,91 @@ const CompararVentas = ({idSorteo}) => {
     }, []);
 
     const handleChangeMontoPagar = (e) => {
-        if (!handleError(e.target.value)) {
-            setMontoPagarCorregido(e.target.value);
-        }
+        setMontoPagarCorregido(e.target.value);
     }
 
     const handleChangeMontoVentas = (e) => {
-        if (!handleError(e.target.value)) {
-            setMontoVentasCorregido(e.target.value);
-        }
+        setMontoVentasCorregido(e.target.value);
     }
 
     const handleSubmit = (values) => {
         if (!values.confirmar) {    // If the checkbox is not checked
-            console.log("Datos corregidos: ", values);
+            const data = {
+                idSorteo: idSorteo,
+                montoVentas: values.montoVentasCorregido,
+                montoComprado: values.montoPagarCorregido
+            }
 
-            //if the response is 200
-            setTitulo('Operación exitosa');
-            setMensaje('Datos de ventas guardados correctamente');
-            setShowSuccessModal(true);
+            console.log("Data: ", data);
+            setShowLoadingModal(true);
+            insertaVentas(data)
+                .then(response => {
+                    setShowLoadingModal(false);
+                    if (response.status === 200) {  //if the response is 200
+                        setTitulo('Operación exitosa');
+                        setMensaje('Datos de ventas guardados correctamente');
+                        setShowSuccessModal(true);
+                    }
+                })
+                .catch(error => {
+                    setShowLoadingModal(false);
+                    setTitulo('Operación fallida');
+                    setMensaje('No se pudieron guardar los datos de ventas');
+                    setShowFailModal(true);
+                });
         }
         else {  // If the checkbox is checked
-            console.log("Datos vienen correctos: ", values);
+            const data = {
+                idSorteo: idSorteo,
+                montoVentas: montoVentas,
+                montoComprado: montoPagar
+            }
+            setShowLoadingModal(true);
+            insertaVentas(data)
+                .then(response => {
+                    setShowLoadingModal(false);
+                    if (response.status === 200) {  //if the response is 200
+                        setTitulo('Operación exitosa');
+                        setMensaje('Datos de ventas guardados correctamente');
+                        setShowSuccessModal(true);
+                    }
+                })
+                .catch(error => {
+                    setShowLoadingModal(false);
+                    setTitulo('Operación fallida');
+                    setMensaje('No se pudieron guardar los datos de ventas');
+                    setShowFailModal(true);
+                });
+
         }
     }
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
+        // Navigate to the next page
     }
+
+    function handleCloseFailModal() {
+        setShowFailModal(false);
+    }
+
+    const handleConfirmation = async (confirmed) => {
+        if (!confirmed) {
+            setShowConfirmation(false);
+            return;
+        }
+        await confirmationAction();
+        setShowConfirmation(false);
+    }
+
+    const handleShowConfirmation = async (action) => {
+        setShowConfirmation(true);
+        setConfirmationAction(() => () => {
+            action();
+        });
+    }
+
+
 
     return (
         <>
@@ -82,7 +149,13 @@ const CompararVentas = ({idSorteo}) => {
                 <div className='card-body'>
                     <h5 className='card-title'>Informe de ventas generado por la administración</h5>
                     <br></br>
-                    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+                    <Formik
+                        initialValues={initialValues}
+                        onSubmit={
+                            async (values) => {
+                                await handleShowConfirmation(() => handleSubmit(values));
+                            }
+                        }>
                         {({ values, errors, touched }) => (
                             <Form>
                                 <div className="form-group">
@@ -147,11 +220,11 @@ const CompararVentas = ({idSorteo}) => {
                                                 id="montoVentasCorregido"
                                                 className="form-control-sm inp"
                                                 placeholder="Monto de ventas"
+                                                //onChange={handleChangeMontoVentas}
                                                 validate={handleError}
                                                 style={{
                                                     width: "40%"
                                                 }}
-                                                onChange={handleChangeMontoVentas}
                                             />
                                             {errors.montoVentasCorregido && touched.montoVentasCorregido ?
                                                 <div style={{ color: "red" }}>
@@ -167,11 +240,11 @@ const CompararVentas = ({idSorteo}) => {
                                                 id="montoPagarCorregido"
                                                 className="form-control-sm inp"
                                                 placeholder="Monto a pagar"
-                                                //validate={handleError}
+                                                //onChange={handleChangeMontoPagar}
+                                                validate={handleError}
                                                 style={{
                                                     width: "40%"
                                                 }}
-                                                onChange={handleChangeMontoPagar}
                                             />
                                             {errors.montoPagarCorregido && touched.montoPagarCorregido ?
                                                 <div style={{ color: "red" }}>
@@ -179,7 +252,15 @@ const CompararVentas = ({idSorteo}) => {
                                                 </div>
                                                 : null}
 
-                                            {/* if montoVentasCorregido and montoPagarCorregido */}
+                                            {values.montoVentasCorregido && values.montoPagarCorregido ?
+                                                <div>
+                                                    <br></br>
+                                                    <button
+                                                        type="submit"
+                                                        className="btn btn-primary">
+                                                        Guardar
+                                                    </button>
+                                                </div> : null}
                                         </div>
                                     }
                                 </div>
@@ -190,9 +271,26 @@ const CompararVentas = ({idSorteo}) => {
             </div>
             <SuccessModal
                 show={showSuccessModal}
-                handleClose={handleCloseSuccessModal}
                 titulo={titulo}
                 mensaje={mensaje}
+                handleClose={handleCloseSuccessModal}
+            />
+            <LoadingModal
+                show={showLoadingModal}
+                titulo='Guardando Ventas'
+                mensaje='Por favor espere...'
+            />
+            <FailModal
+                show={showFailModal}
+                titulo={titulo}
+                mensaje={mensaje}
+                handleClose={handleCloseFailModal}
+            />
+            <ConfirmationModal
+                show={showConfirmation}
+                titulo='Confirmación'
+                mensaje='¿Está seguro que desea registrar las ventas?'
+                handleConfirmation={handleConfirmation}
             />
         </>
     );

@@ -175,3 +175,7 @@ export function insertaProcedimiento(procedimiento) {
 export function getVentas(id) {
     return APIRequest.get('/Ventas/'+ id);
 }
+
+export function insertaVentas(ventas) {
+    return APIRequest.post('/Ventas', ventas);
+}
