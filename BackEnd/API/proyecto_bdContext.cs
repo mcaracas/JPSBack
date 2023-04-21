@@ -20,6 +20,8 @@ namespace API
         public virtual DbSet<Acumulado> Acumulados { get; set; }
 
         public virtual DbSet<Escrutinio> Escrutinio { get; set; }
+
+        public virtual DbSet<Ventas> Ventas { get; set; }
         public virtual DbSet<DatosFichero> DatosFicheros { get; set; }
         public virtual DbSet<DatosPreviosAdministracion> DatosPreviosAdministracions { get; set; }
         public virtual DbSet<DatosSorteo> DatosSorteos { get; set; }
@@ -889,6 +891,23 @@ namespace API
 
 
             });
+
+            modelBuilder.Entity<Ventas>(entity =>
+            {
+                entity.HasKey(e => e.id)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("Ventas");
+
+                entity.Property(e => e.idSorteo)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_dato_sorteo");
+
+                entity.Property(e => e.montoVentas).HasColumnName("ventas");
+
+                entity.Property(e => e.montoComprado).HasColumnName("montoComprado");
+            });
+
 
             OnModelCreatingPartial(modelBuilder);
         }

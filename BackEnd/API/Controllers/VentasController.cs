@@ -30,14 +30,15 @@ public class VentasController : ControllerBase
     }   
 
     //post
+
+
     [HttpPost]
-    public void Post([FromBody] Ventas value)
+    public IActionResult Post([FromBody] Ventas model)
     {
         var context = new proyecto_bdContext();
-        //context.Ventas.Add(value);
-        
+        context.Ventas.Add(model);
         context.SaveChanges();
-
+        return Ok();
     }
 }
 
