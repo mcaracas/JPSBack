@@ -28,5 +28,17 @@ public class VentasController : ControllerBase
             Ventas datos = conexion.GetVentas(id);
         return datos;
     }   
+
+    //post
+
+
+    [HttpPost]
+    public IActionResult Post([FromBody] Ventas model)
+    {
+        var context = new proyecto_bdContext();
+        context.Ventas.Add(model);
+        context.SaveChanges();
+        return Ok();
+    }
 }
 

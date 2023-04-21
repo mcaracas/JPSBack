@@ -18,6 +18,10 @@ namespace API
         }
 
         public virtual DbSet<Acumulado> Acumulados { get; set; }
+
+        public virtual DbSet<Escrutinio> Escrutinio { get; set; }
+
+        public virtual DbSet<Ventas> Ventas { get; set; }
         public virtual DbSet<DatosFichero> DatosFicheros { get; set; }
         public virtual DbSet<DatosPreviosAdministracion> DatosPreviosAdministracions { get; set; }
         public virtual DbSet<DatosSorteo> DatosSorteos { get; set; }
@@ -39,6 +43,8 @@ namespace API
         public virtual DbSet<TomoFolio> TomoFolios { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
         public virtual DbSet<ActaDeFiscalizacion> ActaDeFiscalizacions { get; set; }
+
+        public virtual DbSet<ALO> ALO { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -760,6 +766,148 @@ namespace API
                     .HasForeignKey(d => d.IdDatoSorteo)
                     .HasConstraintName("acta_ibfk_1");
             });
+            
+             modelBuilder.Entity<ALO>(entity =>
+            {
+                entity.HasKey(a => a.Id).HasName("PRIMARY");;
+
+                entity.ToTable("ALO");
+
+
+                modelBuilder.Entity<ALO>()
+    .Property(a => a.Id_sorteo)
+    .HasColumnName("Id_sorteo").HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+    .Property(a => a.ser_numeros_o_f)
+    .HasColumnName("ser_numeros_o_f").HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.ser_premi)
+                    .HasColumnName("ser_premi");
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.Bolita_leyenda)
+                    .HasColumnName("Bolita_leyenda")
+                    .HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.Hora)
+                    .HasColumnName("Hora");
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.Marchamo1)
+                    .HasColumnName("Marchamo1")
+                    .HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.Marchamo2)
+                    .HasColumnName("Marchamo2")
+                    .HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.Marchamo3)
+                    .HasColumnName("Marchamo3")
+                    .HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.Marchamo4)
+                    .HasColumnName("Marchamo4")
+                    .HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.no_juegan1)
+                    .HasColumnName("no_juegan1")
+                    .HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.no_juegan2)
+                    .HasColumnName("no_juegan2")
+                    .HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.no_juegan3)
+                    .HasColumnName("no_juegan3")
+                    .HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.no_juegan4)
+                    .HasColumnName("no_juegan4")
+                    .HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.Observaciones)
+                    .HasColumnName("Observaciones")
+                    .HasMaxLength(60);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.premio_total)
+                    .HasColumnName("premio_total");
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.ser_cant_juegan)
+                    .HasColumnName("ser_cant_juegan");
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.ser_cant_no_juegan)
+                    .HasColumnName("ser_cant_no_juegan");
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.ser_custodiado)
+                    .HasColumnName("ser_custodiado")
+                    .HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.ser_firma)
+                    .HasColumnName("ser_firma")
+                    .HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.ser_numeros_o_f)
+                    .HasColumnName("ser_numeros_o_f")
+                    .HasMaxLength(40);
+
+                modelBuilder.Entity<ALO>()
+                    .Property(a => a.ser_premios_marchamos)
+                    .HasColumnName("ser_premios_marchamos")
+                    .HasMaxLength(40);
+                            }
+
+            );
+
+        
+            modelBuilder.Entity<Escrutinio>(entity =>
+            {
+                entity.HasKey(e => e.id)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("escrutinio");
+
+                entity.Property(e => e.idsorteo)
+                    .HasMaxLength(50)
+                    .HasColumnName("idSorteo");
+
+                entity.Property(e => e.escrutinio).HasColumnName("escrutinio");
+
+
+            });
+
+            modelBuilder.Entity<Ventas>(entity =>
+            {
+                entity.HasKey(e => e.id)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("Ventas");
+
+                entity.Property(e => e.idSorteo)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_dato_sorteo");
+
+                entity.Property(e => e.montoVentas).HasColumnName("ventas");
+
+                entity.Property(e => e.montoComprado).HasColumnName("montoComprado");
+            });
+
 
             OnModelCreatingPartial(modelBuilder);
         }
