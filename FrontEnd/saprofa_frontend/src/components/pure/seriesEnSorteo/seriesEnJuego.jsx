@@ -14,6 +14,8 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
     const [marchamos, setMarchamos] = useState([]);
     const [series, setSeries] = useState([]);
     const [premios, setPremios] = useState([]);
+    const lottery = JSON.parse(sessionStorage.getItem('lottery'));
+    const fechaSorteo = lottery?.fechaHora;
 
     const initialValues = {
         ser_numeros_o_f: '',
@@ -26,12 +28,11 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
         no_juegan2: '',
         no_juegan3: '',
         no_juegan4: '',
-        ser_cant_juegan: '',
-        ser_cant_no_juegan: '',
+        ser_cant_juegan: 0,
+        ser_cant_no_juegan: 0,
         ser_custodiado: '',
-        premio_total: '',
+        premio_total: 0,
         observaciones: '',
-        hora: '',
         ser_firma: '',
         bolita_leyenda: ''
     };
@@ -128,6 +129,11 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
     const handleSubmit = async (values) => {
         try {
             console.log(values);
+            //add property to object
+            values.hora = fechaSorteo;
+            values.ser_firma = fiscalizador;
+            values.id_sorteo = idInterno;
+            values.premio_total = premios.reduce((a, b) => a + (b['montoUnitario'] || 0), 0);
             await insertarFicheros(values);
             setTitulo('Operación exitosa');
             setMensaje('series en juego guardadas exitosamente');
@@ -243,9 +249,14 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
         );
     }
 
-
-    //<h5>Se cuenta además con la presencia de las siguientes personas:</h5>
-    //<Field component="textarea" name="detalles" className="inp" rows="4" cols="50" />
+    /*
+        //<h5>Se cuenta además con la presencia de las siguientes personas:</h5>
+        //<Field component="textarea" name="detalles" className="inp" rows="4" cols="50" />
+        <tr>
+        <td>Hora de finalización Auditorio</td>
+        <td><Field type="time" name="hora" className="inp"></Field></td>
+    </tr>
+    */
     return (
         <>
             <div className="fiscalizacion-containerS">
@@ -324,7 +335,7 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
                                 <tbody>
                                     <tr>
                                         <td>Total de series que juegan</td>
-                                        <td><Field className="inp" type="text" name="ser_cant_juegan" placeholder="______________" onKeyPress={(event) => {
+                                        <td><Field className="inp" type="number" name="ser_cant_juegan" placeholder="______________" onKeyPress={(event) => {
                                             if (!/[0-9]/.test(event.key)) {
                                                 event.preventDefault();
                                             }
@@ -336,7 +347,7 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
                                 <tbody>
                                     <tr>
                                         <td>Total de series que no juegan</td>
-                                        <td><Field className="inp" type="text" name="ser_cant_no_juegan" placeholder="______________" onKeyPress={(event) => {
+                                        <td><Field className="inp" type="number" name="ser_cant_no_juegan" placeholder="______________" onKeyPress={(event) => {
                                             if (!/[0-9]/.test(event.key)) {
                                                 event.preventDefault();
                                             }
@@ -366,16 +377,13 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
                             <table className="table table-bordered align-middle">
                                 <tbody>
                                     <tr>
-                                        <td>Hora de finalización Auditorio</td>
-                                        <td><Field type="time" name="hora" className="inp"></Field></td>
-                                    </tr>
-                                    <tr>
                                         <td>Firma de auditor fiscalizador</td>
                                         <td><Field type="text" name="ser_firma" className="inp" value={fiscalizador} placeholder="____________________"></Field></td>
                                     </tr>
                                     <tr>
                                         <td>Bolita con la leyenda</td>
                                         <td><Field name="bolita_leyenda" type="text" className="inp" placeholder="____________"></Field></td>
+
                                     </tr>
                                 </tbody>
                             </table>

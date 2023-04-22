@@ -152,7 +152,7 @@ export function getListaChequeo(idInterno) {
 }
 export function insertarFicheros(ficheros) {
     console.log(ficheros);
-    return APIRequest.post('/Ficheros', ficheros);
+    return APIRequest.post('/Series', ficheros);
 }
 
 export function getEscrutinio(id) {
