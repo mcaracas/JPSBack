@@ -179,3 +179,8 @@ export function getVentas(id) {
 export function insertaVentas(ventas) {
     return APIRequest.post('/Ventas', ventas);
 }
+
+export function getEmailSorteo(id) {
+    console.log(id);
+    return APIRequest.get('/Util/EnviarEmailSorteo/' + id);
+}
