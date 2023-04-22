@@ -4,7 +4,6 @@ namespace API
     {
         public int Id { get; set; }
         public int Id_sorteo { get; set; }
-        public int ser_premi { get; set; }
         public string? Bolita_leyenda { get; set; }
         public DateTime Hora { get; set; }
         public string? Marchamo1 { get; set; }

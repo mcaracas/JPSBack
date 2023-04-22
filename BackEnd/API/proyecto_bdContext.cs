@@ -782,9 +782,6 @@ namespace API
     .Property(a => a.ser_numeros_o_f)
     .HasColumnName("ser_numeros_o_f").HasMaxLength(40);
 
-                modelBuilder.Entity<ALO>()
-                    .Property(a => a.ser_premi)
-                    .HasColumnName("ser_premi");
 
                 modelBuilder.Entity<ALO>()
                     .Property(a => a.Bolita_leyenda)
