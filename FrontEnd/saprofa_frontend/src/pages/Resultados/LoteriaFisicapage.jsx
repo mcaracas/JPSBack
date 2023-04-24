@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import ResultadoLoteriaFisica from '../../components/pure/Resultados/ResultadoLoteriaFisica';
 
@@ -17,4 +17,4 @@ const LoteriaFisicapage = () => {
     );
 }
 
-export default LoteriaFisicapage;
+export default LoteriaFisicapage;*/

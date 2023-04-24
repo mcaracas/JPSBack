@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 import DatosParticipantes from '../../components/pure/datosParticipantes/DatosParticipantes';
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import { getDatosParticipantes } from '../../services/axiosService';
@@ -25,4 +25,4 @@ const DatosParticipantesPage = () => {
     );
 }
 
-export default DatosParticipantesPage;
+export default DatosParticipantesPage;*/
