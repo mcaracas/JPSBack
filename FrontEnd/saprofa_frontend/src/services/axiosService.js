@@ -101,7 +101,7 @@ export function getDatosPrevios(id) {
 }
 
 export function getDatosParticipantes(id) {
-    return APIRequest.get(`/Representate`);
+    return APIRequest.get(`/Representate/${id}`);
 }
 
 export function insertDatosAdministracion(datos) {
@@ -152,7 +152,7 @@ export function getListaChequeo(idInterno) {
 }
 export function insertarFicheros(ficheros) {
     console.log(ficheros);
-    return APIRequest.post('/Ficheros', ficheros);
+    return APIRequest.post('/Series', ficheros);
 }
 
 export function getEscrutinio(id) {
@@ -178,4 +178,9 @@ export function getVentas(id) {
 
 export function insertaVentas(ventas) {
     return APIRequest.post('/Ventas', ventas);
+}
+
+export function getEmailSorteo(id) {
+    console.log(id);
+    return APIRequest.get('/Util/EnviarEmailSorteo/' + id);
 }

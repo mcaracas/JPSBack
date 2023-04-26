@@ -28,6 +28,7 @@ import TomoFolioPage from './pages/TomoFolio/TomoFolioPage';
 import ListaChequeoPage from './pages/ListaChequeo/ListaChequeoPage';
 import SeriesEnJuegoPage from './pages/seriesEnJuego/seriesEnJuegoPage';
 import EscrutinioPage from './pages/Escrutinio/EscrutinioPage';
+import Reportes from './components/pure/reportes/reportes';
 
 import CompararVentasPage from './pages/CompararVentas/CompararVentasPage';
 
@@ -65,6 +66,7 @@ function App() {
           <Route exact path="/SeriesEnJuego" element={<SeriesEnJuegoPage/>} />
           <Route exact path="/Escrutinio" element={<EscrutinioPage/>} />
           <Route exact path="/CompararVentas" element={<CompararVentasPage/>} />
+          <Route exact path="/Reportes" element={<Reportes/>} />
         </Routes>
       </div>
     </Router>
