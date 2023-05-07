@@ -1,92 +1,130 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
-namespace API.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-#nullable disable
-
-public class ListaChequeoDetalleController : ControllerBase
+namespace API.Controllers
 {
-    private readonly ILogger<ListaChequeoDetalleController> _logger;
-
-    public ListaChequeoDetalleController(ILogger<ListaChequeoDetalleController> logger)
+    [ApiController]
+    [Route("[controller]")]
+    public class ListaChequeoDetalleController : ControllerBase
     {
-        _logger = logger;
-    }
+        private readonly ILogger<ListaChequeoDetalleController> _logger;
 
-    [HttpGet]
-        public IEnumerable<ListaChequeoDetalle> Get()
-    {
-        var context = new proyecto_bdContext();
-        var ListaChequeoDetalles = context.ListaChequeoDetalles.ToList();
-        return ListaChequeoDetalles;
-    }
-
-    [HttpGet("{id}")]
-    public ListaChequeoDetalle Get(int id)
-    {
-        var context = new proyecto_bdContext();
-        var ListaChequeoDetalle = context.ListaChequeoDetalles.FirstOrDefault(x => x.Id == id);
-        return ListaChequeoDetalle;
-    }
-
-    [HttpPost]
-    public ActionResult Post([FromBody] ListaChequeoDetalle ListaChequeoDetalle)
-    {
-        var context = new proyecto_bdContext();
-        context.ListaChequeoDetalles.Add(ListaChequeoDetalle);
-        context.SaveChanges();
-        return Ok();
-    }
-
-    
-    [HttpPut("{id}")]
-        [HttpPut]
-    public void UpdateListaChequeoSorteo(ListaChequeoDetalle ListaChequeoDetalle)
-    {
-        var context = new proyecto_bdContext();
-        var ListaChequeoDetalleUpdate = context.ListaChequeoDetalles.FirstOrDefault(x => x.Id == ListaChequeoDetalle.Id);
-        ListaChequeoDetalleUpdate.Id = ListaChequeoDetalle.Id;
-        ListaChequeoDetalleUpdate.Descripcion= ListaChequeoDetalle.Descripcion;
-        ListaChequeoDetalleUpdate.TipoLoteria = ListaChequeoDetalle.TipoLoteria;
-        ListaChequeoDetalleUpdate.TipoListaChequeo = ListaChequeoDetalle.TipoListaChequeo;
-        ListaChequeoDetalleUpdate.Orden = ListaChequeoDetalle.Orden;
-        context.SaveChanges();
-    }
-
-
-    [HttpDelete("{id}")]    
-    public void Delete(int id)
-    {
-        var context = new proyecto_bdContext();
-        var ListaChequeoDetalle = context.ListaChequeoDetalles.FirstOrDefault(x => x.Id == id);
-        context.ListaChequeoDetalles.Remove(ListaChequeoDetalle);
-        context.SaveChanges();
-    }
-
-    [HttpGet("ListaChequeoParaSorteo/{idSorteo}")]
-    public IActionResult GetListaChequeoParaSorteo(int idSorteo)
-    {
-        var context = new proyecto_bdContext();
-        var DatosSorteo= context.DatosSorteos.FirstOrDefault(x => x.IdInterno == idSorteo);
-        var ProcedimientosPrevios = context.ListaChequeoDetalles.Where(x => x.TipoLoteria == DatosSorteo.TipoLoteria && x.TipoListaChequeo=="previo").OrderBy(x => x.Orden).ToList();
-        var ProcedimientosDurante = context.ListaChequeoDetalles.Where(x => x.TipoLoteria == DatosSorteo.TipoLoteria && x.TipoListaChequeo=="durante").OrderBy(x => x.Orden).ToList();
-        var ProcedimientosPosteriores = context.ListaChequeoDetalles.Where(x => x.TipoLoteria == DatosSorteo.TipoLoteria && x.TipoListaChequeo=="posterior").OrderBy(x => x.Orden).ToList();
-        var ProcedimientosSolicitud = context.ListaChequeoDetalles.Where(x => x.TipoLoteria == DatosSorteo.TipoLoteria && x.TipoListaChequeo=="solicitud").OrderBy(x => x.Orden).ToList();
-        var ProcedimientosGeneracion = context.ListaChequeoDetalles.Where(x => x.TipoLoteria == DatosSorteo.TipoLoteria && x.TipoListaChequeo=="generacion").OrderBy(x => x.Orden).ToList();
-
-        var ListaChequeoDetallesParaSorteo=new
+        public ListaChequeoDetalleController(ILogger<ListaChequeoDetalleController> logger)
         {
-            ProcedimientosPrevios,
-            ProcedimientosDurante,
-            ProcedimientosPosteriores,
-            ProcedimientosSolicitud,
-            ProcedimientosGeneracion
-        };
+            _logger = logger;
+        }
 
-        return Ok(ListaChequeoDetallesParaSorteo);
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                var ListaChequeoDetalles = context.ListaChequeoDetalles.ToList();
+                return Ok(ListaChequeoDetalles);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al obtener la lista de chequeo de detalles: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                var ListaChequeoDetalle = context.ListaChequeoDetalles.FirstOrDefault(x => x.Id == id);
+                if (ListaChequeoDetalle == null)
+                {
+                    return NotFound();
+                }
+                return Ok(ListaChequeoDetalle);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al obtener el detalle de la lista de chequeo con id: {id}: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] ListaChequeoDetalle ListaChequeoDetalle)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var context = new proyecto_bdContext();
+                context.ListaChequeoDetalles.Add(ListaChequeoDetalle);
+                context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al crear el detalle de la lista de chequeo: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] ListaChequeoDetalle ListaChequeoDetalle)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var context = new proyecto_bdContext();
+                var existingDetalle = context.ListaChequeoDetalles.FirstOrDefault(x => x.Id == id);
+                if (existingDetalle == null)
+                {
+                    return NotFound();
+                }
+
+                existingDetalle.Id = ListaChequeoDetalle.Id;
+                existingDetalle.Descripcion = ListaChequeoDetalle.Descripcion;
+                existingDetalle.TipoLoteria = ListaChequeoDetalle.TipoLoteria;
+                existingDetalle.TipoListaChequeo = ListaChequeoDetalle.TipoListaChequeo;
+                existingDetalle.Orden = ListaChequeoDetalle.Orden;
+                context.SaveChanges();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el detalle de la lista de chequeo con id: {id}: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                var ListaChequeoDetalle = context.ListaChequeoDetalles.FirstOrDefault(x => x.Id == id);
+                if (ListaChequeoDetalle == null)
+                {
+                    return NotFound();
+                }
+                context.ListaChequeoDetalles.Remove(ListaChequeoDetalle);
+                context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al eliminar el detalle de la lista de chequeo con id: {id}: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
     }
-
-
 }

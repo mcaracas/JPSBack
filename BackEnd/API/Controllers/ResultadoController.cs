@@ -1,61 +1,123 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace API.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-#nullable disable
-public class ResultadoController : ControllerBase
+namespace API.Controllers
 {
-    private readonly ILogger<ResultadoController> _logger;
-
-    public ResultadoController(ILogger<ResultadoController> logger)
+    [ApiController]
+    [Route("[controller]")]
+    public class ResultadoController : ControllerBase
     {
-        _logger = logger;
-    }
+        private readonly ILogger<ResultadoController> _logger;
 
-    [HttpGet]
-        public IEnumerable<Resultado> Get()
-    {
-        var context = new proyecto_bdContext();
-        var Resultados = context.Resultados.ToList();
-        return Resultados;
-    }
+        public ResultadoController(ILogger<ResultadoController> logger)
+        {
+            _logger = logger;
+        }
 
-    [HttpGet("{id}")]
-    public Resultado Get(int id)
-    {
-        var context = new proyecto_bdContext();
-        var resultado = context.Resultados.FirstOrDefault(x => x.IdResultado == id);
-        return resultado;
-    }
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                var resultados = context.Resultados.ToList();
+                return Ok(resultados);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al obtener los resultados: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
 
-    [HttpPost]
-    public ActionResult Post([FromBody] Resultado Resultado)
-    {
-        var context = new proyecto_bdContext();
-        context.Resultados.Add(Resultado);
-        context.SaveChanges();
-        return Ok();
-    }
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                var resultado = context.Resultados.FirstOrDefault(x => x.IdResultado == id);
 
-    
-    [HttpPut("{id}")]
-        [HttpPut]
-    public void UpdateResultado(Resultado resultado)
-    {
-        var context = new proyecto_bdContext();
-        var ResultadoUpdate = context.Resultados.FirstOrDefault(x => x.IdResultado == resultado.IdResultado);
-        ResultadoUpdate.IdResultado = resultado.IdResultado;
-        context.SaveChanges();
-    }
+                if (resultado == null)
+                {
+                    return NotFound();
+                }
 
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
-        var context = new proyecto_bdContext();
-        var resultado = context.Resultados.FirstOrDefault(x => x.IdResultado == id);
-        context.Resultados.Remove(resultado);
-        context.SaveChanges();
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al obtener el resultado con ID: {id}: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] Resultado resultado)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                context.Resultados.Add(resultado);
+                context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al crear el resultado: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] Resultado resultado)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                var resultadoUpdate = context.Resultados.FirstOrDefault(x => x.IdResultado == id);
+
+                if (resultadoUpdate == null)
+                {
+                    return NotFound();
+                }
+
+                resultadoUpdate.IdResultado = resultado.IdResultado;
+                context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el resultado con ID: {id}: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                var resultado = context.Resultados.FirstOrDefault(x => x.IdResultado == id);
+
+                if (resultado == null)
+                {
+                    return NotFound();
+                }
+
+                context.Resultados.Remove(resultado);
+                context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al eliminar el resultado con ID: {id}: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
     }
 }

@@ -1,65 +1,105 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace API.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-#nullable disable
-
-public class RepresentateController : ControllerBase
+namespace API.Controllers
 {
-    private readonly ILogger<RepresentateController> _logger;
-
-    public RepresentateController(ILogger<RepresentateController> logger)
+    [ApiController]
+    [Route("[controller]")]
+    public class RepresentateController : ControllerBase
     {
-        _logger = logger;
-    }
+        private readonly ILogger<RepresentateController> _logger;
 
-    [HttpGet]
-    public IEnumerable<Representante> Get()
-    {
-        var context = new proyecto_bdContext();
-        var Representantes = context.Representantes.ToList();
-        return Representantes;
-    }
+        public RepresentateController(ILogger<RepresentateController> logger)
+        {
+            _logger = logger;
+        }
 
-    [HttpGet("{id}")]
-    public IActionResult Get(int id)
-    {
-        var context = new proyecto_bdContext();
-        var representante = (
-                     from r in context.Representantes
-                      join d in context.DatosPreviosAdministracions
-                      on r.IdDatosPrevios equals d.Id
-                      join s in context.DatosSorteos
-                      on d.IdDatoSorteo equals s.IdInterno
-                      where s.IdInterno == id
-                      select r
-                    ).First();
-                      
-            
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                var representantes = context.Representantes.ToList();
+                return Ok(representantes);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al obtener los representantes: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
 
-        return Ok(representante);
-    }
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                var representante = (
+                    from r in context.Representantes
+                    join d in context.DatosPreviosAdministracions on r.IdDatosPrevios equals d.Id
+                    join s in context.DatosSorteos on d.IdDatoSorteo equals s.IdInterno
+                    where s.IdInterno == id
+                    select r
+                ).FirstOrDefault();
 
-    
+                if (representante == null)
+                {
+                    return NotFound();
+                }
 
-    [HttpPost]
-    public ActionResult Post([FromBody] Representante Representante)
-    {
-        var context = new proyecto_bdContext();
-        context.Representantes.Add(Representante);
-        context.SaveChanges();
-        return Ok();
-    }
+                return Ok(representante);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al obtener el representante con ID: {id}: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
 
-    [HttpPut("{id}")]
-    [HttpPut]
-    public void UpdateRepresentante(Representante representante)
-    {
-        var context = new proyecto_bdContext();
-        var RepresentanteUpdate = context.Representantes.FirstOrDefault(x => x.Id == representante.Id);
-        RepresentanteUpdate.Id = representante.Id;
-        context.SaveChanges();
+        [HttpPost]
+        public IActionResult Create([FromBody] Representante representante)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                context.Representantes.Add(representante);
+                context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al crear el representante: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] Representante representante)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                var representanteUpdate = context.Representantes.FirstOrDefault(x => x.Id == id);
+
+                if (representanteUpdate == null)
+                {
+                    return NotFound();
+                }
+
+                representanteUpdate.Id = representante.Id;
+                context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el representante con ID: {id}: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
     }
 }
