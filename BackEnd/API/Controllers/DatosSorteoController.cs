@@ -39,7 +39,7 @@ namespace API.Controllers
                 var datosSorteo = context.DatosSorteos.FirstOrDefault(x => x.NumSorteo == num_sorteo);
                 if (datosSorteo == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {num_sorteo}:");
                 }
                 return Ok(datosSorteo);
             }
@@ -104,7 +104,7 @@ namespace API.Controllers
                 var DatosSorteoUpdate = context.DatosSorteos.FirstOrDefault(x => x.IdInterno == id);
                 if (DatosSorteoUpdate == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
 
                 DatosSorteoUpdate.IdInterno = datosSorteo.IdInterno;

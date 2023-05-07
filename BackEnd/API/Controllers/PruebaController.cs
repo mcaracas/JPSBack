@@ -40,6 +40,10 @@ namespace API.Controllers
             {
                 var context = new proyecto_bdContext();
                 var pruebas = context.Pruebas.Where(x => x.IdDatoSorteo == idSorteo).ToList();
+                if (pruebas == null)
+                {
+                    return NotFound($"Error datos con ID: {idSorteo}:");
+                }
                 return Ok(pruebas);
             }
             catch (Exception ex)

@@ -33,13 +33,17 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public Marchamo Get(int id)
+        public IActionResult Get(int id)
         {
             try
             {
                 var context = new proyecto_bdContext();
                 var marchamo = context.Marchamos.FirstOrDefault(x => x.Id == id);
-                return marchamo;
+                if (marchamo == null)
+                {
+                    return NotFound($"No existen datos con el ID: {id}:");
+                }
+                return Ok(marchamo);
             }
             catch (Exception ex)
             {

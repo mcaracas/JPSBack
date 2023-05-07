@@ -39,7 +39,7 @@ namespace API.Controllers
                 var datosPreviosAdministracion = context.DatosPreviosAdministracions.FirstOrDefault(x => x.Id == id);
                 if (datosPreviosAdministracion == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
                 return Ok(datosPreviosAdministracion);
             }

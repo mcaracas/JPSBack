@@ -39,7 +39,7 @@ namespace API.Controllers
                 var ListaChequeoDetalle = context.ListaChequeoDetalles.FirstOrDefault(x => x.Id == id);
                 if (ListaChequeoDetalle == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
                 return Ok(ListaChequeoDetalle);
             }
@@ -86,7 +86,7 @@ namespace API.Controllers
                 var existingDetalle = context.ListaChequeoDetalles.FirstOrDefault(x => x.Id == id);
                 if (existingDetalle == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
 
                 existingDetalle.Id = ListaChequeoDetalle.Id;
@@ -114,7 +114,7 @@ namespace API.Controllers
                 var ListaChequeoDetalle = context.ListaChequeoDetalles.FirstOrDefault(x => x.Id == id);
                 if (ListaChequeoDetalle == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
                 context.ListaChequeoDetalles.Remove(ListaChequeoDetalle);
                 context.SaveChanges();

@@ -39,7 +39,7 @@ namespace API.Controllers
                 var planPremio = context.PlanPremios.FirstOrDefault(x => x.IdPlan == id);
                 if (planPremio == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
                 return Ok(planPremio);
             }
@@ -98,7 +98,7 @@ namespace API.Controllers
                 var planPremio = context.PlanPremios.FirstOrDefault(x => x.IdPlan == id);
                 if (planPremio == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
                 context.PlanPremios.Remove(planPremio);
                 context.SaveChanges();

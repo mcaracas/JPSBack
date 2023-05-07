@@ -26,7 +26,7 @@ public ActionResult<CierreApuestas> Get(int id)
         
         if (datos == null)
         {
-            return NotFound(); // Return a 404 Not Found response if the data is not found
+            return NotFound($"No existen datos con el ID: {id}:"); // Return a 404 Not Found response if the data is not found
         }
 
         return datos;

@@ -37,6 +37,10 @@ namespace API.Controllers
             {
                 var context = new proyecto_bdContext();
                 var planPremiosDetalles = context.PlanPremiosDetalles.Where(x => x.IdPlan == id).ToList();
+                if (planPremiosDetalles == null)
+                {
+                    return NotFound($"No existen datos con el ID: {id}:");
+                }
                 return Ok(planPremiosDetalles);
             }
             catch (Exception ex)
@@ -72,7 +76,7 @@ namespace API.Controllers
                 var planPremiosDetalle = context.PlanPremiosDetalles.FirstOrDefault(x => x.IdPlan == id);
                 if (planPremiosDetalle == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con ID: {id}:");
                 }
                 planPremiosDetalle.IdPlan = updatedPlanPremiosDetalle.IdPlan;
                 context.SaveChanges();
@@ -94,7 +98,7 @@ namespace API.Controllers
                 var planPremiosDetalle = context.PlanPremiosDetalles.FirstOrDefault(x => x.IdPlan == id);
                 if (planPremiosDetalle == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
                 context.PlanPremiosDetalles.Remove(planPremiosDetalle);
                 context.SaveChanges();

@@ -39,7 +39,7 @@ namespace API.Controllers
                 var parametro = context.Parametros.FirstOrDefault(x => x.CodigoParametro == codigoParametro);
                 if (parametro == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {codigoParametro}:");
                 }
                 return Ok(parametro);
             }

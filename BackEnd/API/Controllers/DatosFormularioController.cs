@@ -39,7 +39,7 @@ namespace API.Controllers
                 var datosfomulario = context.Datosfomularios.FirstOrDefault(x => x.Id == id);
                 if (datosfomulario == null)
                 {
-                    return NotFound("No se encontraron datos con ese ID");
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
                 return Ok(datosfomulario);
             }
@@ -86,7 +86,7 @@ namespace API.Controllers
                 var DatosfomularioUpdate = context.Datosfomularios.FirstOrDefault(x => x.Id == id);
                 if (DatosfomularioUpdate == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
 
                 DatosfomularioUpdate.Id = datosfomulario.Id;

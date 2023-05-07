@@ -23,7 +23,7 @@ namespace API.Controllers
                 var Escrutinio = conexion.GetEscrutinio(id);
                 if (Escrutinio == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
                 return Ok(Escrutinio);
             }

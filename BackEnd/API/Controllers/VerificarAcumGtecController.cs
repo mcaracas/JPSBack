@@ -25,7 +25,7 @@ namespace API.Controllers
                 AcumGtec datos = conexion.GetAcumulado(id);
                 if (datos == null)
                 {
-                    return NotFound();
+                    return NotFound($"Error al encontrar datos con ID: {id}:");
                 }
                 return Ok(datos);
             }

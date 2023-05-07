@@ -39,7 +39,7 @@ namespace API.Controllers
                 var listaChequeoSorteo = context.ListaChequeoSorteos.FirstOrDefault(x => x.Id == id);
                 if (listaChequeoSorteo == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos del sorteo con número: {id}:");
                 }
                 return Ok(listaChequeoSorteo);
             }
@@ -86,7 +86,7 @@ namespace API.Controllers
                 var existingSorteo = context.ListaChequeoSorteos.FirstOrDefault(x => x.Id == id);
                 if (existingSorteo == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
 
                 existingSorteo.Id = listaChequeoSorteo.Id;
@@ -110,7 +110,7 @@ namespace API.Controllers
                 var listaChequeoSorteo = context.ListaChequeoSorteos.FirstOrDefault(x => x.Id == id);
                 if (listaChequeoSorteo == null)
                 {
-                    return NotFound();
+                    return NotFound($"No existen datos con el ID: {id}:");
                 }
                 context.ListaChequeoSorteos.Remove(listaChequeoSorteo);
                 context.SaveChanges();

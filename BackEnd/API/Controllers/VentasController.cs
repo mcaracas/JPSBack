@@ -25,13 +25,13 @@ namespace API.Controllers
                 Ventas datos = conexion.GetVentas(id);
                 if (datos == null)
                 {
-                    return NotFound();
+                    return NotFound($"Error al encontrar datos con ID: {id}:");
                 }
                 return Ok(datos);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occurred while retrieving Ventas with id {id}.");
+                _logger.LogError(ex, $"Error al encontrar datos con ID: {id}.");
                 return StatusCode(500, "Internal server error");
             }
         }

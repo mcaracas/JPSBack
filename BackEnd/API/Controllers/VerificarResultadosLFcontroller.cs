@@ -25,7 +25,7 @@ namespace API.Controllers
                 Resultado datos = conexion.GetResultadoSybase(id);
                 if (datos == null)
                 {
-                    return NotFound();
+                    return NotFound($"Error al encontrar datos con ID: {id}:");
                 }
                 return Ok(datos);
             }

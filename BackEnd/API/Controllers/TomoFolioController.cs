@@ -40,7 +40,7 @@ namespace API.Controllers
                 var TomoFolio = context.TomoFolios.FirstOrDefault(x => x.IdTomoFolio == id);
                 if (TomoFolio == null)
                 {
-                    return NotFound();
+                    return NotFound($"Error datos con ID: {id}:");
                 }
                 return Ok(TomoFolio);
             }

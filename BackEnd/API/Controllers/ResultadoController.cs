@@ -43,7 +43,7 @@ namespace API.Controllers
 
                 if (resultado == null)
                 {
-                    return NotFound();
+                    return NotFound($"Error datos con ID: {id}:");
                 }
 
                 return Ok(resultado);
