@@ -1,3 +1,4 @@
+using API.CreacionArchivos;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.IO.Compression;
@@ -29,19 +30,21 @@ public class UtilController : ControllerBase
         var sorteo = context.DatosSorteos.FirstOrDefault(x => x.IdInterno == idSorteo);
 
         String directorioSorteo = Utilidades.Utilidades.ObtenerDirectorioSorteo(idSorteo);
-        String archivo = directorioSorteo +"\\"+ idSorteo.ToString() + ".pdf";
+        //String archivo = directorioSorteo +"\\"+ idSorteo.ToString() + ".pdf";
+        String archivo = directorioSorteo +"\\"+ idSorteo.ToString() + ".docx";
+
       
 
-        if (!System.IO.File.Exists(archivo)){
-            //CREA EL PDF          
-            
+        if (System.IO.File.Exists(archivo)){
+            //Borra el archivo si existe
+            System.IO.File.Delete(archivo);               
         }
 
-        String nombreZip = idSorteo.ToString() + ".zip";
+        //CREA EL PDF          
+        CreacionDeActas.CrearActa(sorteo, archivo);
+
+        String nombreZip = idSorteo.ToString()+"-"+DateTime.Now.ToString("yyyyMMddHHmmss")+ ".zip";
         String rutaZip = "Archive\\Sorteos\\"+nombreZip;
-        if (System.IO.File.Exists(rutaZip)){
-            System.IO.File.Delete(rutaZip);
-        }
         ZipFile.CreateFromDirectory(directorioSorteo,rutaZip);
         String tipoSorteo = sorteo.TipoLoteria;
 
@@ -49,6 +52,8 @@ public class UtilController : ControllerBase
         Utilidades.EmailUtility.EnviarEmail($"Adjunto encontrara el acta del sorteo {tipoSorteo} numero {sorteo.NumSorteo}",
                                              $"Acta de Fiscalizacion - Sorteo {tipoSorteo} numero {sorteo.NumSorteo}",
                                              correos,rutaZip);
+    
+
     }
 
 }
