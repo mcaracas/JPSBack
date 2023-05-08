@@ -2,7 +2,7 @@ import React from 'react';
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
 import Tomo from '../../components/pure/forms/TomoFolio';
 import '../../styles/TomoFolio.scss';
-//@TODO: Delete this page
+import Container from '../../components/container/container';
 
 const TomoFolioPage = () => {
 
@@ -14,7 +14,7 @@ const TomoFolioPage = () => {
     return (
         <div>
             <EncabezadoFranjas title={'Tomo y Folio'} />
-            <Tomo idInterno={idInterno}/>
+            <Container component={<Tomo idInterno={idInterno} />} />
         </div>
     );
 }

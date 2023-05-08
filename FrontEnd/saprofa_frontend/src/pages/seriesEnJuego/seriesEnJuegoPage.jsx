@@ -2,6 +2,7 @@ import React from "react";
 import EncabezadoFranjas from "../../components/pure/EncabezadoFranjas";
 import SeriesEnJuego from "../../components/pure/seriesEnSorteo/seriesEnJuego";
 import '../../styles/seriesEnJuego.scss';
+import Container from "../../components/container/container";
 
 function fecha(dateString) {
     const date = new Date(dateString);
@@ -27,7 +28,9 @@ const SeriesEnJuegoPage = () => {
     return (
         <div>
             <EncabezadoFranjas title={"Series en juego"} />
-            <SeriesEnJuego idInterno={idInterno} sorteo={sorteo} fiscalizador={fiscalizador} fecha={fecha(fechaSorteo)} tipoLoteria={tipoLoteria}  />
+            <Container component={
+                <SeriesEnJuego idInterno={idInterno} sorteo={sorteo} fiscalizador={fiscalizador} fecha={fecha(fechaSorteo)} tipoLoteria={tipoLoteria} />
+            } />
         </div>
     );
 }
