@@ -9,7 +9,7 @@ import ConfirmationModal from "../../modals/ConfirmationModal";
 import { useNavigate } from 'react-router-dom';
 
 // TODO: Esto se debe recibir desde el Backend para ser dinámico
-const CANT_BOLITAS = 2;
+const CANT_BOLITAS = 1;
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
 const numSorteo = lottery?.numSorteo;
 const tipoLoteria = lottery?.tipoLoteria;
