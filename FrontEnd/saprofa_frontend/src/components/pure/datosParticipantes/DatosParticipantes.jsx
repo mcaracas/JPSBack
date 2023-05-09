@@ -22,7 +22,7 @@ const initialValues = {
 //const nombresParticipantes = [ 'Gerente Operaciones', 'Gerente Producción', 'Gerencia', 'Juez', 'Presentador', 'Prompter', 'Equipo Computo' ];
 
 // check the props. should include num_sorteo, tipo_loteria
-const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdministracion }) => {
+const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdministracion, tipoLoteria }) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [showFailModal, setShowFailModal] = useState(false);
@@ -37,10 +37,27 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
   const [dropdownValues, setDropdownValues] = useState([]);
   const [confirmationAction, setConfirmationAction] = useState(() => { });
 
+  const navigateToPruebas = (tipoLoteria) => {
+    switch (tipoLoteria) {
+      case 'LTT':
+        return ('/PruebasLotto');
+      case 'NT':
+        return ('/PruebasNuevosTiempos');
+      case '3M':
+        return ('/Pruebas3Monazos');
+      case 'LN':
+        return ('/MarchamoNacional');
+      case 'LP':
+        return ('/MarchamoPopular');
+      default:
+        return ('/ChooseLottery');
+    }
+  }
+
   function handleCloseSuccessModal() {
     setShowSuccessModal(false);
     //TODO: check where to navigate
-    navigate('/PruebasLotto');
+    navigate(navigateToPruebas(tipoLoteria));
   }
 
   function handleCloseFailModal() {
@@ -68,11 +85,12 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
     labelsParticipantes.forEach(label => {
       const llave = mapLabel(label);
       const val = objetoDatosMapeados[label];
-      console.log("key", llave);
-      console.log("val", val);
-      setFormData({ ...formData, [llave]: val });
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        [llave]: val
+      }));
+      console.log("formData", formData);
     });
-    console.log("formData", formData);
   }, []);
 
   const mapLabel = label => {
@@ -116,15 +134,12 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
         return (
           <div className="col-12 col-md-6 m-4" key={index}>
             <label htmlFor={label}>{label}</label>
-            {console.log("objetoDatosMapeados[label]", objetoDatosMapeados[label])}
-            {/* <ParticipantesDropdown participantes={datosParticipantes} setFieldValue={setFieldValue} /> */}
             <ParticipantesDropdown participantes={datosParticipantes} value={objetoDatosMapeados[label]} label={label} setParticipanteForm={setParticipanteForm} />
           </div>
         )
       });
       setDropdownValues(dropdowns);
 
-      console.log("datosParticipantes", datosParticipantes);
     } catch (error) {
 
     }
@@ -133,26 +148,27 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
   const handleSubmit = async (values) => {
     console.log("values", values);
     try {
-      // setShowLoadingModal(true);
-      // const response = await insertDatosAdministracion({
-      //   gerenteOperaciones: values.GOperaciones,
-      //   gerenteProduccion: values.GProduccionYComercializacion,
-      //   gerencia: values.Gerencia,
-      //   juez: values.Juez,
-      //   presentadorDelSorteo: values.PresentadorDelSorteo,
-      //   prompter: values.Prompter,
-      //   equipoDeComputo: values.EquipoDeComputo
-      // });
-      // setShowLoadingModal(false);
-      // if (response.status === 200) {
-      //   setShowLoadingModal(false);
-      //   setMensaje("Datos de Participantes guardados exitosamente");
-      //   setTitulo("¡Operación Exitosa!");
-      //   setDatosEnviados(true);
-      //   setShowSuccessModal(true);
-      // } else {
-      //   setShowLoadingModal(false);
-      // }
+      setShowLoadingModal(true);
+      const response = await insertDatosAdministracion({
+        idDatosPrevios: idSorteo,
+        gerenteOperaciones: values.GOperaciones,
+        gerenteProduccion: values.GProduccionYComercializacion,
+        gerencia: values.Gerencia,
+        juez: values.Juez,
+        presentadorDelSorteo: values.PresentadorDelSorteo,
+        prompter: values.Prompter,
+        equipoComputo: values.EquipoDeComputo
+      });
+      setShowLoadingModal(false);
+      if (response.status === 200) {
+        setShowLoadingModal(false);
+        setMensaje("Datos de Participantes guardados exitosamente");
+        setTitulo("¡Operación Exitosa!");
+        setDatosEnviados(true);
+        setShowSuccessModal(true);
+      } else {
+        setShowLoadingModal(false);
+      }
     } catch (error) {
       setShowLoadingModal(false);
       setMensaje(`Error al guardar los Datos de Participantes. ${error.message}`);
