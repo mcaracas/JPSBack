@@ -156,7 +156,7 @@ export function insertarFicheros(ficheros) {
 }
 
 export function getEscrutinio(id) {
-    return APIRequest.get('/Escrutinio' + id);
+    return 100000000//APIRequest.get('/Escrutinio' + id);
 }
 
 export function insertarEscrutinio(escrutinio) {
