@@ -24,12 +24,25 @@ public class RepresentateController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public Representante Get(int id)
+    public IActionResult Get(int id)
     {
         var context = new proyecto_bdContext();
-        var representante = context.Representantes.FirstOrDefault(x => x.Id == id);
-        return representante;
+        var representante = (
+                     from r in context.Representantes
+                      join d in context.DatosPreviosAdministracions
+                      on r.IdDatosPrevios equals d.Id
+                      join s in context.DatosSorteos
+                      on d.IdDatoSorteo equals s.IdInterno
+                      where s.IdInterno == id
+                      select r
+                    ).First();
+                      
+            
+
+        return Ok(representante);
     }
+
+    
 
     [HttpPost]
     public ActionResult Post([FromBody] Representante Representante)

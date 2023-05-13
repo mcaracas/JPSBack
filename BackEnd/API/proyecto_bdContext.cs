@@ -34,6 +34,7 @@ namespace API
         public virtual DbSet<PlanPremiosDetalle> PlanPremiosDetalles { get; set; }
         public virtual DbSet<Prueba> Pruebas { get; set; }
         public virtual DbSet<RepFavorecidosUltimoAnno> RepFavorecidosUltimoAnnos { get; set; }
+        public virtual DbSet<RepListaChequeoActum> RepListaChequeoActa { get; set; }
         public virtual DbSet<RepSorteoPorUsuario> RepSorteoPorUsuarios { get; set; }
         public virtual DbSet<RepVentasPorFecha> RepVentasPorFechas { get; set; }
         public virtual DbSet<Representante> Representantes { get; set; }
@@ -903,6 +904,37 @@ namespace API
                 entity.Property(e => e.montoVentas).HasColumnName("ventas");
 
                 entity.Property(e => e.montoComprado).HasColumnName("montoComprado");
+            });
+
+            modelBuilder.Entity<RepListaChequeoActum>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("rep_lista_chequeo_acta");
+
+                entity.Property(e => e.Descripcion)
+                    .HasColumnType("varchar(5000)")
+                    .HasColumnName("descripcion");
+
+                entity.Property(e => e.IdChequeoDetalle)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_chequeo_detalle");
+
+                entity.Property(e => e.IdDatoSorteo)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("id_dato_sorteo");
+
+                entity.Property(e => e.Orden)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("orden");
+
+                entity.Property(e => e.TipoListaChequeo)
+                    .HasMaxLength(45)
+                    .HasColumnName("tipo_lista_chequeo");
+
+                entity.Property(e => e.Verificado)
+                    .HasMaxLength(20)
+                    .HasColumnName("verificado");
             });
 
 

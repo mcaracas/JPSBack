@@ -101,7 +101,7 @@ export function getDatosPrevios(id) {
 }
 
 export function getDatosParticipantes(id) {
-    return APIRequest.get(`/Representate`);
+    return APIRequest.get(`/Representate/${id}`);
 }
 
 export function insertDatosAdministracion(datos) {
