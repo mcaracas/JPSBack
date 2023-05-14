@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import SuccessModal from '../../modals/SuccessModal';
+import ConfirmationModal from '../../modals/ConfirmationModal';
 import { useNavigate } from 'react-router-dom';
-import { getMarchamos, insertarFicheros, getPremios } from '../../../services/axiosService';
-
+import { getMarchamos, insertarFicheros } from '../../../services/axiosService';
+import LoadingModal from "../../modals/LoadingModal";
+import FailModal from "../../modals/FailModal";
 
 const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) => {
 
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
+
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
     const navigate = useNavigate();
@@ -16,6 +18,35 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
     const [premios, setPremios] = useState([]);
     const lottery = JSON.parse(sessionStorage.getItem('lottery'));
     const fechaSorteo = lottery?.fechaHora;
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showLoadingModal, setShowLoadingModal] = useState(false);
+    const [showFailModal, setShowFailModal] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [confirmationAction, setConfirmationAction] = useState(() => { });
+
+
+    function handleCloseFailModal() {
+        setShowFailModal(false);
+    }
+    function handleCloseSuccessModal() {
+        setShowSuccessModal(false);
+        navigate('/');      // Redirect to the next page
+    }
+    const handleConfirmation = async (confirmed) => {
+        if (!confirmed) {
+            setShowConfirmation(false);
+            return;
+        }
+        await confirmationAction();
+        setShowConfirmation(false);
+    }
+
+    const handleShowConfirmation = async (action) => {
+        setShowConfirmation(true);
+        setConfirmationAction(() => () => {
+            action();
+        });
+    }
 
     const initialValues = {
         ser_numeros_o_f: '',
@@ -57,57 +88,6 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
         }
     }
 
-    async function getPremioLoteria() {
-        try {
-            const response = await getPremios();
-            console.log(response.data);
-            const filteredData = response.data.filter((item) => item.idPlan === 1);
-            console.log(filteredData);
-            setPremios(filteredData);
-        }
-        catch (error) {
-            setTitulo('Operación fallida');
-            setMensaje('No se pudo cargar los premios');
-            setShowSuccessModal(true);
-        }
-    }
-
-    function TablaPremios() {
-        return (
-            <table className='table table-bordered table-responsive'>
-                <thead>
-                    <tr>
-                        <th colSpan="3">Bolitas de premios</th>
-                    </tr>
-                    <tr>
-                        <th>Cantidad</th>
-                        <th>Premio</th>
-                        <th> Descripción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {premios.map((item) => (
-                        <tr key={item.id}>
-                            <td>{item.cantidadPremios}</td>
-                            <td>¢ {item.montoUnitario}</td>
-                            <td>{item.descripcion}</td>
-                        </tr>
-                    ))}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td><b>Total: {premios.reduce((a, b) => a + (b['cantidadPremios'] || 0), 0)}</b></td>
-                        <td colSpan="3"><b>¢ {premios.reduce((a, b) => a + (b['montoUnitario'] || 0), 0)}</b></td>
-                    </tr>
-                </tfoot>
-            </table>
-        );
-    }
-
-
-    useEffect(() => {
-        getPremioLoteria();
-    }, []);
 
     useEffect(() => {
         getDatos();
@@ -121,10 +101,6 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
         return error;
     };
 
-    function handleCloseSuccessModal() {
-        setShowSuccessModal(false);
-        navigate('/');      // Redirect to the next page
-    }
 
     const handleSubmit = async (values) => {
         try {
@@ -134,12 +110,19 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
             values.ser_firma = fiscalizador;
             values.id_sorteo = idInterno;
             values.premio_total = premios.reduce((a, b) => a + (b['montoUnitario'] || 0), 0);
-            await insertarFicheros(values);
-            setTitulo('Operación exitosa');
-            setMensaje('series en juego guardadas exitosamente');
-            setShowSuccessModal(true);
+            const response = await insertarFicheros(values);
+            if (response.status === 200) {
+                setShowLoadingModal(false);
+                setTitulo('¡Operación Exitosa!');
+                setMensaje('series en juego guardadas exitosamente');
+                setShowSuccessModal(true);
+            }
+            else {
+                setShowLoadingModal(false);
+            }
         } catch (error) {
-            setTitulo('Operación fallida');
+            setShowLoadingModal(false);
+            setTitulo('¡Operación Fallida!');
             setMensaje('No se pudo guardar las series en juego');
             setShowSuccessModal(true);
         }
@@ -257,15 +240,6 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
             </div>
         );
     }
-
-    /*
-        //<h5>Se cuenta además con la presencia de las siguientes personas:</h5>
-        //<Field component="textarea" name="detalles" className="inp" rows="4" cols="50" />
-        <tr>
-        <td>Hora de finalización Auditorio</td>
-        <td><Field type="time" name="hora" className="inp"></Field></td>
-    </tr>
-    */
     return (
         <>
             <div className="fiscalizacion-containerS">
@@ -283,7 +257,10 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
                 <br />
                 <Formik
                     initialValues={initialValues}
-                    onSubmit={handleSubmit}
+                    onSubmit={
+                        async (values) => {
+                            await handleShowConfirmation(() => handleSubmit(values));
+                        }}
                 >
                     {({ isSubmitting, errors, touched, values }) => (
                         <Form>
@@ -327,8 +304,6 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
                                 </tbody>
                             </table>
                             <br />
-                            {tipoLoteria === 'LN' ? TablaPremios() : null}
-                            <br />
                             <table className="table table-bordered align-middle">
                                 <thead>
                                     <tr>
@@ -343,12 +318,11 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
                                 <tbody>
                                     <tr>
                                         <td>Total de series que juegan</td>
-                                        <td><Field className="inp" type="number" name="ser_cant_juegan" placeholder="______________" onKeyPress={(event) => {
+                                        <td><Field className="inp" type="text" name="ser_cant_juegan" placeholder="______________" onKeyPress={(event) => {
                                             if (!/[0-9]/.test(event.key)) {
                                                 event.preventDefault();
                                             }
-                                        }} validate={handleerror} />{errors.ser_cant_juegan && touched.ser_cant_juegan ?
-                                            <div style={{ color: "red" }}><ErrorMessage name="ser_cant_juegan" /></div> : null}
+                                        }} />
                                         </td>
                                     </tr>
                                 </tbody>
@@ -357,12 +331,11 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
                                 <tbody>
                                     <tr>
                                         <td>Total de series que no juegan</td>
-                                        <td><Field className="inp" type="number" name="ser_cant_no_juegan" placeholder="______________" onKeyPress={(event) => {
+                                        <td><Field className="inp" type="text" name="ser_cant_no_juegan" placeholder="______________" onKeyPress={(event) => {
                                             if (!/[0-9]/.test(event.key)) {
                                                 event.preventDefault();
                                             }
-                                        }} validate={handleerror} />{errors.ser_cant_no_juegan && touched.ser_cant_no_juegan ?
-                                            <div style={{ color: "red" }}><ErrorMessage name="ser_cant_no_juegan" /></div> : null}
+                                        }} />
                                         </td>
                                     </tr>
                                 </tbody>
@@ -392,15 +365,13 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
                                     <tr>
                                         <td>Firma de auditor fiscalizador</td>
                                         <td>
-                                            <Field type="text" name="ser_firma" className="inp" value={fiscalizador} placeholder="____________________" validate={handleerror} />
+                                            <Field type="text" name="ser_firma" className="inp" value={fiscalizador} placeholder="____________________" />
                                             {errors.ser_firma && touched.ser_firma && fiscalizador === null ? <div style={{ color: "red" }}><ErrorMessage name="ser_firma" /></div> : null}
                                         </td>
-
                                     </tr>
                                     <tr>
                                         <td>Bolita con la leyenda</td>
-                                        <td><Field name="bolita_leyenda" type="text" className="inp" placeholder="____________" validate={handleerror} />
-                                            {errors.bolita_leyenda && touched.bolita_leyenda ? <div style={{ color: "red" }}><ErrorMessage name="bolita_leyenda" /></div> : null}
+                                        <td><Field name="bolita_leyenda" type="text" className="inp" placeholder="____________" />
                                         </td>
                                     </tr>
                                 </tbody>
@@ -413,9 +384,26 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
             </div>
             <SuccessModal
                 show={showSuccessModal}
-                handleClose={handleCloseSuccessModal}
                 titulo={titulo}
                 mensaje={mensaje}
+                handleClose={handleCloseSuccessModal}
+            />
+            <LoadingModal
+                show={showLoadingModal}
+                titulo='Guardando series en juego'
+                mensaje='Por favor espere...'
+            />
+            <FailModal
+                show={showFailModal}
+                titulo={titulo}
+                mensaje={mensaje}
+                handleClose={handleCloseFailModal}
+            />
+            <ConfirmationModal
+                show={showConfirmation}
+                titulo='Confirmación'
+                mensaje='¿Está seguro que desea registrar las series en juego guardadas?'
+                handleConfirmation={handleConfirmation}
             />
         </>
     );

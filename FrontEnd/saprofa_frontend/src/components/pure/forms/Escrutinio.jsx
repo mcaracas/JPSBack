@@ -50,7 +50,7 @@ const Escrutinio = () => {
 
     const getDatos = async () => {
         try {
-            const response = await getEscrutinio(1);
+            const response = getEscrutinio(1) //await getEscrutinio(1); 
             setDatos(response);
         }
         catch (error) {

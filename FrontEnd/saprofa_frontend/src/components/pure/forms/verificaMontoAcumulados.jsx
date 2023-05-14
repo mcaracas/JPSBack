@@ -157,6 +157,11 @@ const VerificaMontoAcumulado = () => {
                                         <button type="submit" className="btn">Aceptar</button>
                                     </div>
                                 }
+
+
+
+
+
                             </section>
                         </Form>
                     )}

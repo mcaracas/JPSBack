@@ -29,6 +29,7 @@ import ListaChequeoPage from './pages/ListaChequeo/ListaChequeoPage';
 import SeriesEnJuegoPage from './pages/seriesEnJuego/seriesEnJuegoPage';
 import EscrutinioPage from './pages/Escrutinio/EscrutinioPage';
 import Reportes from './components/pure/reportes/reportes';
+import InventarioPage from './pages/inventario/InventarioPage';
 
 import CompararVentasPage from './pages/CompararVentas/CompararVentasPage';
 
@@ -67,6 +68,7 @@ function App() {
           <Route exact path="/Escrutinio" element={<EscrutinioPage/>} />
           <Route exact path="/CompararVentas" element={<CompararVentasPage/>} />
           <Route exact path="/Reportes" element={<Reportes/>} />
+          <Route exact path="/Inventario" element={<InventarioPage/>} />
         </Routes>
       </div>
     </Router>
