@@ -29,7 +29,7 @@ public ActionResult<CierreApuestas> Get(int id)
             return NotFound($"No existen datos con el ID: {id}:"); // Return a 404 Not Found response if the data is not found
         }
 
-        return datos;
+        return Ok(datos);
     }
     catch (Exception ex)
     {
