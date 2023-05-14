@@ -1,7 +1,7 @@
-#nullable disable
-//RF07 Verificar monto de acumulados
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using API.Utilidades;
+using System;
 
 namespace API.Controllers
 {
@@ -17,11 +17,23 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public AcumGtec Get(int id)
+        public IActionResult Get(int id)
         {
-            ConexionSybase conexion = new ConexionSybase();
-            AcumGtec datos = conexion.GetAcumulado(id);
-            return datos;
+            try
+            {
+                ConexionSybase conexion = new ConexionSybase();
+                AcumGtec datos = conexion.GetAcumulado(id);
+                if (datos == null)
+                {
+                    return NotFound($"Error al encontrar datos con ID: {id}:");
+                }
+                return Ok(datos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while retrieving AcumGtec with id {id}.");
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
 }

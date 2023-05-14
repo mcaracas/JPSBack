@@ -1,44 +1,56 @@
-//RF06 Comparar ventas
-
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using API.Utilidades;
+using System;
 
-namespace API.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-#nullable disable
-
-
-
-
-public class VentasController : ControllerBase
+namespace API.Controllers
 {
-    private readonly ILogger<VentasController> _logger;
-
-    public VentasController(ILogger<VentasController> logger)
+    [ApiController]
+    [Route("[controller]")]
+    public class VentasController : ControllerBase
     {
-        _logger = logger;
-    }
+        private readonly ILogger<VentasController> _logger;
 
-    [HttpGet("{id}")]
-        public Ventas Get(int id)
-    {
-        
-        ConexionSybase conexion = new ConexionSybase();
-            Ventas datos = conexion.GetVentas(id);
-        return datos;
-    }   
+        public VentasController(ILogger<VentasController> logger)
+        {
+            _logger = logger;
+        }
 
-    //post
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                ConexionSybase conexion = new ConexionSybase();
+                Ventas datos = conexion.GetVentas(id);
+                if (datos == null)
+                {
+                    return NotFound($"Error al encontrar datos con ID: {id}:");
+                }
+                return Ok(datos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error al encontrar datos con ID: {id}.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
 
-
-    [HttpPost]
-    public IActionResult Post([FromBody] Ventas model)
-    {
-        var context = new proyecto_bdContext();
-        context.Ventas.Add(model);
-        context.SaveChanges();
-        return Ok();
+        [HttpPost]
+        public IActionResult Post([FromBody] Ventas model)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                context.Ventas.Add(model);
+                context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while saving Ventas.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }
-
