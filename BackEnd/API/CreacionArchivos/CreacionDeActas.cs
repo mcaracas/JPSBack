@@ -22,7 +22,7 @@ namespace API.CreacionArchivos
                     ActaLoteriaPopular.CrearActaLoteriaPopular(datosSorteo, path);
                     break;
                 case "LN":
-                    //CrearActaLoteriaChances(datosSorteo, path);
+                    ActaLoteriaNacional.CrearActaLoteriaNacional(datosSorteo, path);
                     break;
                 case "3M":
                     //CrearActaLoteriaBilletes(datosSorteo, path);
