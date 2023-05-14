@@ -30,17 +30,12 @@ namespace API.CreacionArchivos
                 case "LTT":
                     //CrearActaLoteriaBilletesChances(datosSorteo, path);
                     break;
-                case "NV":
-                    //CrearActaLoteriaBilletesChances(datosSorteo, path);
+                case "NT":
+                    ActaNuevosTiempos.CrearActaNuevosTiempos(datosSorteo, path);
+                    break;
                 default:
                     break;
             }
-
-        }        
-        
-     
+        }
     }
-        
-
-    
 }
