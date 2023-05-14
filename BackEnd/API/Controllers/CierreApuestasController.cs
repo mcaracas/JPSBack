@@ -17,11 +17,26 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public CierreApuestas Get(int id)
+public ActionResult<CierreApuestas> Get(int id)
+{
+    try
+    {
+        ConexionSybase conexion = new ConexionSybase();
+        CierreApuestas datos = conexion.GetCierreApuestas(id);
+        
+        if (datos == null)
         {
-            ConexionSybase conexion = new ConexionSybase();
-            CierreApuestas datos = conexion.GetCierreApuestas(id);
-            return datos;
+            return NotFound($"No existen datos con el ID: {id}:"); // Return a 404 Not Found response if the data is not found
         }
+
+        return Ok(datos);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "An error occurred while processing the request.");
+        return StatusCode(500, "An error occurred while processing the request.");
+    }
+}
+
     }
 }
