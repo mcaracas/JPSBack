@@ -81,8 +81,9 @@ namespace API.CreacionArchivos
                 new Justification() { Val = JustificationValues.Center });
         }
 
-        public static void CrearTablaProcedimientos(Body body, IOrderedEnumerable<RepListaChequeoActum> procedimientos, string titulo){
+        public static void CrearTablaProcedimientos(Body body, IOrderedEnumerable<RepListaChequeoActum> procedimientos, string titulo, DatosSorteo sorteo){
             //Poniendo titulo antes de la tabla
+            var context = new proyecto_bdContext();
             Paragraph paragraphTituloProcedimientos = body.AppendChild(new Paragraph());
             JustificarParrafo(paragraphTituloProcedimientos);
             Run runTituloProcedimientos = paragraphTituloProcedimientos.AppendChild(new Run());
@@ -134,6 +135,29 @@ namespace API.CreacionArchivos
             // Llenar los datos de la tabla
             foreach (var proc in procedimientos)
             {
+                var datosPreviosAdm = context.DatosPreviosAdministracions.Where(x => x.IdDatoSorteo == sorteo.IdInterno).FirstOrDefault();
+                var representantes = context.Representantes.Where(x => x.IdDatosPrevios == datosPreviosAdm.Id).FirstOrDefault();
+                if (proc.Descripcion.Contains("{GerenteGeneral}")){
+                    proc.Descripcion = proc.Descripcion.Replace("{GerenteGeneral}", representantes.Gerencia);
+                }
+                if (proc.Descripcion.Contains("{GerenteOperaciones}")){
+                    proc.Descripcion = proc.Descripcion.Replace("{GerenteOperaciones}", representantes.GerenteOperaciones);
+                }
+                if (proc.Descripcion.Contains("{GerenteProduccion}")){
+                    proc.Descripcion = proc.Descripcion.Replace("{GerenteProduccion}", representantes.GerenteProduccion);
+                }
+                if (proc.Descripcion.Contains("{Otro}")){
+                    proc.Descripcion = proc.Descripcion.Replace("{Otro}", "____________________");
+                }
+                if (proc.Descripcion.Contains("{OtroDescripcion}")){
+                    proc.Descripcion = proc.Descripcion.Replace("{OtroDescripcion}", "____________________");
+                }
+                if (proc.Descripcion.Contains("{Fracciones}")){
+                    proc.Descripcion = proc.Descripcion.Replace("{Fracciones}", " __________");
+                }
+                if (proc.Descripcion.Contains("{Recibos}")){
+                    proc.Descripcion = proc.Descripcion.Replace("{Recibos}", " __________");
+                }
                 TableRow tableDataRow = new TableRow();
                 table.AppendChild(tableDataRow);
 
@@ -164,6 +188,39 @@ namespace API.CreacionArchivos
             }
 
             body.AppendChild(table);
+        }
+
+        public static string numInverso(string num){
+            // Invierte el orden de un número
+            string numInvertido = "";
+            for (int i = num.Length - 1; i >= 0; i--)
+            {
+                numInvertido += num[i];
+            }
+            return numInvertido;
+        }
+
+
+        public static String UltimoTomo(int idSorteo)
+        {
+            var context = new proyecto_bdContext();
+            var DatosSorteo= context.DatosSorteos.FirstOrDefault(x => x.IdInterno == idSorteo);
+            if(DatosSorteo == null)
+                return "";
+            var TomoFolio = context.TomoFolios.Where(x => (x.IdDatoSorteoNavigation.TipoLoteria == DatosSorteo.TipoLoteria && x.Estado=="Activo")  ).OrderByDescending(x => x.Tomo).ThenByDescending(x =>x.Folio).FirstOrDefault();
+            TomoFolio.IdDatoSorteoNavigation = null;
+            return TomoFolio.Tomo.ToString();
+        }
+
+        public static String UltimoTomoPrevio(int idSorteo)
+        {
+            var context = new proyecto_bdContext();
+            var DatosSorteo= context.DatosSorteos.FirstOrDefault(x => x.IdInterno == idSorteo);
+            if(DatosSorteo == null)
+                return "";
+            var TomoFolio = context.TomoFolios.Where(x => (x.IdDatoSorteoNavigation.TipoLoteria == DatosSorteo.TipoLoteria && x.Estado=="Activo" && x.IdDatoSorteo != idSorteo)).OrderByDescending(x => x.Tomo).ThenByDescending(x =>x.Folio).FirstOrDefault();
+            TomoFolio.IdDatoSorteoNavigation = null;
+            return TomoFolio.Tomo.ToString();
         }
         
     }
