@@ -184,3 +184,8 @@ export function getEmailSorteo(id) {
     console.log(id);
     return APIRequest.get('/Util/EnviarEmailSorteo/' + id);
 }
+
+export function getName(username) {
+    return APIRequest.get(`/Usuario/${username}`);
+  }
+  
