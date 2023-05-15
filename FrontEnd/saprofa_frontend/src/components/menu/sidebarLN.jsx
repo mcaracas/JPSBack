@@ -30,6 +30,11 @@ const SidebarLN = () => {
                 </a>
             </li>
             <li className="list-group-item">
+                <a className="menu-opc" href="/inventario">
+                    Inventario
+                </a>
+            </li>
+            <li className="list-group-item">
                 <a className="menu-opc" href="/ResultadosLoteriaFisica">
                     Resultados
                 </a>

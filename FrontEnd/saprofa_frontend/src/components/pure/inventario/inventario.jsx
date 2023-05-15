@@ -112,7 +112,7 @@ const Inventario = ({ fecha, sorteo }) => {
                 <button className="btn btn-primary" onClick={() => {
                     handleShowConfirmation(async () => {
                         try {
-                            navigate('/');
+                            navigate('/ResultadosLoteriaFisica');
                             setTitulo('Operación exitosa');
                             setMensaje('Se ha guardado el inventario');
                             setShowSuccessModal(true);
