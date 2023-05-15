@@ -23,15 +23,24 @@ public class UsuarioController : ControllerBase
         return Usuarios;
     }
 
-    /*
-        [HttpGet("{id}")]
-        public Usuario Get(int id)
+
+    [HttpGet("nombre/{username}")]
+    public string GetNombre(string username)
+    {
+        var context = new proyecto_bdContext();
+        var usuario = context.Usuarios.FirstOrDefault(x => x.Usuario1 == username);
+
+        if (usuario == null)
         {
-            var context = new proyecto_bdContext();
-            var usuario = context.Usuarios.FirstOrDefault(x => x.Id == id);
-            return usuario;
+            return "No se encontró el usuario";
         }
-    */
+        else
+        {
+            return usuario.Nombre;
+        }
+    }
+
+
 
     [HttpPost, Route("[action]", Name = "Register")]
     public ActionResult Register([FromBody] Usuario Usuario)

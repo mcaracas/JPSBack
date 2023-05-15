@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import SuccessModal from '../../modals/SuccessModal';
 import ConfirmationModal from '../../modals/ConfirmationModal';
-import LoadingModal from "../../modals/LoadingModal";
 import FailModal from "../../modals/FailModal";
 import { getPremios } from '../../../services/axiosService';
 import { useNavigate } from 'react-router-dom';
 
-const Inventario = ({ idSorteo, fecha, sorteo }) => {
+const Inventario = ({ fecha, sorteo }) => {
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
     const navigate = useNavigate();
     const [premios, setPremios] = useState([]);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [showLoadingModal, setShowLoadingModal] = useState(false);
     const [showFailModal, setShowFailModal] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [confirmationAction, setConfirmationAction] = useState(() => { });
@@ -20,10 +18,12 @@ const Inventario = ({ idSorteo, fecha, sorteo }) => {
     function handleCloseFailModal() {
         setShowFailModal(false);
     }
+
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
         navigate('/');
     }
+
     const handleConfirmation = async (confirmed) => {
         if (!confirmed) {
             setShowConfirmation(false);
@@ -39,12 +39,6 @@ const Inventario = ({ idSorteo, fecha, sorteo }) => {
             action();
         });
     }
-    const initialValues = {
-        cantidadPremios: 0,
-        montoUnitario: 0,
-        descripcion: ''
-    };
-
 
     async function getPremioLoteria() {
         try {
@@ -58,6 +52,7 @@ const Inventario = ({ idSorteo, fecha, sorteo }) => {
             setTitulo('Operación fallida');
             setMensaje('No se pudo cargar los premios');
             setShowSuccessModal(true);
+            console.log(error);
         }
     }
 
@@ -84,24 +79,18 @@ const Inventario = ({ idSorteo, fecha, sorteo }) => {
                             <td>{item.cantidadPremios}</td>
                             <td>¢ {item.montoUnitario}</td>
                             <td>{item.descripcion}</td>
-                            <td>
-                                <button className="btn btn-danger" onClick={() => {
-                                    const newPremios = premios.filter(premio => premio.id !== item.id);
-                                    setPremios(newPremios);
-                                }}>Eliminar</button>
-                            </td>
                         </tr>
                     ))}
                 </tbody>
                 <tfoot>
                     <tr>
                         <td><b>Total: {premios.reduce((a, b) => a + (b['cantidadPremios'] || 0), 0)}</b></td>
-                        <td colSpan="3"><b>¢ {premios.reduce((a, b) => a + (b['montoUnitario'] || 0), 0)}</b></td>
                     </tr>
                 </tfoot>
             </table>
         );
     }
+    //ver monto <td colSpan="3"><b>¢ {premios.reduce((a, b) => a + (b['montoUnitario'] || 0), 0)}</b></td>
     return (
         <>
             <div className="fiscalizacion-containerS1">
@@ -118,26 +107,29 @@ const Inventario = ({ idSorteo, fecha, sorteo }) => {
                 </div>
                 <div>
                     {TablaPremios()}
-                    <button className="btn" onClick={() => {
-                        const id = premios.length + 1;
-                        const nuevaFila = { id: id, cantidadPremios: 1, montoUnitario: 0, descripcion: "" };
-                        setPremios([...premios, nuevaFila]);
-                    }}>Agregar fila</button>
-
                 </div>
                 <br />
-
+                <button className="btn btn-primary" onClick={() => {
+                    handleShowConfirmation(async () => {
+                        try {
+                            navigate('/ResultadosLoteriaFisica');
+                            setTitulo('Operación exitosa');
+                            setMensaje('Se ha guardado el inventario');
+                            setShowSuccessModal(true);
+                        }
+                        catch (error) {
+                            setTitulo('Operación fallida');
+                            setMensaje('No se pudo guardar el inventario');
+                            setShowFailModal(true);
+                        }
+                    });
+                }}>Continuar</button>
             </div>
             <SuccessModal
                 show={showSuccessModal}
                 titulo={titulo}
                 mensaje={mensaje}
                 handleClose={handleCloseSuccessModal}
-            />
-            <LoadingModal
-                show={showLoadingModal}
-                titulo='Guardando Marchamos'
-                mensaje='Por favor espere...'
             />
             <FailModal
                 show={showFailModal}
@@ -148,7 +140,7 @@ const Inventario = ({ idSorteo, fecha, sorteo }) => {
             <ConfirmationModal
                 show={showConfirmation}
                 titulo='Confirmación'
-                mensaje='¿Está seguro que desea registrar las pruebas?'
+                mensaje='¿Desea continuar?'
                 handleConfirmation={handleConfirmation}
             />
         </>
