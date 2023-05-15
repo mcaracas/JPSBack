@@ -85,13 +85,12 @@ const Inventario = ({ fecha, sorteo }) => {
                 <tfoot>
                     <tr>
                         <td><b>Total: {premios.reduce((a, b) => a + (b['cantidadPremios'] || 0), 0)}</b></td>
-                        <td colSpan="3"><b>¢ {premios.reduce((a, b) => a + (b['montoUnitario'] || 0), 0)}</b></td>
                     </tr>
                 </tfoot>
             </table>
         );
     }
-
+    //ver monto <td colSpan="3"><b>¢ {premios.reduce((a, b) => a + (b['montoUnitario'] || 0), 0)}</b></td>
     return (
         <>
             <div className="fiscalizacion-containerS1">
