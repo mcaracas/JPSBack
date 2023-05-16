@@ -52,9 +52,7 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
 
     const handleTipoPremio = (value, index) => {
         setTipoPremio(value);
-        console.log('tipoPremio:', tipoPremio);
         setIndexPremio(index);
-        console.log('indexPremio:', indexPremio);
     };
 
     const [resultados, setResultados] = useState([]);
@@ -94,15 +92,12 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
             //TODO: change this to the real data
             setNumFavorecido('72');
             setSeriePremio('999');
-            console.log('numFavorecido: ', numFavorecido);
-            console.log('seriePremio: ', seriePremio);
             setResultado((prevResultado) => ({
                 ...prevResultado,
                 numFavorecido: '72',
                 seriePremio: '999',
                 tipoResultado: tipoPremio,
             }));
-            console.log('resultado:', resultado);
             if (resultado) {
                 const formValues = {
                     numFavorecido: resultado.numFavorecido,
@@ -111,7 +106,6 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                 };
                 formRef.current.values.numFavorecido = resultado.numFavorecido.toString();
                 formRef.current.values.seriePremio = resultado.seriePremio.toString();
-                console.log('resultado:', resultado)
             }
         } catch (error) {
             setDatosEnviados(false);
@@ -122,8 +116,6 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
     }
 
     const agregarResultado = (indexTipoPremio) => {
-        console.log('numFavorecido:', numFavorecidoRef.current.value);
-        console.log('seriePremio:', seriePremioRef.current.value);
         setResultado(
             {
                 ...resultado,
@@ -131,7 +123,6 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                 seriePremio: seriePremioRef.current.value,
             }
         );
-        console.log(resultado);
         const numberValidation = validateNumber(numFavorecido);
         const serieValidation = validateSerie(seriePremio);
         if ((numberValidation !== '' || serieValidation !== '')) {
@@ -154,13 +145,23 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
             numPremioPlanNavigation: null,
         }]);
         setNumeroResultado(numeroResultado + 1);
-        // console.log('resultados:',resultados);
     }
 
+    const changeResultNumber = (index) => {
+        const newResultados = [...resultados];
+        for (let i = index; i < newResultados.length; i++) {
+            newResultados[i].numeroResultado = i;
+        }
+        console.log('newResultados:', newResultados);
+        setResultados(newResultados);
+        console.log('resultados:', resultados);
+        setNumeroResultado(numeroResultado - 1);
+    }
     const removeFields = (index) => {
         handleShowConfirmation(() => {
             let data = [...resultados];
             data.splice(index, 1);
+            changeResultNumber(index);
             setResultados(data);
         });
     }
