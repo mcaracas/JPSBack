@@ -25,7 +25,7 @@ namespace API.CreacionArchivos
                     ActaLoteriaNacional.CrearActaLoteriaNacional(datosSorteo, path);
                     break;
                 case "3M":
-                    //CrearActaLoteriaBilletes(datosSorteo, path);
+                    Acta3monazos.CrearActa3monazos(datosSorteo, path);
                     break;
                 case "LTT":
                     ActaLotto.CrearActaLoteriaPopular(datosSorteo, path);
