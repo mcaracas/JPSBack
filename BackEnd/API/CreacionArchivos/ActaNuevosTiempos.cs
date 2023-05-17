@@ -116,12 +116,17 @@ namespace API.CreacionArchivos
                     .Where(n => n.IdDatoSorteo == sorteo.IdInterno)
                     .ToList();
                 string resultados =
-                    "Se concluye que el sorteo de Lotería Nuevos Tiempos N° {NUMSORTEO}, cuyo número ganador fue {RESULTADO} y el sorteo Nuevos Tiempos modalidad Reventados fue bolita {BOLITA}, y presenta un resultado {RESULTADOREVENTADO}.";
+                    "Se concluye que el sorteo de Lotería Nuevos Tiempos N° {NUMSORTEO}, cuyo número ganador fue {RESULTADO} y el sorteo Nuevos Tiempos modalidad Reventados fue bolita¹ {BOLITA}, y presenta un resultado² {RESULTADOREVENTADO}.";
                 resultados = resultados.Replace("{NUMSORTEO}", sorteo.NumSorteo.ToString());
                 resultados = resultados.Replace(
                     "{RESULTADO}",
                     numerosGanadores[0].NumFavorecido.ToString()
                 );
+                resultados = resultados.Replace(
+                    "{BOLITA}",
+                    numerosGanadores[0].tipoResultado.ToString()
+                );
+                resultados = resultados.Replace("{RESULTADOREVENTADO}", "[]");
                 Paragraph paragraphResultados = body.AppendChild(new Paragraph());
                 Run runResultados = paragraphResultados.AppendChild(new Run());
                 runResultados.AppendChild(new Text(resultados));
@@ -158,8 +163,8 @@ namespace API.CreacionArchivos
                 runGerencia.AppendChild(new Break());
 
                 string infoBolita =
-                    "R = Reventada bolita roja, B = Bolita blanca, G = Reventada 80x bolita gris.";
-                string infoResultado = "C = Conforme, S = Con salvedad.";
+                    "¹ R = Reventada bolita roja, B = Bolita blanca, G = Reventada 80x bolita gris.";
+                string infoResultado = "² C = Conforme, S = Con salvedad.";
 
                 Paragraph paragraphInfo = body.AppendChild(new Paragraph());
                 Run runInfo = paragraphInfo.AppendChild(new Run());
