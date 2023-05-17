@@ -37,6 +37,50 @@ namespace API.CreacionArchivos
                 Body body = new Body();
                 mainPart.Document.Append(body);
 
+                                //===========================
+                // Agregar una sección con un encabezado
+                var sectionProps = new SectionProperties();
+                var headerReference = new HeaderReference()
+                {
+                    Type = HeaderFooterValues.Default,
+                    Id = "headerId"
+                };
+                sectionProps.Append(headerReference);
+                body.Append(sectionProps);
+
+                var headerPart = mainPart.AddNewPart<HeaderPart>("headerId");
+                headerPart.Header = new Header();
+
+                // Agrega los titulos del encabezado
+                string titulo = "AUDITORIA INTERNA";
+                string titulo2 = "ACTA DE FISCALIZACION";
+                string tituloSorteo = "SORTEO LOTERIA POPULAR N° {NUMSORTEO}";
+                string dia = "{DIASORTEO}";
+                tituloSorteo = tituloSorteo.Replace("{NUMSORTEO}", sorteo.NumSorteo.ToString());
+                dia = dia.Replace( // Formato: "lunes 1 de enero del 2020"
+                    "{DIASORTEO}",
+                    sorteo.FechaHora.Value.ToString(
+                        "dddd d 'de' MMMM 'del' yyyy",
+                        new CultureInfo("es-ES")
+                    )
+                );
+
+                // Agrega un párrafo al encabezado
+                Paragraph paragraphHeader = headerPart.Header.AppendChild(new Paragraph());
+                Run runHeader = paragraphHeader.AppendChild(new Run());
+                runHeader.AppendChild(new Text(titulo));
+                runHeader.AppendChild(new Break()); // Agrega un salto de línea
+                runHeader.AppendChild(new Break());
+                runHeader.AppendChild(new Text(titulo2));
+                runHeader.AppendChild(new Break());
+                runHeader.AppendChild(new Text(tituloSorteo));
+                runHeader.AppendChild(new Break());
+                runHeader.AppendChild(new Text(dia));
+                UtilidadesActas.Negrita(runHeader);
+                UtilidadesActas.JustificarCentro(paragraphHeader);
+
+                //===========================
+
                 //(1era pagina)
                 //Agregando los parrafos del texto Inicial del Acta 
                 string[] parrafos = textoInicialActa.Split("\n");
@@ -54,9 +98,6 @@ namespace API.CreacionArchivos
                 }
                 InsertarSeccionGanadores(body,sorteo,tipoSorteoDetallado);
                 UtilidadesActas.AgregarSaltoPagina(body);
-
-
-
 
 
                 //(2da pagina)
@@ -83,10 +124,9 @@ namespace API.CreacionArchivos
                 runGerencia.AppendChild(new Text("          ________________________________________"));
                 runGerencia.AppendChild(new Break()); //Agregar un enter
                 runGerencia.AppendChild(new Text("Recibido: Gerencia de Produccion y Comercializacion"));
-                UtilidadesActas.AgregarSaltoPagina(body);
 
 
-
+                /*
                 //(3era pagina)
                 //Objetivos y Normativa
                 string ObjetivosActa = context.Parametros.FirstOrDefault(x => x.CodigoParametro == "ObjetivosActa").ParametroValor;
@@ -344,6 +384,7 @@ namespace API.CreacionArchivos
                 runFirmaFinalizacion.AppendChild(new Break()); //Agregar un enter
                 runFirmaFinalizacion.AppendChild(new Text("Fiscalizador de la Auditoria Interna"));
                 UtilidadesActas.JustificarCentro(paragraphFirmaFinalizacion);      
+                */
 
 
 

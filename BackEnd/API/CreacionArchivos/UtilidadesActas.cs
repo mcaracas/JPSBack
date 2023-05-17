@@ -222,6 +222,16 @@ namespace API.CreacionArchivos
             TomoFolio.IdDatoSorteoNavigation = null;
             return TomoFolio.Tomo.ToString();
         }
+
+        
+        public static void ConvertirWordAPDF(string rutaArchivoWord, string rutaArchivoPDF)
+        {
+            // Cargar el documento de Word
+            Aspose.Words.Document documento = new Aspose.Words.Document(rutaArchivoWord);
+
+            // Guardar el documento como PDF
+            documento.Save(rutaArchivoPDF, Aspose.Words.SaveFormat.Pdf);
+        }
         
     }
 }

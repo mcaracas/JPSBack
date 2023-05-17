@@ -31,17 +31,28 @@ public class UtilController : ControllerBase
 
         String directorioSorteo = Utilidades.Utilidades.ObtenerDirectorioSorteo(idSorteo);
         //String archivo = directorioSorteo +"\\"+ idSorteo.ToString() + ".pdf";
-        String archivo = directorioSorteo +"\\"+ idSorteo.ToString() + ".docx";
+        String archivoWord = directorioSorteo +"\\"+ idSorteo.ToString() + ".docx";
+        String archivoPdf = directorioSorteo +"\\"+ idSorteo.ToString() + ".pdf";
+
 
       
 
-        if (System.IO.File.Exists(archivo)){
+        if (System.IO.File.Exists(archivoWord)){
             //Borra el archivo si existe
-            System.IO.File.Delete(archivo);               
+            System.IO.File.Delete(archivoWord);               
         }
 
-        //CREA EL PDF          
-        CreacionDeActas.CrearActa(sorteo, archivo);
+        if (System.IO.File.Exists(archivoPdf)){
+            //Borra el archivo si existe
+            System.IO.File.Delete(archivoPdf);               
+        }
+
+        //CREA EL WORD         
+        CreacionDeActas.CrearActa(sorteo, archivoWord);
+
+        //CREA EL PDF
+        UtilidadesActas.ConvertirWordAPDF(archivoWord, archivoPdf);
+
 
         String nombreZip = idSorteo.ToString()+"-"+DateTime.Now.ToString("yyyyMMddHHmmss")+ ".zip";
         String rutaZip = "Archive\\Sorteos\\"+nombreZip;
