@@ -1,8 +1,12 @@
 import React from 'react';
 
-const Sidebar3M = () => {
+const Sidebar3M = ({src, sorteo}) => {
     return (
         <ul className='list-group'>
+            <li className="list-group-item">
+                <img className="logoSorteo" src={src} alt='nombre' />
+                <h2 className="sorteo">{sorteo}</h2>
+            </li>
             <li className="list-group-item">
                 <a className="menu-opc" href="/ChooseLottery">
                     Seleccionar sorteo
