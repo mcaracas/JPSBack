@@ -6,12 +6,13 @@ import PlanPremios from '../PlanPremios';
 import { getPremioFromAdministracion, insertarPremios } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
 import ConfirmationModal from '../../modals/ConfirmationModal';
+import LoadingModal from "../../modals/LoadingModal";
+import FailModal from "../../modals/FailModal";
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
 const planPremios = JSON.parse(sessionStorage.getItem('planPremios'));
 const idPlanPremios = lottery?.planPremios;
 const idDatoSorteo = lottery?.idInterno;
-console.log('lottery:', lottery);
 
 
 const ResultadoLoteriaFisica = ({ idSorteo }) => {
@@ -19,6 +20,8 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
     const [indexPremio, setIndexPremio] = useState(0);
     const [numeroResultado, setNumeroResultado] = useState(1);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showLoadingModal, setShowLoadingModal] = useState(false);
+    const [showFailModal, setShowFailModal] = useState(false);
     const [datosEnviados, setDatosEnviados] = useState(false);
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
@@ -41,6 +44,10 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
         }
         await confirmationAction();
         setShowConfirmation(false);
+    }
+
+    function handleCloseFailModal() {
+        setShowFailModal(false);
     }
 
     const handleShowConfirmation = async (action) => {
@@ -152,9 +159,7 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
         for (let i = index; i < newResultados.length; i++) {
             newResultados[i].numeroResultado = i;
         }
-        console.log('newResultados:', newResultados);
         setResultados(newResultados);
-        console.log('resultados:', resultados);
         setNumeroResultado(numeroResultado - 1);
     }
     const removeFields = (index) => {
@@ -164,6 +169,32 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
             changeResultNumber(index);
             setResultados(data);
         });
+    }
+
+    const handleSubmit = async (values) => {
+        try {
+            const response = await insertarPremios(resultados);
+            if (resultados.length === 0) {
+                setMensaje("No se han agregado resultados");
+                setTitulo("¡Operación Fallida!");
+                setShowSuccessModal(true);
+                return;
+            }
+            if (response.status === 200) {
+                setMensaje("Datos de Resultados guardados exitosamente");
+                setTitulo("¡Operación Exitosa!");
+                setDatosEnviados(true);
+                setShowSuccessModal(true);
+            } else {
+                console.log('error');
+            }
+        } catch (error) {
+            setShowLoadingModal(false);
+            setMensaje(`Error al Registrar los resultados. ${error.message}`);
+            setTitulo("¡Operación Fallida!");
+            setDatosEnviados(false);
+            setShowFailModal(true);
+        }
     }
 
     const validateSerie = (seriePremio) => {
@@ -201,27 +232,8 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                     initialValues={resultado}
                     innerRef={formRef}
                     onSubmit={
-                        async (values) => {
-                            try {
-                                const response = await insertarPremios(resultados);
-                                console.log('resultados a enviar:', resultados);
-                                if (resultados.length === 0) {
-                                    setMensaje("No se han agregado resultados");
-                                    setTitulo("¡Operación Fallida!");
-                                    setShowSuccessModal(true);
-                                    return;
-                                }
-                                if (response.status === 200) {
-                                    setMensaje("Datos de Resultados guardados exitosamente");
-                                    setTitulo("¡Operación Exitosa!");
-                                    setDatosEnviados(true);
-                                    setShowSuccessModal(true);
-                                } else {
-                                    console.log('error');
-                                }
-                            } catch (error) {
-                                console.log(error);
-                            }
+                        async () => {
+                            await handleShowConfirmation(() => handleSubmit(resultados));
                         }
                     }
                 >
@@ -356,6 +368,17 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                 titulo='Confirmación'
                 mensaje='¿Está seguro que desea eliminar el resultado?'
                 handleConfirmation={handleConfirmation}
+            />
+            <LoadingModal
+                show={showLoadingModal}
+                titulo='Guardando Datos de Participantes'
+                mensaje='Por favor espere...'
+            />
+            <FailModal
+                show={showFailModal}
+                titulo={titulo}
+                mensaje={mensaje}
+                handleClose={handleCloseFailModal}
             />
         </>
     );
