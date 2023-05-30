@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { actaFiscalizacion } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
@@ -11,6 +11,14 @@ const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha }) => {
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
     const navigate = useNavigate();
+
+    useEffect(() => {
+		const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
+	});
 
     const initialValues = {
         procesosConformeEstablecido: true,

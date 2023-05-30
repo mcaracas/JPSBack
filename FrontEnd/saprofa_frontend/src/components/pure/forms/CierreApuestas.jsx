@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { getCierreApuestas } from '../../../services/axiosService';
 import { insertarApuestas } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
+import { useNavigate } from 'react-router-dom';
 
 const CierreApuestas = () => {
 
@@ -14,7 +15,7 @@ const CierreApuestas = () => {
     const [mensaje, setMensaje] = useState('');
     const [checked2, setChecked2] = React.useState(false);
     const [datos2, setDatos2] = React.useState();
-
+    const navigate = useNavigate();
     const handleCheck = (e) => {
         const isChecked = e.target.checked;
         console.log(isChecked);
@@ -88,6 +89,11 @@ const CierreApuestas = () => {
     }
 
     useEffect(() => {
+        const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
         getDatos();
     }, []);
 

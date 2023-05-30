@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, FieldArray, Form, Field } from "formik";
 import * as Yup from "yup";
 import { insertListaPrueba } from '../../../services/axiosService';
@@ -59,6 +59,14 @@ const Pruebas3MonazosForm = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState(() => { });
   const navigate = useNavigate();
+
+  useEffect(() => {
+		const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
+	});
 
   function handleCloseSuccessModal() {
     setShowSuccessModal(false);

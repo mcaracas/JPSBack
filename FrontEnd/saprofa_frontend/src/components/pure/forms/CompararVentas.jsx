@@ -42,6 +42,11 @@ const CompararVentas = ({ idSorteo }) => {
     }
 
     useEffect(() => {
+        const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
         getVentas(idSorteo)
             .then(response => {
                 setMontoVentas(response.data.montoVentas);

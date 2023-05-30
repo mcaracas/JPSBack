@@ -1,10 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { postResultadosElectronica } from '../../../services/axiosService';
 import PropTypes from 'prop-types'
 import SuccessModal from '../../modals/SuccessModal';
+import { useNavigate } from 'react-router-dom';
 
 const Resultados3M = ({ numSorteo, idInterno }) => {
+    const navigate = useNavigate();
 
     const numeroRef = useRef("");
 
@@ -12,6 +14,14 @@ const Resultados3M = ({ numSorteo, idInterno }) => {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
+
+    useEffect(() => {
+		const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
+	});
 
     const agregarResultado = (values) => {
         setResultados([...resultados, {

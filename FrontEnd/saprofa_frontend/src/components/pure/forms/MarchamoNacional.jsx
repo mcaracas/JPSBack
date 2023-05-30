@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { insertMarchamo } from '../../../services/axiosService';
@@ -149,6 +149,14 @@ const MarchamoNacional = (id) => {
   const [confirmationAction, setConfirmationAction] = useState(() => { });
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+		const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
+	});
 
   const handleCheck = (e) => {
     const isChecked = e.target.checked;

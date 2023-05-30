@@ -1,4 +1,5 @@
 import React from 'react';
+import { cerrarSesion } from './logout';
 
 const SidebarLN = ({ src, sorteo }) => {
     return (
@@ -62,6 +63,11 @@ const SidebarLN = ({ src, sorteo }) => {
                 <a className="menu-opc" href="/ConclusionesRecomendaciones">
                     Conclusiones y Recomendaciones
                 </a>
+            </li>
+            <li className="list-group-item">
+                <button className="menu-opc cerrarSesion" onClick={cerrarSesion}>
+                    Cerrar Sesión
+                </button>
             </li>
         </ul>
     );

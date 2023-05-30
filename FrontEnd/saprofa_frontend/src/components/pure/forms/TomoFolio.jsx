@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { getUltimoTomofolio, postTomoFolio } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
+import { useNavigate } from 'react-router-dom';
 
 
 const Tomo = ({ idInterno }) => {
@@ -14,6 +15,7 @@ const Tomo = ({ idInterno }) => {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
+    const navigate = useNavigate();
 
     const initialValues = {
         tomo: tomoActual,
@@ -53,6 +55,11 @@ const Tomo = ({ idInterno }) => {
 
     //Set Tomo and Folio Actual when Tomo and Folio are changed
     useEffect(() => {
+        const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
         setTomoActual(tomo);
         setFolioActual(folio + 1);
     }, [tomo, folio]);

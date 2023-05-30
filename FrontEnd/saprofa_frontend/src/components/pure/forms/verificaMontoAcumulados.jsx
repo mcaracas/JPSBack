@@ -4,9 +4,10 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { getMontoAcumulado } from '../../../services/axiosService';
 import { insertaMontoAcumulado } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
+import { useNavigate } from 'react-router-dom';
 
 const VerificaMontoAcumulado = () => {
-
+    const navigate = useNavigate();
     const [datos, setDatos] = React.useState();
     const [checked, setChecked] = React.useState(true);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -88,6 +89,11 @@ const VerificaMontoAcumulado = () => {
     }
 
     useEffect(() => {
+        const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
         getDatos();
     }, []);
 

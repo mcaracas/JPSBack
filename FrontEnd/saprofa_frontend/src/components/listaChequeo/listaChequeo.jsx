@@ -48,6 +48,11 @@ const ListaChequeoPopular = ({ idDatoSorteo }) => {
 
 
     useEffect(() => {
+        const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
         getListaChequeo(2)
             .then((res) => {
                 setListaChequeo(res.data);

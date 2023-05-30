@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { getEscrutinio } from '../../../services/axiosService';
 import { insertarEscrutinio } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
+import { useNavigate } from 'react-router-dom';
 
 const Escrutinio = () => {
 
@@ -15,6 +16,8 @@ const Escrutinio = () => {
     const [checked2, setChecked2] = React.useState(false);
     const [datos2, setDatos2] = React.useState();
 
+    const navigate = useNavigate();
+    
     const handleCheck = (e) => {
         const isChecked = e.target.checked;
         console.log(isChecked);
@@ -88,6 +91,11 @@ const Escrutinio = () => {
     }
 
     useEffect(() => {
+        const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
         getDatos();
     }, []);
 

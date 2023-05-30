@@ -57,6 +57,11 @@ const Inventario = ({ fecha, sorteo }) => {
     }
 
     useEffect(() => {
+        const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
         getPremioLoteria();
     }, []);
 

@@ -90,6 +90,11 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
 
 
     useEffect(() => {
+        const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
         getDatos();
     }, []);
 

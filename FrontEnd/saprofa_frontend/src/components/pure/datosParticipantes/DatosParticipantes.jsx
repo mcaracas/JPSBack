@@ -81,6 +81,11 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
   }
 
   useEffect(() => {
+    const usuario = sessionStorage.getItem('name');
+    if (!usuario) {
+      sessionStorage.clear();
+      navigate('/');
+    }
     handleObtenerParticipantes();
     labelsParticipantes.forEach(label => {
       const llave = mapLabel(label);

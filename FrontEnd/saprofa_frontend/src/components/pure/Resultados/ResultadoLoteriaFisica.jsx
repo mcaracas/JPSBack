@@ -8,6 +8,7 @@ import SuccessModal from '../../modals/SuccessModal';
 import ConfirmationModal from '../../modals/ConfirmationModal';
 import LoadingModal from "../../modals/LoadingModal";
 import FailModal from "../../modals/FailModal";
+import { useNavigate } from 'react-router-dom';
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
 const planPremios = JSON.parse(sessionStorage.getItem('planPremios'));
@@ -29,9 +30,10 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
     const [seriePremio, setSeriePremio] = useState('');
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [confirmationAction, setConfirmationAction] = useState(() => { });
-
+    const navigate = useNavigate();
     const numFavorecidoRef = useRef(null);
     const seriePremioRef = useRef(null);
+
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
@@ -77,6 +79,11 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
     });
 
     useEffect(() => {
+        const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
         setResultado((prevResultado) => ({
             ...prevResultado,
             numFavorecido: numFavorecidoRef.current.value,
