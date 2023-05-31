@@ -14,40 +14,58 @@ namespace API.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public IActionResult GetAll()
+        [HttpGet("ListaChequeoParaSorteo/{idSorteo}")]
+        public IActionResult GetListaChequeoParaSorteo(int idSorteo)
         {
-            try
-            {
-                var context = new proyecto_bdContext();
-                var ListaChequeoDetalles = context.ListaChequeoDetalles.ToList();
-                return Ok(ListaChequeoDetalles);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al obtener la lista de chequeo de detalles: {ex.Message}");
-                return StatusCode(500);
-            }
-        }
+            var context = new proyecto_bdContext();
+            var DatosSorteo = context.DatosSorteos.FirstOrDefault(x => x.IdInterno == idSorteo);
+            var ProcedimientosPrevios = context.ListaChequeoDetalles
+                .Where(
+                    x => x.TipoLoteria == DatosSorteo.TipoLoteria && x.TipoListaChequeo == "previo"
+                )
+                .OrderBy(x => x.Orden)
+                .ToList();
+            var ProcedimientosDurante = context.ListaChequeoDetalles
+                .Where(
+                    x => x.TipoLoteria == DatosSorteo.TipoLoteria && x.TipoListaChequeo == "durante"
+                )
+                .OrderBy(x => x.Orden)
+                .ToList();
+            var ProcedimientosPosteriores = context.ListaChequeoDetalles
+                .Where(
+                    x =>
+                        x.TipoLoteria == DatosSorteo.TipoLoteria
+                        && x.TipoListaChequeo == "posterior"
+                )
+                .OrderBy(x => x.Orden)
+                .ToList();
+            var ProcedimientosSolicitud = context.ListaChequeoDetalles
+                .Where(
+                    x =>
+                        x.TipoLoteria == DatosSorteo.TipoLoteria
+                        && x.TipoListaChequeo == "solicitud"
+                )
+                .OrderBy(x => x.Orden)
+                .ToList();
+            var ProcedimientosGeneracion = context.ListaChequeoDetalles
+                .Where(
+                    x =>
+                        x.TipoLoteria == DatosSorteo.TipoLoteria
+                        && x.TipoListaChequeo == "generacion"
+                )
+                .OrderBy(x => x.Orden)
+                .ToList();
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
-            try
+            var ListaChequeoDetallesParaSorteo = new
             {
-                var context = new proyecto_bdContext();
-                var ListaChequeoDetalle = context.ListaChequeoDetalles.FirstOrDefault(x => x.Id == id);
-                if (ListaChequeoDetalle == null)
-                {
-                    return NotFound($"No existen datos con el ID: {id}:");
-                }
-                return Ok(ListaChequeoDetalle);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error al obtener el detalle de la lista de chequeo con id: {id}: {ex.Message}");
-                return StatusCode(500);
-            }
+                ProcedimientosPrevios,
+                ProcedimientosDurante,
+                ProcedimientosPosteriores,
+                ProcedimientosSolicitud,
+                ProcedimientosGeneracion
+            };
+
+            return Ok(ListaChequeoDetallesParaSorteo);
         }
 
         [HttpPost]
@@ -100,7 +118,9 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al actualizar el detalle de la lista de chequeo con id: {id}: {ex.Message}");
+                _logger.LogError(
+                    $"Error al actualizar el detalle de la lista de chequeo con id: {id}: {ex.Message}"
+                );
                 return StatusCode(500);
             }
         }
@@ -111,7 +131,9 @@ namespace API.Controllers
             try
             {
                 var context = new proyecto_bdContext();
-                var ListaChequeoDetalle = context.ListaChequeoDetalles.FirstOrDefault(x => x.Id == id);
+                var ListaChequeoDetalle = context.ListaChequeoDetalles.FirstOrDefault(
+                    x => x.Id == id
+                );
                 if (ListaChequeoDetalle == null)
                 {
                     return NotFound($"No existen datos con el ID: {id}:");
@@ -122,7 +144,9 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al eliminar el detalle de la lista de chequeo con id: {id}: {ex.Message}");
+                _logger.LogError(
+                    $"Error al eliminar el detalle de la lista de chequeo con id: {id}: {ex.Message}"
+                );
                 return StatusCode(500);
             }
         }
