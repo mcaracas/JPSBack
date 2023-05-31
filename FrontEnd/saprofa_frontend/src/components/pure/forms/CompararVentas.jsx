@@ -11,10 +11,8 @@ import { useNavigate } from 'react-router-dom';
 const CompararVentas = ({ idSorteo }) => {
 
     const [montoVentas, setMontoVentas] = useState(0);
-    const [montoPagar, setMontoPagar] = useState(0);
 
     const [montoVentasCorregido, setMontoVentasCorregido] = useState(0);
-    const [montoPagarCorregido, setMontoPagarCorregido] = useState(0);
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [titulo, setTitulo] = useState('');
@@ -27,7 +25,6 @@ const CompararVentas = ({ idSorteo }) => {
 
     const initialValues = {
         montoVentas: montoVentas,
-        montoPagar: montoPagar,
         confirmar: false
     }
 
@@ -43,23 +40,18 @@ const CompararVentas = ({ idSorteo }) => {
 
     useEffect(() => {
         const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
+        if (!usuario) {
+            sessionStorage.clear();
             navigate('/');
         }
         getVentas(idSorteo)
             .then(response => {
                 setMontoVentas(response.data.montoVentas);
-                setMontoPagar(response.data.montoComprado);
             })
             .catch(error => {
                 console.log(error);
             });
     }, []);
-
-    const handleChangeMontoPagar = (e) => {
-        setMontoPagarCorregido(e.target.value);
-    }
 
     const handleChangeMontoVentas = (e) => {
         setMontoVentasCorregido(e.target.value);
@@ -95,7 +87,6 @@ const CompararVentas = ({ idSorteo }) => {
             const data = {
                 idSorteo: idSorteo,
                 montoVentas: montoVentas,
-                montoComprado: montoPagar
             }
             setShowLoadingModal(true);
             insertaVentas(data)
@@ -179,21 +170,6 @@ const CompararVentas = ({ idSorteo }) => {
                                         }}
                                     />
 
-                                    <br></br><br></br>
-                                    <label htmlFor="montoPagar">Monto a pagar: </label>
-                                    <Field
-                                        name="montoPagar"
-                                        type="number"
-                                        id="montoPagar"
-                                        className="form-control-sm"
-                                        placeholder="Monto a pagar"
-                                        value={montoPagar}
-                                        disabled
-                                        style={{
-                                            background: "none",
-                                            border: "none"
-                                        }}
-                                    />
 
                                     <br></br><br></br>
                                     <p className="card-subtitle text-muted">¿Son correctos estos montos?</p>
@@ -237,27 +213,7 @@ const CompararVentas = ({ idSorteo }) => {
                                                 </div>
                                                 : null}
 
-                                            <br></br><br></br>
-                                            <label htmlFor="montoPagarCorregido">Monto a pagar: </label>
-                                            <Field
-                                                name="montoPagarCorregido"
-                                                type="number"
-                                                id="montoPagarCorregido"
-                                                className="form-control-sm inp"
-                                                placeholder="Monto a pagar"
-                                                //onChange={handleChangeMontoPagar}
-                                                validate={handleError}
-                                                style={{
-                                                    width: "40%"
-                                                }}
-                                            />
-                                            {errors.montoPagarCorregido && touched.montoPagarCorregido ?
-                                                <div style={{ color: "red" }}>
-                                                    <ErrorMessage name="montoPagarCorregido" />
-                                                </div>
-                                                : null}
-
-                                            {values.montoVentasCorregido && values.montoPagarCorregido ?
+                                            {values.montoVentasCorregido ?
                                                 <div>
                                                     <br></br>
                                                     <button
