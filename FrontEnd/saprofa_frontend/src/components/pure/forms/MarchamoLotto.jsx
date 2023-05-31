@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { insertMarchamo } from '../../../services/axiosService';
+import { insertMarchamo, getParametros } from '../../../services/axiosService';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import './../../../styles/icon.scss';
 import SuccessModal from "../../modals/SuccessModal";
@@ -37,30 +37,7 @@ let marchamoDefault = {
 	numeroMarchamo: '1525',
 }
 
-
-const buildMarchamoList = (values) => {
-
-	return [
-		{
-			...marchamoDefault,
-			numeroMarchamo: `JPS-SLE-000${values.apertura}`,
-		}
-		,
-		{
-			...marchamoDefault,
-			tipo: 'Cierre',
-			numeroMarchamo: `JPS-SLE-000${values.cierre}`,
-		}
-		,
-		{
-			...marchamoDefault,
-			tipo: 'Contingencia',
-			numeroMarchamo: values.contingencia ? `JPS-SLE-000${values.contingencia} ` : null,
-		},
-	];
-}
-
-const MarchamoLotto = () => {
+const MarchamoLotto = (codigoMarchamo) => {
 
 	const [datosEnviados, setDatosEnviados] = useState(false);
 	const [titulo, setTitulo] = useState('');
@@ -71,6 +48,29 @@ const MarchamoLotto = () => {
 	const [showConfirmation, setShowConfirmation] = useState(false);
 	const [confirmationAction, setConfirmationAction] = useState(() => { });
 	const navigate = useNavigate();
+
+	const buildMarchamoList = (values) => {
+
+		return [
+			{
+				...marchamoDefault,
+				numeroMarchamo: `${codigoMarchamo}${values.apertura}`,
+			}
+			,
+			{
+				...marchamoDefault,
+				tipo: 'Cierre',
+				numeroMarchamo: `${codigoMarchamo}${values.cierre}`,
+			}
+			,
+			{
+				...marchamoDefault,
+				tipo: 'Contingencia',
+				numeroMarchamo: values.contingencia ? `${codigoMarchamo}${values.contingencia} ` : null,
+			},
+		];
+	}
+	
 
 	useEffect(() => {
 		const usuario = sessionStorage.getItem('name');
@@ -167,7 +167,7 @@ const MarchamoLotto = () => {
 										</td>
 										<td>
 											<label htmlFor="apertura" className="label-with-icon">
-												<span className="label-text">JPS-SLE-0000</span>
+												<span className="label-text">{codigoMarchamo}</span>
 												<div className="required-icon">
 													{!touched.apertura && <AiOutlineExclamationCircle />}
 												</div>

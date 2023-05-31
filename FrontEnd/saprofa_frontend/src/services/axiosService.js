@@ -188,4 +188,12 @@ export function getEmailSorteo(id) {
 export function getName(username) {
     return APIRequest.get(`/Usuario/${username}`);
   }
+
+export function getParametroBydId(id) {
+    return APIRequest.get(`/Parametro/${id}`);
+}
+
+export function getParametros() {
+    return APIRequest.get(`/Parametro`);
+}
   
