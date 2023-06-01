@@ -32,6 +32,8 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
     const numFavorecidoRef = useRef(null);
     const seriePremioRef = useRef(null);
 
+    const planPremiosCopia = [...planPremiosProp];
+
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
@@ -61,7 +63,6 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
         const selectedIndex = event.target.selectedIndex;
         setIndexPremio(selectedIndex);
         setTipoPremio(planPremios[selectedIndex].descripcion);
-        console.log("tipoPremio: ", tipoPremio, "\nindexPremio: ", indexPremio)
     };
 
     const [resultados, setResultados] = useState([]);
@@ -129,10 +130,37 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
         }
     };
 
+    const devolverResultadoADropdown = (tipoPremio) => {
+        // verificar si aún existen premios de ese tipo
+        const existente = planPremios.find(
+            (premio) => premio.descripcion === tipoPremio
+        );
+        if (!existente) {
+            let premio = planPremiosCopia.find(
+                (premio) => premio.descripcion === tipoPremio
+            );
+            premio = {
+                ...premio,
+                cantidadPremios: 1,
+            }
+            const index = planPremiosCopia.findIndex(
+                (premio) => premio.descripcion === tipoPremio
+            );
+            // si no existen, agregarlo a la lista en la posicion correspondiente
+            planPremios.splice(index, 0, premio);
+            setPlanPremios(planPremios);
+        } else {
+            const updatedPlanPremios = [...planPremios];
+            const index = updatedPlanPremios.findIndex(
+                (premio) => premio.descripcion === tipoPremio
+            );
+            const cant = updatedPlanPremios[index].cantidadPremios;
+            updatedPlanPremios[index].cantidadPremios = cant + 1;
+            setPlanPremios(updatedPlanPremios);
+        }
+    }
+
     const reducirCantidadPremio = (indexPremio) => {
-        console.log("indexPremio: ", indexPremio)
-        console.log("premio: ", planPremios[indexPremio]);
-        console.log("descripcion: ", planPremios[indexPremio].descripcion);
         const updatedPlanPremios = [...planPremios];
         const cant = updatedPlanPremios[indexPremio].cantidadPremios;
         if (cant === 1) {
@@ -193,6 +221,8 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
     const removeFields = (index) => {
         handleShowConfirmation(() => {
             let data = [...resultados];
+            const tipoPremio = data[index].tipoResultado;
+            devolverResultadoADropdown(tipoPremio);
             data.splice(index, 1);
             changeResultNumber(index);
             setResultados(data);
@@ -317,7 +347,7 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
                                                                     value={planPremio.MontoUnitario}
                                                                     key={planPremio.numPremio}
                                                                 >
-                                                                    {planPremio.descripcion} ({planPremio.cantidadPremios})
+                                                                    {planPremio.descripcion} [{planPremio.cantidadPremios}]
                                                                 </option>
                                                             ))}
                                                         </select>
