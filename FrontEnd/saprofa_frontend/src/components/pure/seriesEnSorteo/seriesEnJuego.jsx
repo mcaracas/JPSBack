@@ -30,7 +30,7 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
     }
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
-        navigate('/');      // Redirect to the next page
+        navigate('/MarchamoNacional');      // Redirect to the next page
     }
     const handleConfirmation = async (confirmed) => {
         if (!confirmed) {
@@ -96,7 +96,7 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
             navigate('/');
         }
         getDatos();
-    }, []);
+    }, [navigate]);
 
     const handleerror = (value) => {
         let error;
@@ -110,7 +110,6 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
     const handleSubmit = async (values) => {
         try {
             console.log(values);
-            //add property to object
             values.hora = fechaSorteo;
             values.ser_firma = fiscalizador;
             values.id_sorteo = idInterno;
@@ -381,7 +380,7 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
                                     </tr>
                                 </tbody>
                             </table>
-                            <button type="submit" className="btn" >Enviar
+                            <button type="submit" className="btn" >Guardar
                             </button>
                         </Form>
                     )}

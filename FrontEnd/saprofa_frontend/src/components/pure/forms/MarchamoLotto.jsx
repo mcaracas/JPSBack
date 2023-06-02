@@ -75,13 +75,9 @@ const MarchamoLotto = (codigoMarchamo) => {
 	}
 
 	async function obtenerParametros() {
-		try {
-			const response = await parametros();
-			const filteredData = response.map((item) => item.parametroValor);
-			setNomenclatura(filteredData);
-		} catch (error) {
-			console.log(`Error al obtener los parametros de marchamo: ${error}`);
-		}
+		const response = await parametros();
+		const filteredData = response.map((item) => item.parametroValor);
+		setNomenclatura(filteredData);
 	};
 
 	useEffect(() => {
@@ -91,7 +87,7 @@ const MarchamoLotto = (codigoMarchamo) => {
 			navigate('/');
 		}
 		obtenerParametros();
-	}, []);
+	}, [navigate]);
 
 	function handleCloseSuccessModal() {
 		setShowSuccessModal(false);
