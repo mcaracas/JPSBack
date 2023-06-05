@@ -9,20 +9,28 @@ import ConfirmationModal from "../../modals/ConfirmationModal";
 import { useNavigate } from 'react-router-dom';
 
 
-const initialValues = {
-  GOperaciones: '',
-  GProduccionYComercializacion: '',
-  Gerencia: '',
-  Juez: '',
-  PresentadorDelSorteo: '',
-  Prompter: '',
-  EquipoDeComputo: ''
-};
+// Array con opciones agregadas a dropdowns de participantes
+const OPCIONES_AGREGAR = ["No Participa"];
 
-//const nombresParticipantes = [ 'Gerente Operaciones', 'Gerente Producción', 'Gerencia', 'Juez', 'Presentador', 'Prompter', 'Equipo Computo' ];
-
-// check the props. should include num_sorteo, tipo_loteria
+/**
+ * 
+ * @param {string} idSorteo Id del sorteo
+ * @param {object} objetoDatosMapeados Objeto con las etiquetas de los participantes y sus valores obtenidos del backend
+ * @param {function} obtenerDatosAdministracion Funcion que obtiene los datos de los participantes del backend
+ * @param {string} tipoLoteria Tipo de loteria 
+ * @returns 
+ */
 const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdministracion, tipoLoteria }) => {
+  // Valores iniciales de los campos del formulario, se toman del objetoDatosMapeados que viene del componente padre
+  const initialValues = {
+    gerenteOperaciones: objetoDatosMapeados['Gerente Operaciones'],
+    gerenteProduccion: objetoDatosMapeados['Gerencia Produccion y Comercializacion'],
+    gerencia: objetoDatosMapeados['Gerencia'],
+    juez: objetoDatosMapeados['Juez'],
+    presentador: objetoDatosMapeados['Presentador del Sorteo'],
+    prompter: objetoDatosMapeados['Prompter'],
+    equipoComputo: objetoDatosMapeados['Equipo de Computo'],
+  };
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [showFailModal, setShowFailModal] = useState(false);
@@ -32,11 +40,20 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
   const [mensaje, setMensaje] = useState('');
   const [datosEnviados, setDatosEnviados] = useState(false);
   const [formData, setFormData] = useState(initialValues);
+  // Etiqueta de los participantes
   const [labelsParticipantes, setLabelsParticipantes] = useState(Object.keys(objetoDatosMapeados));
-  const [datosParticipantes, setDatosParticipantes] = useState(Object.values(objetoDatosMapeados));
+  // Valores de los participantes
+  const [datosParticipantes, setDatosParticipantes] = useState(agregaValoresDropdown());
   const [dropdownValues, setDropdownValues] = useState([]);
   const [confirmationAction, setConfirmationAction] = useState(() => { });
 
+  function agregaValoresDropdown() {
+    const valores = [...Object.values(objetoDatosMapeados)];
+    valores.push(...OPCIONES_AGREGAR);
+    return valores;
+  }
+
+  // Rutas de las pruebas según tipo de lotería
   const navigateToPruebas = (tipoLoteria) => {
     switch (tipoLoteria) {
       case 'LTT':
@@ -56,7 +73,6 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
 
   function handleCloseSuccessModal() {
     setShowSuccessModal(false);
-    //TODO: check where to navigate
     navigate(navigateToPruebas(tipoLoteria));
   }
 
@@ -94,10 +110,10 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
         ...prevFormData,
         [llave]: val
       }));
-      console.log("formData", formData);
     });
   }, []);
 
+  // Mapea las etiquetas de los participantes a las etiquetas del formulario
   const mapLabel = label => {
     switch (label) {
       case 'Gerente Operaciones':
@@ -131,7 +147,9 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
         idSorteo = lottery?.idInterno;
       }
       const response = await obtenerDatosAdministracion(idSorteo);
+      // Etiquetas de los participantes
       const labels = Object.keys(response);
+      // Valores de los participantes
       const datos = Object.values(response);
       setLabelsParticipantes(labels);
       setDatosParticipantes(datos);
@@ -151,19 +169,9 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
   }
 
   const handleSubmit = async (values) => {
-    console.log("values", values);
     try {
       setShowLoadingModal(true);
-      const response = await insertDatosAdministracion({
-        idDatosPrevios: idSorteo,
-        gerenteOperaciones: values.GOperaciones,
-        gerenteProduccion: values.GProduccionYComercializacion,
-        gerencia: values.Gerencia,
-        juez: values.Juez,
-        presentadorDelSorteo: values.PresentadorDelSorteo,
-        prompter: values.Prompter,
-        equipoComputo: values.EquipoDeComputo
-      });
+      const response = await insertDatosAdministracion(values);
       setShowLoadingModal(false);
       if (response.status === 200) {
         setShowLoadingModal(false);
@@ -206,7 +214,7 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
                   <div className='col-2'>
                     <div className="col-12 col-md-6 d-flex flex-column justify-content-between">
                       <button className="btn mt-5 mb-5" name='obtenerDatos' type="button" onClick={handleObtenerParticipantes}>Obtener Participantes</button>
-                      <button className="btn mt-5 mb-5" disabled={isSubmitting || isValidating || datosEnviados} type="submit" onClick={() => { insertDatosAdministracion() }}>Registar Datos de Participantes</button>
+                      <button className="btn mt-5 mb-5" disabled={isSubmitting || isValidating || datosEnviados} type="submit" >Registar Datos de Participantes</button>
                     </div>
                   </div>
                 </div>
