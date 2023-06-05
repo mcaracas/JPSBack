@@ -4,6 +4,7 @@ import ConclusionesRecomendaciones from '../../components/pure/conclusionesRecom
 import '../../styles/conclusionesrecomendaciones.scss';
 import Container from '../../components/container/container';
 import { fecha } from "../../utils/config/fecha";
+import Reportes from '../../components/pure/reportes/reportes';
 
 const ConclusionesRecomendacionesPage = () => {
     const lottery = JSON.parse(sessionStorage.getItem('lottery'));
@@ -16,9 +17,11 @@ const ConclusionesRecomendacionesPage = () => {
     return (
         <div>
             <EncabezadoFranjas title={"Conclusiones y Recomendaciones"} />
-            <Container 
-            component={<ConclusionesRecomendaciones sorteo={sorteo} fiscalizador={fiscalizador} fecha={fecha(fechaSorteo)} />}
+            <Container
+                component={<ConclusionesRecomendaciones sorteo={sorteo} fiscalizador={fiscalizador} fecha={fecha(fechaSorteo)} />}
             />
+            <Reportes />
+            <span className="reportes"></span>
         </div>
     );
 }

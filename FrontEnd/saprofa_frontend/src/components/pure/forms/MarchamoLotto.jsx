@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Field, Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { insertMarchamo, getParametros } from '../../../services/axiosService';
+import { insertMarchamo } from '../../../services/axiosService';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import './../../../styles/icon.scss';
 import SuccessModal from "../../modals/SuccessModal";
@@ -9,6 +9,7 @@ import LoadingModal from "../../modals/LoadingModal";
 import FailModal from "../../modals/FailModal";
 import ConfirmationModal from "../../modals/ConfirmationModal";
 import { useNavigate } from 'react-router-dom';
+import { parametros } from '../../../utils/config/marchamos';
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
 const numSorteo = lottery?.numSorteo;
@@ -48,6 +49,8 @@ const MarchamoLotto = (codigoMarchamo) => {
 	const [showConfirmation, setShowConfirmation] = useState(false);
 	const [confirmationAction, setConfirmationAction] = useState(() => { });
 	const navigate = useNavigate();
+	const [nomenclatura, setNomenclatura] = useState('');
+
 
 	const buildMarchamoList = (values) => {
 
@@ -70,15 +73,21 @@ const MarchamoLotto = (codigoMarchamo) => {
 			},
 		];
 	}
-	
+
+	async function obtenerParametros() {
+		const response = await parametros();
+		const filteredData = response.map((item) => item.parametroValor);
+		setNomenclatura(filteredData);
+	};
 
 	useEffect(() => {
 		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
+		if (!usuario) {
 			sessionStorage.clear();
-            navigate('/');
-        }
-	});
+			navigate('/');
+		}
+		obtenerParametros();
+	}, [navigate]);
 
 	function handleCloseSuccessModal() {
 		setShowSuccessModal(false);
@@ -167,7 +176,7 @@ const MarchamoLotto = (codigoMarchamo) => {
 										</td>
 										<td>
 											<label htmlFor="apertura" className="label-with-icon">
-												<span className="label-text">{codigoMarchamo}</span>
+												<span className="label-text">{nomenclatura[0]}</span>
 												<div className="required-icon">
 													{!touched.apertura && <AiOutlineExclamationCircle />}
 												</div>
@@ -179,7 +188,7 @@ const MarchamoLotto = (codigoMarchamo) => {
 												</div>
 											)}
 										</td>
-										<td rowSpan={2}>JPS-SLE-000 <Field id='contingencia' name='contingencia' type='number' className='form-control' /></td>
+										<td rowSpan={2}>{nomenclatura[0]} <Field id='contingencia' name='contingencia' type='number' className='form-control' /></td>
 									</tr>
 									<tr>
 										<td>
@@ -187,7 +196,7 @@ const MarchamoLotto = (codigoMarchamo) => {
 										</td>
 										<td>
 											<label htmlFor="cierre" className="label-with-icon">
-												<span className="label-text">JPS-SLE-0000</span>
+												<span className="label-text">{nomenclatura[0]}</span>
 												<div className="required-icon">
 													{!touched.cierre && <AiOutlineExclamationCircle />}
 												</div>

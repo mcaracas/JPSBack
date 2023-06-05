@@ -137,7 +137,7 @@ const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha }) => {
                             <p>Fiscalizador de la Auditoría Interna</p>
 
                             <button type="submit" disabled={isSubmitting}>
-                                {isSubmitting ? 'Submitting...' : 'Enviar'}
+                                {isSubmitting ? 'Submitting...' : 'Guardar'}
                             </button>
                         </Form>
                     )}

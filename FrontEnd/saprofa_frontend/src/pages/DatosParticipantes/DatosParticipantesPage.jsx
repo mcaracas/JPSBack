@@ -20,10 +20,10 @@ const DatosParticipantesPage = () => {
         navigate('/ChooseLottery');
     }
 
-    /**
+/**
  * 
  * @param {int} id Id del sorteo
- * @returns Array con dos arrays, el primero con las labels y el segundo con los datos de los participantes
+ * @returns Un objeto de javascript con las etiquetas de los participantes y sus valores obtenidos del backend
  */
     const obtenerDatosAdministracion = async (id) => {
         try {
@@ -32,7 +32,6 @@ const DatosParticipantesPage = () => {
                 throw new Error('Error al obtener los datos de los participantes');
             }
             const datos = response.data;
-            console.log(datos);
             const datosMapeados = {
                 'Gerente Operaciones': datos.gerenteOperaciones,
                 'Gerencia Produccion y Comercializacion': datos.gerenteProduccion,
@@ -42,7 +41,6 @@ const DatosParticipantesPage = () => {
                 'Prompter': datos.prompter,
                 'Equipo de Computo': datos.equipoComputo,
             };
-            // return [Object.keys(datosMapeados), Object.values(datosMapeados)];
             return datosMapeados;
         } catch (error) {
             setMensaje(`Error al cargar los Datos de Participantes. ${error.message}`);
@@ -55,6 +53,7 @@ const DatosParticipantesPage = () => {
         const lottery = JSON.parse(sessionStorage.getItem('lottery'));
         tipoLoteria = lottery?.tipoLoteria;
         idDatosPrevios = lottery?.idInterno;
+        // Obtine los datos de los participantes para enviarlos listos al componente DatosParticipantes
         const obtenerDatos = async () => {
             const response = await obtenerDatosAdministracion(idDatosPrevios);
             setDatosParticipantes(response);
@@ -62,13 +61,11 @@ const DatosParticipantesPage = () => {
         obtenerDatos();
     }, []);
 
-    // TODO: change props sent to DatosParticipantes to use sessionStorage
     return (
         <>
             <div>
                 <EncabezadoFranjas title={"Datos de los participantes"} />
                 <Container
-                    // component={datosParticipantes && <DatosParticipantes idSorteo={idDatosPrevios} labels={datosParticipantes[0]} datosParticipantes={datosParticipantes[1]} obtenerDatosAdministracion={obtenerDatosAdministracion} />}
                     component={datosParticipantes && <DatosParticipantes idSorteo={idDatosPrevios} objetoDatosMapeados={datosParticipantes} obtenerDatosAdministracion={obtenerDatosAdministracion} tipoLoteria={tipoLoteria}/>}
                 />
             </div>

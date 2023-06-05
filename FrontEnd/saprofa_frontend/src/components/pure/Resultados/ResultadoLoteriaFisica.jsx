@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import '../../../styles/pruebas/pruebasForms.sass'
-import PlanPremios from '../PlanPremios';
-import { getPremioFromAdministracion, insertarPremios } from '../../../services/axiosService';
+import { insertarPremios } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
 import ConfirmationModal from '../../modals/ConfirmationModal';
 import LoadingModal from "../../modals/LoadingModal";
@@ -11,13 +9,12 @@ import FailModal from "../../modals/FailModal";
 import { useNavigate } from 'react-router-dom';
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
-const planPremios = JSON.parse(sessionStorage.getItem('planPremios'));
 const idPlanPremios = lottery?.planPremios;
 const idDatoSorteo = lottery?.idInterno;
 
 
-const ResultadoLoteriaFisica = ({ idSorteo }) => {
-    const [tipoPremio, setTipoPremio] = useState('Premio Mayor');
+const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
+    const [tipoPremio, setTipoPremio] = useState(planPremiosProp[0].descripcion);
     const [indexPremio, setIndexPremio] = useState(0);
     const [numeroResultado, setNumeroResultado] = useState(1);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -30,9 +27,12 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
     const [seriePremio, setSeriePremio] = useState('');
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [confirmationAction, setConfirmationAction] = useState(() => { });
+    const [planPremios, setPlanPremios] = useState(planPremiosProp);
     const navigate = useNavigate();
     const numFavorecidoRef = useRef(null);
     const seriePremioRef = useRef(null);
+
+    const planPremiosCopia = [...planPremiosProp];
 
 
     function handleCloseSuccessModal() {
@@ -59,9 +59,10 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
         });
     }
 
-    const handleTipoPremio = (value, index) => {
-        setTipoPremio(value);
-        setIndexPremio(index);
+    const handleTipoPremio = (event) => {
+        const selectedIndex = event.target.selectedIndex;
+        setIndexPremio(selectedIndex);
+        setTipoPremio(planPremios[selectedIndex].descripcion);
     };
 
     const [resultados, setResultados] = useState([]);
@@ -80,8 +81,8 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
 
     useEffect(() => {
         const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
+        if (!usuario) {
+            sessionStorage.clear();
             navigate('/');
         }
         setResultado((prevResultado) => ({
@@ -127,16 +128,63 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
             setMensaje(error);
             setShowSuccessModal(true);
         }
+    };
+
+    const devolverResultadoADropdown = (tipoPremio) => {
+        // verificar si aún existen premios de ese tipo
+        const existente = planPremios.find(
+            (premio) => premio.descripcion === tipoPremio
+        );
+        if (!existente) {
+            let premio = planPremiosCopia.find(
+                (premio) => premio.descripcion === tipoPremio
+            );
+            premio = {
+                ...premio,
+                cantidadPremios: 1,
+            }
+            const index = planPremiosCopia.findIndex(
+                (premio) => premio.descripcion === tipoPremio
+            );
+            // si no existen, agregarlo a la lista en la posicion correspondiente
+            planPremios.splice(index, 0, premio);
+            setPlanPremios(planPremios);
+        } else {
+            const updatedPlanPremios = [...planPremios];
+            const index = updatedPlanPremios.findIndex(
+                (premio) => premio.descripcion === tipoPremio
+            );
+            const cant = updatedPlanPremios[index].cantidadPremios;
+            updatedPlanPremios[index].cantidadPremios = cant + 1;
+            setPlanPremios(updatedPlanPremios);
+        }
     }
 
-    const agregarResultado = (indexTipoPremio) => {
-        setResultado(
-            {
-                ...resultado,
-                numFavorecido: numFavorecidoRef.current.value,
-                seriePremio: seriePremioRef.current.value,
+    const reducirCantidadPremio = (indexPremio) => {
+        const updatedPlanPremios = [...planPremios];
+        const cant = updatedPlanPremios[indexPremio].cantidadPremios;
+        if (cant === 1) {
+            updatedPlanPremios.splice(indexPremio, 1);
+            // si el premio es el ultimo de la lista, se selecciona al inicio
+            if (indexPremio === updatedPlanPremios.length) {
+                setIndexPremio(0);
+                setTipoPremio(updatedPlanPremios[0].descripcion);
+            } else {
+                //se actualizan los valores despues de eliminar el premio del dropdown
+                setIndexPremio(indexPremio);
+                setTipoPremio(updatedPlanPremios[indexPremio].descripcion);
             }
-        );
+        } else {
+            updatedPlanPremios[indexPremio] = {
+                ...updatedPlanPremios[indexPremio],
+                cantidadPremios: cant - 1,
+            };
+        }
+
+        setPlanPremios(updatedPlanPremios);
+    };
+
+    const agregarResultado = (resultado) => {
         const numberValidation = validateNumber(numFavorecido);
         const serieValidation = validateSerie(seriePremio);
         if ((numberValidation !== '' || serieValidation !== '')) {
@@ -146,6 +194,7 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
             setShowSuccessModal(true);
             return;
         }
+        reducirCantidadPremio(indexPremio);
         setResultados([...resultados, {
             numeroResultado,
             numPremioPlan: idPlanPremios,
@@ -172,6 +221,8 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
     const removeFields = (index) => {
         handleShowConfirmation(() => {
             let data = [...resultados];
+            const tipoPremio = data[index].tipoResultado;
+            devolverResultadoADropdown(tipoPremio);
             data.splice(index, 1);
             changeResultNumber(index);
             setResultados(data);
@@ -258,22 +309,6 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                                             <tbody>
                                                 <tr>
                                                     <th>
-                                                        <label htmlFor='numFavorecido'>Número</label>
-                                                        <Field
-                                                            id='numFavorecido'
-                                                            name='numFavorecido'
-                                                            type='text'
-                                                            className='form-control input-form-control'
-                                                            innerRef={numFavorecidoRef}
-                                                            validate={validateNumber}
-                                                        />
-                                                        <ErrorMessage name='numFavorecido' component={() => {
-                                                            return (
-                                                                <div className='error'>{errors.numFavorecido}</div>
-                                                            )
-                                                        }} />
-                                                    </th>
-                                                    <th>
                                                         <label htmlFor='seriePremio'>Serie</label>
                                                         <Field
                                                             id='seriePremio'
@@ -289,8 +324,33 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                                                             )
                                                         }} />
                                                     </th>
+                                                    <th>
+                                                        <label htmlFor='numFavorecido'>Número</label>
+                                                        <Field
+                                                            id='numFavorecido'
+                                                            name='numFavorecido'
+                                                            type='text'
+                                                            className='form-control input-form-control'
+                                                            innerRef={numFavorecidoRef}
+                                                            validate={validateNumber}
+                                                        />
+                                                        <ErrorMessage name='numFavorecido' component={() => {
+                                                            return (
+                                                                <div className='error'>{errors.numFavorecido}</div>
+                                                            )
+                                                        }} />
+                                                    </th>
                                                     <td className='col-4'>
-                                                        <PlanPremios idPlanPremios={idPlanPremios} onSelectChange={handleTipoPremio} />
+                                                        <select className="form-select form-select-sm" onClick={handleTipoPremio}>
+                                                            {planPremios.map((planPremio) => (
+                                                                <option
+                                                                    value={planPremio.MontoUnitario}
+                                                                    key={planPremio.numPremio}
+                                                                >
+                                                                    {planPremio.descripcion} [{planPremio.cantidadPremios}]
+                                                                </option>
+                                                            ))}
+                                                        </select>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -334,16 +394,16 @@ const ResultadoLoteriaFisica = ({ idSorteo }) => {
                         <tbody>
                             <tr>
                                 <th>Numero Resultado</th>
-                                <th>Número</th>
                                 <th>Serie</th>
+                                <th>Número</th>
                                 <th>Tipo de Premio</th>
                             </tr>
                             {resultados.map((resultado, index) => {
                                 return (
                                     <tr key={index}>
                                         <td className='col-1'>{resultado.numeroResultado}</td>
-                                        <td>{resultado.numFavorecido}</td>
                                         <td>{resultado.seriePremio}</td>
+                                        <td>{resultado.numFavorecido}</td>
                                         <td>
                                             <div className="container m-auto">
                                                 <div className="row justify-content-center">

@@ -156,11 +156,15 @@ export function insertarFicheros(ficheros) {
 }
 
 export function getEscrutinio(id) {
-    return 100000000//APIRequest.get('/Escrutinio' + id);
+    return APIRequest.get('/Escrutinio/' + id);
 }
 
-export function insertarEscrutinio(escrutinio) {
-    return APIRequest.post('/Escrutinio', escrutinio);
+export function insertarEscrutinio(id, escrutinio) {
+    const data = {
+        "idSorteo": id,
+        "escrutinio": escrutinio,
+    }
+    return APIRequest.post('/Escrutinio', data);
 }
 
 export function getPremios() {
@@ -168,12 +172,12 @@ export function getPremios() {
 }
 
 export function insertaProcedimiento(procedimiento) {
-    console.log("Data: ",procedimiento);
+    console.log("Data: ", procedimiento);
     return APIRequest.post('/ListaChequeoSorteo', procedimiento);
 }
 
 export function getVentas(id) {
-    return APIRequest.get('/Ventas/'+ id);
+    return APIRequest.get('/Ventas/' + id);
 }
 
 export function insertaVentas(ventas) {
@@ -187,7 +191,7 @@ export function getEmailSorteo(id) {
 
 export function getName(username) {
     return APIRequest.get(`/Usuario/${username}`);
-  }
+}
 
 export function getParametroBydId(id) {
     return APIRequest.get(`/Parametro/${id}`);
@@ -196,4 +200,3 @@ export function getParametroBydId(id) {
 export function getParametros() {
     return APIRequest.get(`/Parametro`);
 }
-  

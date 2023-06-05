@@ -16,13 +16,6 @@ function ConfirmationCodeModal() {
     const [titulo, setTitulo] = useState('')
     const [mensaje, setMensaje] = useState('')
 
-    useEffect(() => {
-		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
-            navigate('/');
-        }
-	});
     
     function handleClose() {
         setIsOpen(false);

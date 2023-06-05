@@ -7,7 +7,7 @@ import CompararVentas from './../../components/pure/forms/CompararVentas';
 const CompararVentasPage = () => {
 
     const lottery = JSON.parse(sessionStorage.getItem("lottery"));
-    const idSorteo = lottery?.numSorteo;
+    const idSorteo = lottery?.idInterno;
 
     return (
         <div>

@@ -88,9 +88,7 @@ const Inventario = ({ fecha, sorteo }) => {
                     ))}
                 </tbody>
                 <tfoot>
-                    <tr>
-                        <td><b>Total: {premios.reduce((a, b) => a + (b['cantidadPremios'] || 0), 0)}</b></td>
-                    </tr>
+
                 </tfoot>
             </table>
         );

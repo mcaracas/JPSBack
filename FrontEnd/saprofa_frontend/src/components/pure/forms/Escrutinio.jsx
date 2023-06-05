@@ -8,16 +8,17 @@ import { useNavigate } from 'react-router-dom';
 
 const Escrutinio = () => {
 
-    const [datos, setDatos] = React.useState();
+    const [datos, setDatos] = React.useState('');
     const [checked, setChecked] = React.useState(true);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
     const [checked2, setChecked2] = React.useState(false);
     const [datos2, setDatos2] = React.useState();
+    const [idInterno, setIdInterno] = React.useState(0);
 
     const navigate = useNavigate();
-    
+
     const handleCheck = (e) => {
         const isChecked = e.target.checked;
         console.log(isChecked);
@@ -53,8 +54,8 @@ const Escrutinio = () => {
 
     const getDatos = async () => {
         try {
-            const response = getEscrutinio(1) //await getEscrutinio(1); 
-            setDatos(response);
+            const response = await getEscrutinio(1);
+            setDatos(response.data.escrutinio);
         }
         catch (error) {
             setTitulo('Operación fallida');
@@ -74,30 +75,32 @@ const Escrutinio = () => {
     const handleSubmit = async () => {
         try {
             if (!checked) {
-                await insertarEscrutinio(datos);
+                await insertarEscrutinio(idInterno, datos);
             } else {
                 const numberWithoutDots = Number(datos2.replace(/\./g, ''));
-                await insertarEscrutinio(numberWithoutDots);
+                await insertarEscrutinio(idInterno, numberWithoutDots);
             }
             setTitulo('Operación exitosa');
-            setMensaje('Monto Acumulado guardado exitosamente');
+            setMensaje('Escrutinio guardado !!');
             setShowSuccessModal(true);
         }
         catch (error) {
             setTitulo('Operación fallida');
-            setMensaje('No se pudo guardar los datos de Monto Acumulado');
+            setMensaje('No se pudo guardar los datos de Escrutinio');
             setShowSuccessModal(true);
         }
     }
 
     useEffect(() => {
         const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
+        const lottery = JSON.parse(sessionStorage.getItem('lottery'));
+        setIdInterno(lottery?.idInterno);
+        if (!usuario) {
+            sessionStorage.clear();
             navigate('/');
         }
         getDatos();
-    }, []);
+    }, [navigate]);
 
     const initialValues = {
         montoTotal: '',
