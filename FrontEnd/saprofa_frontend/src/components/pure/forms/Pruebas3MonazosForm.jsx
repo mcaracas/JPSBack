@@ -61,23 +61,23 @@ const Pruebas3MonazosForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
-            navigate('/');
-        }
-	});
+    const usuario = sessionStorage.getItem('name');
+    if (!usuario) {
+      sessionStorage.clear();
+      navigate('/');
+    }
+  });
 
   function handleCloseSuccessModal() {
     setShowSuccessModal(false);
-    navigate('/Marchamo3Monazos');
+    navigate('/CompararVentas');
   }
 
   function handleCloseFailModal() {
     setShowFailModal(false);
   }
 
-  const handleConfirmation = async(confirmed) => {
+  const handleConfirmation = async (confirmed) => {
     if (!confirmed) {
       setShowConfirmation(false);
       return;
@@ -86,7 +86,7 @@ const Pruebas3MonazosForm = () => {
     setShowConfirmation(false);
   }
 
-  const handleShowConfirmation = async(action) => {
+  const handleShowConfirmation = async (action) => {
     setShowConfirmation(true);
     setConfirmationAction(() => () => {
       action();

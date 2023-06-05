@@ -87,16 +87,16 @@ const Marchamo3Monazos = (id) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
+        const usuario = sessionStorage.getItem('name');
+        if (!usuario) {
+            sessionStorage.clear();
             navigate('/');
         }
-	});
+    });
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
-        navigate('/CierreApuestas');
+        navigate('/Pruebas3Monazos');
     }
 
     function handleCloseFailModal() {

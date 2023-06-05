@@ -32,6 +32,7 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
         setShowSuccessModal(false);
         navigate('/MarchamoNacional');      // Redirect to the next page
     }
+
     const handleConfirmation = async (confirmed) => {
         if (!confirmed) {
             setShowConfirmation(false);
@@ -91,8 +92,8 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
 
     useEffect(() => {
         const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
+        if (!usuario) {
+            sessionStorage.clear();
             navigate('/');
         }
         getDatos();

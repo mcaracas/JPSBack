@@ -37,6 +37,7 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
+        navigate('/Escrutinio');
     }
 
     const handleConfirmation = async (confirmed) => {

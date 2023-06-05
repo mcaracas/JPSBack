@@ -239,20 +239,7 @@ const ListaChequeoPopular = ({ idDatoSorteo }) => {
     // MODALS
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
-        const lottery = JSON.parse(sessionStorage.getItem("lottery"));
-        const tipoSorteo = lottery?.tipoLoteria;
-
-        if (tipoSorteo === "LTT") {
-            navigate('/PruebasLotto');
-        } else if (tipoSorteo === "NT") {
-            navigate('/PruebasNuevosTiempos');
-        } else if (tipoSorteo === "3M") {
-            navigate('/Pruebas3M');
-        } else if (tipoSorteo === "LN") {
-            navigate('/MarchamoNacional');
-        } else if (tipoSorteo === "LP") {
-            navigate('/MarchamoPopular');
-        }
+        navigate('/ConclusionesRecomendaciones');
     }
 
     function handleCloseFailModal() {

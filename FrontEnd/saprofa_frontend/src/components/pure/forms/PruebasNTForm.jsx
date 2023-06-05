@@ -46,7 +46,7 @@ function validateNumber(value) {
     error = 'Número requerido';
   } else if (!/^([0-9]|[1-9][0-9]|99|0[0-9])$/.test(value)) {
     error = 'Debe ser un número entre 00 y 99';
-}
+  }
   return error;
 }
 
@@ -85,23 +85,23 @@ const PruebasNTForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
-            navigate('/');
-        }
-	});
+    const usuario = sessionStorage.getItem('name');
+    if (!usuario) {
+      sessionStorage.clear();
+      navigate('/');
+    }
+  });
 
   function handleCloseSuccessModal() {
     setShowSuccessModal(false);
-    navigate('/MarchamoNuevosTiempos');
+    navigate('/CompararVentas');
   }
 
   function handleCloseFailModal() {
     setShowFailModal(false);
   }
 
-  const handleConfirmation = async(confirmed) => {
+  const handleConfirmation = async (confirmed) => {
     if (!confirmed) {
       setShowConfirmation(false);
       return;
@@ -110,7 +110,7 @@ const PruebasNTForm = () => {
     setShowConfirmation(false);
   }
 
-  const handleShowConfirmation = async(action) => {
+  const handleShowConfirmation = async (action) => {
     setShowConfirmation(true);
     setConfirmationAction(() => () => {
       action();
@@ -168,7 +168,7 @@ const PruebasNTForm = () => {
     });
     return list;
   }
-  
+
   const handleSubmit = async () => {
     try {
       const listaSubmit = formatListaPruebas(pruebas);
@@ -313,7 +313,7 @@ const PruebasNTForm = () => {
         mensaje={mensaje}
         handleClose={handleCloseFailModal}
       />
-       <ConfirmationModal
+      <ConfirmationModal
         show={showConfirmation}
         titulo='Confirmación'
         mensaje='¿Está seguro que desea registrar las pruebas?'

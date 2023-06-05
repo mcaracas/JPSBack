@@ -6,7 +6,7 @@ import { insertarEscrutinio } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
 import { useNavigate } from 'react-router-dom';
 
-const Escrutinio = () => {
+const Escrutinio = ({ tipoLoteria }) => {
 
     const [datos, setDatos] = React.useState('');
     const [checked, setChecked] = React.useState(true);
@@ -44,6 +44,24 @@ const Escrutinio = () => {
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
+        navigate(navigateTo());
+    }
+
+    const navigateTo = () => {
+        switch (tipoLoteria) {
+            case 'LTT':
+                return ('/TomoFolio');
+            case 'NT':
+                return ('/TomoFolio');
+            case '3M':
+                return ('/TomoFolio');
+            case 'LN':  //@TODO: Cambiar si se hace una pagina para loteria nacional
+                return ('/TomoFolio');
+            case 'LP':
+                return ('/TomoFolio');
+            default:
+                return ('/ChooseLottery');
+        }
     }
 
     const manejarCambiodatos = (e) => {

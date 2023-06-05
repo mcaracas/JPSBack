@@ -151,12 +151,12 @@ const MarchamoNacional = (id) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
-            navigate('/');
-        }
-	});
+    const usuario = sessionStorage.getItem('name');
+    if (!usuario) {
+      sessionStorage.clear();
+      navigate('/');
+    }
+  });
 
   const handleCheck = (e) => {
     const isChecked = e.target.checked;
@@ -165,7 +165,7 @@ const MarchamoNacional = (id) => {
 
   function handleCloseSuccessModal() {
     setShowSuccessModal(false);
-    navigate('/CierreApuestas');
+    navigate('/CompararVentas');
   }
 
   function handleCloseFailModal() {
@@ -493,7 +493,7 @@ const MarchamoNacional = (id) => {
                       <Field id='cierreAcumTula' name='cierreAcumTula' type='number' className='form-control' /> tula
                       {
                         errors.cierreAcumTula && touched.cierreAcumTula &&
-                          <div className='error'>{errors.cierreAcumTula}</div>
+                        <div className='error'>{errors.cierreAcumTula}</div>
                       }
                     </td>
                   </tr>

@@ -8,11 +8,12 @@ const CompararVentasPage = () => {
 
     const lottery = JSON.parse(sessionStorage.getItem("lottery"));
     const idSorteo = lottery?.idInterno;
+    const tipoLoteria = lottery?.tipoLoteria;
 
     return (
         <div>
             <EncabezadoFranjas title={"Comparar Ventas"} />
-            <Container component={<CompararVentas idSorteo={idSorteo}/>}/>
+            <Container component={<CompararVentas idSorteo={idSorteo} />} />
         </div>
     );
 }

@@ -46,8 +46,9 @@ const Tomo = ({ idInterno }) => {
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
-      }
- 
+        navigate('/ListaChequeo');
+    }
+
     //Get Tomo and Folio from DB when component is mounted
     useEffect(() => {
         getTomoFolio();
@@ -56,8 +57,8 @@ const Tomo = ({ idInterno }) => {
     //Set Tomo and Folio Actual when Tomo and Folio are changed
     useEffect(() => {
         const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
+        if (!usuario) {
+            sessionStorage.clear();
             navigate('/');
         }
         setTomoActual(tomo);

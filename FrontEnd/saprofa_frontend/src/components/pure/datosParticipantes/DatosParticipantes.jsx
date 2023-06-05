@@ -57,15 +57,15 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
   const navigateToPruebas = (tipoLoteria) => {
     switch (tipoLoteria) {
       case 'LTT':
-        return ('/PruebasLotto');
+        return ('/MarchamoLotto');
       case 'NT':
-        return ('/PruebasNuevosTiempos');
+        return ('/MarchamoNuevosTiempos');
       case '3M':
-        return ('/Pruebas3Monazos');
+        return ('/Marchamo3Monazos');
       case 'LN':
-        return ('/MarchamoNacional');
+        return ('/SeriesEnJuego');
       case 'LP':
-        return ('/MarchamoPopular');
+        return ('/SeriesEnJuego');
       default:
         return ('/ChooseLottery');
     }

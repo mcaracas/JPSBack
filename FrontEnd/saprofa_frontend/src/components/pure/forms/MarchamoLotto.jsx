@@ -91,7 +91,7 @@ const MarchamoLotto = (codigoMarchamo) => {
 
 	function handleCloseSuccessModal() {
 		setShowSuccessModal(false);
-		navigate('/CierreApuestas');
+		navigate('/PruebasLotto');
 	}
 
 	function handleCloseFailModal() {

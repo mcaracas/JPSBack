@@ -71,16 +71,16 @@ const PruebasLottoForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
-            navigate('/');
-        }
-	});
+    const usuario = sessionStorage.getItem('name');
+    if (!usuario) {
+      sessionStorage.clear();
+      navigate('/');
+    }
+  });
 
   function handleCloseSuccessModal() {
     setShowSuccessModal(false);
-    navigate('/MarchamoLotto');
+    navigate('/CompararVentas');
   }
 
   function handleCloseFailModal() {

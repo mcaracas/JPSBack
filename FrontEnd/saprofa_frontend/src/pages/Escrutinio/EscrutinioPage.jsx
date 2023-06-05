@@ -5,10 +5,14 @@ import Escrutinio from '../../components/pure/forms/Escrutinio';
 
 
 const EscrutinioPage = () => {
+
+    const lottery = JSON.parse(sessionStorage.getItem('lottery'));
+    const tipoLoteria = lottery?.tipoLoteria;
+
     return (
         <div>
             <EncabezadoFranjas title={"Escrutinio"} />
-            <Container component={<Escrutinio />} />
+            <Container component={<Escrutinio tipoLoteria={tipoLoteria} />} />
         </div>
     );
 }

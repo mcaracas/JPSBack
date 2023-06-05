@@ -96,15 +96,15 @@ const MarchamoNuevosTiempos = () => {
 
 	useEffect(() => {
 		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
+		if (!usuario) {
 			sessionStorage.clear();
-            navigate('/');
-        }
+			navigate('/');
+		}
 	});
 
 	function handleCloseSuccessModal() {
 		setShowSuccessModal(false);
-		navigate('/CierreApuestas');
+		navigate('/PruebasNuevosTiempos');
 	}
 
 	function handleCloseFailModal() {
@@ -290,10 +290,10 @@ const MarchamoNuevosTiempos = () => {
 											}
 										</td>
 										<td>
-										<label htmlFor="contingenciaNTR" className="label-with-icon">
+											<label htmlFor="contingenciaNTR" className="label-with-icon">
 												<span className="label-text">JPS-SLE-0000</span>
-											</label> 
-										<Field id='contingenciaNTR' name='contingenciaNTR' type='number' className='form-control' />
+											</label>
+											<Field id='contingenciaNTR' name='contingenciaNTR' type='number' className='form-control' />
 											{
 												errors.contingenciaNTR && touched.contingenciaNTR &&
 												(

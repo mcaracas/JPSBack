@@ -8,7 +8,7 @@ import { getVentas, insertaVentas } from '../../../services/axiosService';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
-const CompararVentas = ({ idSorteo }) => {
+const CompararVentas = ({ idSorteo, tipoLoteria }) => {
 
     const [montoVentas, setMontoVentas] = useState(0);
 
@@ -110,7 +110,24 @@ const CompararVentas = ({ idSorteo }) => {
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
-        // Navigate to the next page
+        navigate(navigateTo());
+    }
+
+    const navigateTo = () => {
+        switch (tipoLoteria) {
+            case 'LTT':
+                return ('/ResultadosLoteriaElectronica');
+            case 'NT':
+                return ('/ResultadosLoteriaElectronica');
+            case '3M':
+                return ('/ResultadosLoteriaElectronica');
+            case 'LN':
+                return ('/inventario');
+            case 'LP':
+                return ('/inventario');
+            default:
+                return ('/ChooseLottery');
+        }
     }
 
     function handleCloseFailModal() {

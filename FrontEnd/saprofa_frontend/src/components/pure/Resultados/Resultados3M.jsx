@@ -16,12 +16,12 @@ const Resultados3M = ({ numSorteo, idInterno }) => {
     const [mensaje, setMensaje] = useState('');
 
     useEffect(() => {
-		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
+        const usuario = sessionStorage.getItem('name');
+        if (!usuario) {
+            sessionStorage.clear();
             navigate('/');
         }
-	});
+    });
 
     const agregarResultado = (values) => {
         setResultados([...resultados, {
@@ -68,6 +68,7 @@ const Resultados3M = ({ numSorteo, idInterno }) => {
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
+        navigate('/Escrutinio');
     }
 
     async function handleSubmit() {

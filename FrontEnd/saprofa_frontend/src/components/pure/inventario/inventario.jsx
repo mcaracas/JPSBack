@@ -21,7 +21,7 @@ const Inventario = ({ fecha, sorteo }) => {
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
-        navigate('/');
+        navigate('/ResultadosLoteriaFisica');
     }
 
     const handleConfirmation = async (confirmed) => {
@@ -58,8 +58,8 @@ const Inventario = ({ fecha, sorteo }) => {
 
     useEffect(() => {
         const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
+        if (!usuario) {
+            sessionStorage.clear();
             navigate('/');
         }
         getPremioLoteria();
