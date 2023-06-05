@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { actaFiscalizacion } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
 import { useNavigate } from 'react-router-dom';
+import Reportes from '../reportes/reportes';
 
 
 const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha }) => {
@@ -13,12 +14,12 @@ const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
+        const usuario = sessionStorage.getItem('name');
+        if (!usuario) {
+            sessionStorage.clear();
             navigate('/');
         }
-	});
+    });
 
     const initialValues = {
         procesosConformeEstablecido: true,
@@ -148,6 +149,7 @@ const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha }) => {
                 titulo={titulo}
                 mensaje={mensaje}
             />
+            <Reportes />
         </>
     );
 };
