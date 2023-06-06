@@ -6,7 +6,7 @@ import { insertarApuestas } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
 import { useNavigate } from 'react-router-dom';
 
-const CierreApuestas = () => {
+const CierreApuestas = ({ idSorteo }) => {
 
     const [datos, setDatos] = React.useState();
     const [checked, setChecked] = React.useState(true);
@@ -51,8 +51,8 @@ const CierreApuestas = () => {
 
     const getDatos = async () => {
         try {
-            const response = await getCierreApuestas(1);
-            setDatos(response);
+            const response = await getCierreApuestas(idSorteo);
+            setDatos(response.data.monto);
         }
         catch (error) {
             setTitulo('Operación fallida');
@@ -90,8 +90,8 @@ const CierreApuestas = () => {
 
     useEffect(() => {
         const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
+        if (!usuario) {
+            sessionStorage.clear();
             navigate('/');
         }
         getDatos();
