@@ -160,8 +160,8 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
                         <Field
                             className="inp"
                             type="text"
-                            onKeyPress={(event) => {
-                                if (!/[0-9,]/.test(event.key)) {
+                            onKeyPress={(event) => {//[1,50]
+                                if (!/[0-9,()]/.test(event.key)) {
                                     event.preventDefault();
                                 }
                             }}
@@ -170,6 +170,7 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
                         />
                         <span style={{ color: 'gray', fontSize: '12px' }}>
                             Ingrese los números separados por coma (por ejemplo: {start}, {end})
+                            , para ingresar rangos de números utilice paréntesis (por ejemplo: ({start}, {end}))
                         </span>
                     </td>
                 </tr>
@@ -270,12 +271,12 @@ const SeriesEnJuego = ({ idInterno, sorteo, fiscalizador, fecha, tipoLoteria }) 
                     {({ isSubmitting, errors, touched, values }) => (
                         <Form>
 
-                            <label >
+                            {/* <label >
                                 <h5>Números de marchamos utilizados en la custodia del sorteo anterior:</h5>
                             </label>
                             <div>
                                 <MiTabla series={series} marchamos={marchamos} />
-                            </div>
+                            </div> */}
                             <br />
                             <label >
                                 <h5>Números de marchamos utilizados en la custodia de los ficheros:</h5>
