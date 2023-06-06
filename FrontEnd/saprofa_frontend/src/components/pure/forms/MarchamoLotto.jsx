@@ -17,6 +17,13 @@ const tipoLoteria = lottery?.tipoLoteria;
 const idSorteo = `${tipoLoteria}${numSorteo}`;
 const idDatoSorteo = lottery?.idInterno;
 
+// cantidad maxima de digitos para el numero de marchamo
+const CANT_MAXIMA_DIGITOS = 5;
+
+// Expresion regular para validar que el numero de marchamo sea de 5 digitos
+const regex = new RegExp(`^[0-9]{${CANT_MAXIMA_DIGITOS}}$`);
+
+
 /**
  * Validation schema for the form
  * @type {Yup.ObjectSchema}
@@ -25,9 +32,9 @@ const idDatoSorteo = lottery?.idInterno;
  */
 
 const marchamoSchema = Yup.object().shape({
-	apertura: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-	cierre: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-	contingencia: Yup.number().max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	apertura: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+	cierre: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+	contingencia: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`),
 });
 
 let marchamoDefault = {
@@ -38,7 +45,7 @@ let marchamoDefault = {
 	numeroMarchamo: '1525',
 }
 
-const MarchamoLotto = (codigoMarchamo) => {
+const MarchamoLotto = (id) => {
 
 	const [datosEnviados, setDatosEnviados] = useState(false);
 	const [titulo, setTitulo] = useState('');
@@ -57,27 +64,26 @@ const MarchamoLotto = (codigoMarchamo) => {
 		return [
 			{
 				...marchamoDefault,
-				numeroMarchamo: `${codigoMarchamo}${values.apertura}`,
+				numeroMarchamo: `${nomenclatura['ELECTRONICA']}${values.apertura}`,
 			}
 			,
 			{
 				...marchamoDefault,
 				tipo: 'Cierre',
-				numeroMarchamo: `${codigoMarchamo}${values.cierre}`,
+				numeroMarchamo: `${nomenclatura['ELECTRONICA']}${values.cierre}`,
 			}
 			,
 			{
 				...marchamoDefault,
 				tipo: 'Contingencia',
-				numeroMarchamo: values.contingencia ? `${codigoMarchamo}${values.contingencia} ` : null,
+				numeroMarchamo: values.contingencia ? `${nomenclatura['ELECTRONICA']}${values.contingencia} ` : null,
 			},
 		];
 	}
 
 	async function obtenerParametros() {
 		const response = await parametros();
-		const filteredData = response.map((item) => item.parametroValor);
-		setNomenclatura(filteredData);
+		setNomenclatura(response);
 	};
 
 	useEffect(() => {
@@ -176,7 +182,7 @@ const MarchamoLotto = (codigoMarchamo) => {
 										</td>
 										<td>
 											<label htmlFor="apertura" className="label-with-icon">
-												<span className="label-text">{nomenclatura[0]}</span>
+												<span className="label-text">{nomenclatura['ELECTRONICA']}</span>
 												<div className="required-icon">
 													{!touched.apertura && <AiOutlineExclamationCircle />}
 												</div>
@@ -188,7 +194,17 @@ const MarchamoLotto = (codigoMarchamo) => {
 												</div>
 											)}
 										</td>
-										<td rowSpan={2}>{nomenclatura[0]} <Field id='contingencia' name='contingencia' type='number' className='form-control' /></td>
+										<td rowSpan={2}>
+											<label htmlFor="contingencia" className="label-with-icon">
+												<span className="label-text">{nomenclatura['ELECTRONICA']}</span>
+											</label>
+											<Field id='contingencia' name='contingencia' type='number' className='form-control' />
+											{errors.contingencia && touched.contingencia && (
+												<div className='error'>
+													<ErrorMessage name='contingencia'></ErrorMessage>
+												</div>
+											)}
+										</td>
 									</tr>
 									<tr>
 										<td>
@@ -196,7 +212,7 @@ const MarchamoLotto = (codigoMarchamo) => {
 										</td>
 										<td>
 											<label htmlFor="cierre" className="label-with-icon">
-												<span className="label-text">{nomenclatura[0]}</span>
+												<span className="label-text">{nomenclatura['ELECTRONICA']}</span>
 												<div className="required-icon">
 													{!touched.cierre && <AiOutlineExclamationCircle />}
 												</div>
