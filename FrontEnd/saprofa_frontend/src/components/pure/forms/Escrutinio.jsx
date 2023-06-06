@@ -77,7 +77,7 @@ const Escrutinio = ({ tipoLoteria, idSorteo }) => {
         }
         catch (error) {
             setTitulo('Operación fallida');
-            setMensaje('No se pudo guardar los datos de Monto Acumulado');
+            setMensaje('No se pudo guardar los datos de escrutinio');
             setShowSuccessModal(true);
         }
     }
@@ -99,7 +99,7 @@ const Escrutinio = ({ tipoLoteria, idSorteo }) => {
                 await insertarEscrutinio(idInterno, numberWithoutDots);
             }
             setTitulo('Operación exitosa');
-            setMensaje('Escrutinio guardado !!');
+            setMensaje('Datos de escrutinio guardados correctamente');
             setShowSuccessModal(true);
         }
         catch (error) {

@@ -13,7 +13,7 @@ const CompararVentasPage = () => {
     return (
         <div>
             <EncabezadoFranjas title={"Comparar Ventas"} />
-            <Container component={<CompararVentas idSorteo={idSorteo} />} />
+            <Container component={<CompararVentas idSorteo={idSorteo} tipoLoteria={tipoLoteria} />} />
         </div>
     );
 }
