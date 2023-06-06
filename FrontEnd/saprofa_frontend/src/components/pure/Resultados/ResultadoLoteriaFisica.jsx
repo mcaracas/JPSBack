@@ -28,12 +28,36 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [confirmationAction, setConfirmationAction] = useState(() => { });
     const [planPremios, setPlanPremios] = useState(planPremiosProp);
+    const [resultados, setResultados] = useState([]);
+    const [resultado, setResultado] = useState({
+        numeroResultado,
+        numPremioPlan: idPlanPremios,
+        idDatoSorteo,
+        numFavorecido,
+        seriePremio,
+        tipoResultado: tipoPremio,
+        verificado: true, //TODO: change this to the real data
+        verificaAcumulado: true, //TODO: change this to the real data
+        idDatoSorteoNavigation: null,
+        numPremioPlanNavigation: null,
+    });
     const navigate = useNavigate();
     const numFavorecidoRef = useRef(null);
     const seriePremioRef = useRef(null);
 
     const planPremiosCopia = [...planPremiosProp];
 
+    function actualizarCache(valorActualizado) {
+        localStorage.setItem('ResultadoCache',
+            JSON.stringify({
+                resultados: valorActualizado.resultados,
+                resultado: valorActualizado.resultado,
+                tipoPremio: valorActualizado.tipoPremio,
+                numeroResultado: valorActualizado.numeroResultado,
+                planPremios: valorActualizado.planPremios,
+            })
+        );
+    }
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
@@ -66,26 +90,27 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
         setTipoPremio(planPremios[selectedIndex].descripcion);
     };
 
-    const [resultados, setResultados] = useState([]);
-    const [resultado, setResultado] = useState({
-        numeroResultado,
-        numPremioPlan: idPlanPremios,
-        idDatoSorteo,
-        numFavorecido,
-        seriePremio,
-        tipoResultado: tipoPremio,
-        verificado: true, //TODO: change this to the real data
-        verificaAcumulado: true, //TODO: change this to the real data
-        idDatoSorteoNavigation: null,
-        numPremioPlanNavigation: null,
-    });
-
     useEffect(() => {
         const usuario = sessionStorage.getItem('name');
         if (!usuario) {
             sessionStorage.clear();
             navigate('/');
         }
+        if (localStorage.getItem('ResultadoCache')) {
+            const resultadoCache = JSON.parse(localStorage.getItem('ResultadoCache'));
+            setResultados(resultadoCache.resultados);
+            setResultado(resultadoCache.resultado);
+            setNumFavorecido(resultadoCache.resultado.numFavorecido);
+            setSeriePremio(resultadoCache.resultado.seriePremio);
+            setTipoPremio(resultadoCache.tipoPremio);
+            setNumeroResultado(resultadoCache.numeroResultado);
+            setPlanPremios(resultadoCache.planPremios)
+            formRef.current.values.numFavorecido = resultadoCache.resultado.numFavorecido;
+            formRef.current.values.seriePremio = resultadoCache.resultado.seriePremio;
+        }
+    }, [navigate]);
+
+    useEffect(() => {
         setResultado((prevResultado) => ({
             ...prevResultado,
             numFavorecido: numFavorecidoRef.current.value,
@@ -114,6 +139,19 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
                 seriePremio: '999',
                 tipoResultado: tipoPremio,
             }));
+            actualizarCache({
+                resultados,
+                resultado: {
+                    ...resultado,
+                    numFavorecido: numFavorecido,
+                    seriePremio: seriePremio,
+                    tipoResultado: tipoPremio,
+                },
+                tipoPremio,
+                numeroResultado,
+                planPremios,
+            });
+
             if (resultado) {
                 const formValues = {
                     numFavorecido: resultado.numFavorecido,
@@ -127,7 +165,7 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
             setDatosEnviados(false);
             setTitulo('¡Error!');
             setMensaje(error);
-            setShowSuccessModal(true);
+            setShowFailModal(true);
         }
     };
 
@@ -159,6 +197,18 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
             updatedPlanPremios[index].cantidadPremios = cant + 1;
             setPlanPremios(updatedPlanPremios);
         }
+        actualizarCache({
+            resultados,
+            resultado: {
+                ...resultado,
+                numFavorecido: numFavorecido,
+                seriePremio: seriePremio,
+                tipoResultado: tipoPremio,
+            },
+            tipoPremio,
+            numeroResultado,
+            planPremios,
+        });
     }
 
     const reducirCantidadPremio = (indexPremio) => {
@@ -181,18 +231,29 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
                 cantidadPremios: cant - 1,
             };
         }
-
         setPlanPremios(updatedPlanPremios);
+        actualizarCache({
+            resultados,
+            resultado: {
+                ...resultado,
+                numFavorecido: numFavorecido,
+                seriePremio: seriePremio,
+                tipoResultado: tipoPremio,
+            },
+            tipoPremio,
+            numeroResultado,
+            planPremios,
+        });
     };
 
-    const agregarResultado = (resultado) => {
+    const agregarResultado = async (resultado) => {
         const numberValidation = validateNumber(numFavorecido);
         const serieValidation = validateSerie(seriePremio);
         if ((numberValidation !== '' || serieValidation !== '')) {
             setDatosEnviados(false);
             setTitulo('¡Error!');
             setMensaje(`${serieValidation}!\n${numberValidation}!`);
-            setShowSuccessModal(true);
+            setShowFailModal(true);
             return;
         }
         reducirCantidadPremio(indexPremio);
@@ -200,8 +261,8 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
             numeroResultado,
             numPremioPlan: idPlanPremios,
             idDatoSorteo,
-            numFavorecido: formRef.current.values.numFavorecido.toString(),
-            seriePremio: formRef.current.values.seriePremio.toString(),
+            numFavorecido: numFavorecido,
+            seriePremio: seriePremio,
             verificado: true, //TODO: change this to the real data
             verificaAcumulado: true, //TODO: change this to the real data
             tipoResultado: tipoPremio,
@@ -209,6 +270,18 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
             numPremioPlanNavigation: null,
         }]);
         setNumeroResultado(numeroResultado + 1);
+        actualizarCache({
+            resultados,
+            resultado: {
+                ...resultado,
+                numFavorecido: numFavorecido,
+                seriePremio: seriePremio,
+                tipoResultado: tipoPremio,
+            },
+            tipoPremio,
+            numeroResultado,
+            planPremios,
+        });
     }
 
     const changeResultNumber = (index) => {
@@ -218,6 +291,18 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
         }
         setResultados(newResultados);
         setNumeroResultado(numeroResultado - 1);
+        actualizarCache({
+            resultados,
+            resultado: {
+                ...resultado,
+                numFavorecido: numFavorecido,
+                seriePremio: seriePremio,
+                tipoResultado: tipoPremio,
+            },
+            tipoPremio,
+            numeroResultado,
+            planPremios,
+        });
     }
     const removeFields = (index) => {
         handleShowConfirmation(() => {
@@ -227,6 +312,18 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
             data.splice(index, 1);
             changeResultNumber(index);
             setResultados(data);
+            actualizarCache({
+                resultados,
+                resultado: {
+                    ...resultado,
+                    numFavorecido: numFavorecido,
+                    seriePremio: seriePremio,
+                    tipoResultado: tipoPremio,
+                },
+                tipoPremio,
+                numeroResultado,
+                planPremios,
+            });
         });
     }
 
@@ -244,6 +341,7 @@ const ResultadoLoteriaFisica = ({ idSorteo, planPremiosProp }) => {
                 setTitulo("¡Operación Exitosa!");
                 setDatosEnviados(true);
                 setShowSuccessModal(true);
+                localStorage.removeItem('ResultadoCache');
             } else {
                 console.log('error');
             }
