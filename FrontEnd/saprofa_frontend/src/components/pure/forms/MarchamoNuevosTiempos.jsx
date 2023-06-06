@@ -9,12 +9,19 @@ import LoadingModal from "../../modals/LoadingModal";
 import FailModal from "../../modals/FailModal";
 import ConfirmationModal from "../../modals/ConfirmationModal";
 import { useNavigate } from 'react-router-dom';
+import { parametros } from '../../../utils/config/marchamos';
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
 const numSorteo = lottery?.numSorteo;
 const tipoLoteria = lottery?.tipoLoteria;
 const idSorteo = `${tipoLoteria}${numSorteo}`;
 const idDatoSorteo = lottery?.idInterno;
+
+// cantidad maxima de digitos para el numero de marchamo
+const CANT_MAXIMA_DIGITOS = 5;
+
+// Expresion regular para validar que el numero de marchamo sea de 5 digitos
+const regex = new RegExp(`^[0-9]{${CANT_MAXIMA_DIGITOS}}$`);
 
 /**
  * Validation schema for the form
@@ -24,13 +31,13 @@ const idDatoSorteo = lottery?.idInterno;
  */
 
 const marchamoSchema = Yup.object().shape({
-	aperturaNT: Yup.number().required('Este campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-	aperturaNTR: Yup.number().required('Este campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-	cierreNT: Yup.number().required('Este campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-	cierreNTR: Yup.number().required('Este campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-	contingencia1NT: Yup.number().max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-	contingencia2NT: Yup.number().max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-	contingenciaNTR: Yup.number().max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+	aperturaNT: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+	aperturaNTR: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+	cierreNT: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+	cierreNTR: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+	contingencia1NT: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`),
+	contingencia2NT: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`),
+	contingenciaNTR: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`),
 });
 
 let marchamoDefault = {
@@ -39,47 +46,6 @@ let marchamoDefault = {
 	valija: '',
 	tipoMarchamo: 'ElectronicaNT',
 	numeroMarchamo: '1525',
-}
-
-
-const buildMarchamoList = (values) => {
-
-	return [
-		{
-			...marchamoDefault,
-			numeroMarchamo: `JPS-SLE-000${values.aperturaNT}`,
-		},
-		{
-			...marchamoDefault,
-			tipo: 'Cierre',
-			numeroMarchamo: `JPS-SLE-000${values.cierreNT}`,
-		},
-		{
-			...marchamoDefault,
-			numeroMarchamo: `JPS-SLE-000${values.aperturaNTR}`,
-		},
-		{
-			...marchamoDefault,
-			tipo: 'Cierre',
-			numeroMarchamo: `JPS-SLE-000${values.cierreNTR}`,
-		},
-		{
-			...marchamoDefault,
-			tipo: 'Contingencia',
-			numeroMarchamo: values.contingencia ? `JPS-SLE-000${values.contingencia1NT} ` : null,
-		},
-		{
-			...marchamoDefault,
-			tipo: 'Contingencia',
-			numeroMarchamo: values.contingencia ? `JPS-SLE-000${values.contingencia2NT} ` : null,
-		},
-		{
-			...marchamoDefault,
-			tipoMarchamo: 'ElectronicaNTR',
-			tipo: 'Contingencia',
-			numeroMarchamo: values.contingencia ? `JPS-SLE-000${values.contingenciaNTR} ` : null,
-		}
-	]
 }
 
 const MarchamoNuevosTiempos = () => {
@@ -92,15 +58,62 @@ const MarchamoNuevosTiempos = () => {
 	const [showFailModal, setShowFailModal] = useState(false);
 	const [showConfirmation, setShowConfirmation] = useState(false);
 	const [confirmationAction, setConfirmationAction] = useState(() => { });
+	const [nomenclatura, setNomenclatura] = useState('');
 	const navigate = useNavigate();
 
+	const buildMarchamoList = (values) => {
+
+		return [
+			{
+				...marchamoDefault,
+				numeroMarchamo: `${nomenclatura['ELECTRONICA']}${values.aperturaNT}`,
+			},
+			{
+				...marchamoDefault,
+				tipo: 'Cierre',
+				numeroMarchamo: `${nomenclatura['ELECTRONICA']}${values.cierreNT}`,
+			},
+			{
+				...marchamoDefault,
+				numeroMarchamo: `${nomenclatura['ELECTRONICA']}${values.aperturaNTR}`,
+			},
+			{
+				...marchamoDefault,
+				tipo: 'Cierre',
+				numeroMarchamo: `${nomenclatura['ELECTRONICA']}${values.cierreNTR}`,
+			},
+			{
+				...marchamoDefault,
+				tipo: 'Contingencia',
+				numeroMarchamo: values.contingencia1NT ? `${nomenclatura['ELECTRONICA']}${values.contingencia1NT} ` : null,
+			},
+			{
+				...marchamoDefault,
+				tipo: 'Contingencia',
+				numeroMarchamo: values.contingencia2NT ? `${nomenclatura['ELECTRONICA']}${values.contingencia2NT} ` : null,
+			},
+			{
+				...marchamoDefault,
+				tipoMarchamo: 'ElectronicaNTR',
+				tipo: 'Contingencia',
+				numeroMarchamo: values.contingenciaNTR ? `${nomenclatura['ELECTRONICA']}${values.contingenciaNTR} ` : null,
+			}
+		]
+	}
+
+	async function obtenerParametros() {
+		const response = await parametros();
+		setNomenclatura(response);
+	};
+	
 	useEffect(() => {
 		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
+		if (!usuario) {
 			sessionStorage.clear();
-            navigate('/');
-        }
-	});
+			navigate('/');
+		}
+		obtenerParametros();
+	}, [navigate]);
 
 	function handleCloseSuccessModal() {
 		setShowSuccessModal(false);
@@ -196,7 +209,7 @@ const MarchamoNuevosTiempos = () => {
 										<td><h4>Apertura</h4></td>
 										<td>
 											<label htmlFor="aperturaNT" className="label-with-icon">
-												<span className="label-text">JPS-SLE-0000</span>
+												<span className="label-text">{nomenclatura['ELECTRONICA']}</span>
 												<div className="required-icon">
 													{!touched.aperturaNT && <AiOutlineExclamationCircle />}
 												</div>
@@ -210,7 +223,7 @@ const MarchamoNuevosTiempos = () => {
 										</td>
 										<td>
 											<label htmlFor="aperturaNTR" className="label-with-icon">
-												<span className="label-text">JPS-SLE-0000</span>
+												<span className="label-text">{nomenclatura['ELECTRONICA']}</span>
 												<div className="required-icon">
 													{!touched.aperturaNTR && <AiOutlineExclamationCircle />}
 												</div>
@@ -227,7 +240,7 @@ const MarchamoNuevosTiempos = () => {
 										<td><h4>Cierre</h4></td>
 										<td>
 											<label htmlFor="cierreNT" className="label-with-icon">
-												<span className="label-text">JPS-SLE-0000</span>
+												<span className="label-text">{nomenclatura['ELECTRONICA']}</span>
 												<div className="required-icon">
 													{!touched.cierreNT && <AiOutlineExclamationCircle />}
 												</div>
@@ -244,7 +257,7 @@ const MarchamoNuevosTiempos = () => {
 										</td>
 										<td>
 											<label htmlFor="cierreNTR" className="label-with-icon">
-												<span className="label-text">JPS-SLE-0000</span>
+												<span className="label-text">{nomenclatura['ELECTRONICA']}</span>
 												<div className="required-icon">
 													{!touched.cierreNTR && <AiOutlineExclamationCircle />}
 												</div>
@@ -264,7 +277,7 @@ const MarchamoNuevosTiempos = () => {
 										<td><h4>Contingencia</h4></td>
 										<td>
 											<label htmlFor="contingencia1NT" className="label-with-icon">
-												<span className="label-text">JPS-SLE-0000</span>
+												<span className="label-text">{nomenclatura['ELECTRONICA']}</span>
 											</label>
 											<Field id='contingencia1NT' name='contingencia1NT' type='number' className='form-control' />
 											{
@@ -277,7 +290,7 @@ const MarchamoNuevosTiempos = () => {
 
 											}
 											<label htmlFor="contingencia2NT" className="label-with-icon">
-												<span className="label-text">JPS-SLE-0000</span>
+												<span className="label-text">{nomenclatura['ELECTRONICA']}</span>
 											</label>
 											<Field id='contingencia2NT' name='contingencia2NT' type='number' className='form-control' />
 											{
@@ -290,10 +303,10 @@ const MarchamoNuevosTiempos = () => {
 											}
 										</td>
 										<td>
-										<label htmlFor="contingenciaNTR" className="label-with-icon">
-												<span className="label-text">JPS-SLE-0000</span>
-											</label> 
-										<Field id='contingenciaNTR' name='contingenciaNTR' type='number' className='form-control' />
+											<label htmlFor="contingenciaNTR" className="label-with-icon">
+												<span className="label-text">{nomenclatura['ELECTRONICA']}</span>
+											</label>
+											<Field id='contingenciaNTR' name='contingenciaNTR' type='number' className='form-control' />
 											{
 												errors.contingenciaNTR && touched.contingenciaNTR &&
 												(

@@ -9,12 +9,20 @@ import LoadingModal from "../../modals/LoadingModal";
 import FailModal from "../../modals/FailModal";
 import ConfirmationModal from "../../modals/ConfirmationModal";
 import { useNavigate } from 'react-router-dom';
+import { parametros } from '../../../utils/config/marchamos';
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
 const numSorteo = lottery?.numSorteo;
 const tipoLoteria = lottery?.tipoLoteria;
 const idSorteo = `${tipoLoteria}${numSorteo}`;
 const idDatoSorteo = lottery?.idInterno;
+
+// cantidad maxima de digitos para el numero de marchamo
+const CANT_MAXIMA_DIGITOS = 5;
+
+// Expresion regular para validar que el numero de marchamo sea de 5 digitos
+const regex = new RegExp(`^[0-9]{${CANT_MAXIMA_DIGITOS}}$`);
+
 
 /**
  * Validation schema for the form
@@ -38,42 +46,6 @@ let marchamoDefault = {
     numeroMarchamo: '1525',
 }
 
-
-const buildMarchamoList = (values) => {
-
-    return [
-        {
-            ...marchamoDefault,
-            numeroMarchamo: `JPS-SLE-000${values.aperturaValjA}`,
-        }
-        ,
-        {
-            ...marchamoDefault,
-            tipo: 'Cierre',
-            numeroMarchamo: `JPS-SLE-000${values.cierrejValjA}`,
-        }
-        ,
-        {
-            ...marchamoDefault,
-            valija: 'B',
-            numeroMarchamo: `JPS-SLE-000${values.aperturaValjB}`,
-        }
-        ,
-        {
-            ...marchamoDefault,
-            tipo: 'Cierre',
-            valija: 'B',
-            numeroMarchamo: `JPS-SLE-000${values.cierrejValjB}`,
-        }
-        ,
-        {
-            ...marchamoDefault,
-            tipo: 'Contingencia',
-            numeroMarchamo: values.contingencia ? `JPS-SLE-000${values.contingencia} ` : null,
-        }
-    ];
-}
-
 const Marchamo3Monazos = (id) => {
 
     const [datosEnviados, setDatosEnviados] = useState(false);
@@ -84,15 +56,57 @@ const Marchamo3Monazos = (id) => {
     const [showFailModal, setShowFailModal] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [confirmationAction, setConfirmationAction] = useState(() => { });
+    const [nomenclatura, setNomenclatura] = useState('');
     const navigate = useNavigate();
 
+    const buildMarchamoList = (values) => {
+
+        return [
+            {
+                ...marchamoDefault,
+                numeroMarchamo: `${nomenclatura['ELECTRONICA']}${values.aperturaValjA}`,
+            }
+            ,
+            {
+                ...marchamoDefault,
+                tipo: 'Cierre',
+                numeroMarchamo: `${nomenclatura['ELECTRONICA']}${values.cierrejValjA}`,
+            }
+            ,
+            {
+                ...marchamoDefault,
+                valija: 'B',
+                numeroMarchamo: `${nomenclatura['ELECTRONICA']}${values.aperturaValjB}`,
+            }
+            ,
+            {
+                ...marchamoDefault,
+                tipo: 'Cierre',
+                valija: 'B',
+                numeroMarchamo: `${nomenclatura['ELECTRONICA']}${values.cierrejValjB}`,
+            }
+            ,
+            {
+                ...marchamoDefault,
+                tipo: 'Contingencia',
+                numeroMarchamo: values.contingencia ? `${nomenclatura['ELECTRONICA']}${values.contingencia} ` : null,
+            }
+        ];
+    }
+
+    async function obtenerParametros() {
+        const response = await parametros();
+        setNomenclatura(response);
+    };
+
     useEffect(() => {
-		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
+        const usuario = sessionStorage.getItem('name');
+        if (!usuario) {
+            sessionStorage.clear();
             navigate('/');
         }
-	});
+        obtenerParametros();
+    }, [navigate]);
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
@@ -185,7 +199,7 @@ const Marchamo3Monazos = (id) => {
                                         <td><h4>Plástico</h4></td>
                                         <td>
                                             <label htmlFor="aperturaValjA" className="label-with-icon">
-                                                <span className="label-text">JPS-SLE-0000</span>
+                                                <span className="label-text">{nomenclatura['ELECTRONICA']}</span>
                                                 <div className="required-icon">
                                                     {!touched.aperturaValjA && <AiOutlineExclamationCircle />}
                                                 </div>
@@ -199,7 +213,7 @@ const Marchamo3Monazos = (id) => {
                                         </td>
                                         <td>
                                             <label htmlFor="aperturaValjB" className="label-with-icon">
-                                                <span className="label-text">JPS-SLE-0000</span>
+                                                <span className="label-text">{nomenclatura['ELECTRONICA']}</span>
                                                 <div className="required-icon">
                                                     {!touched.aperturaValjB && <AiOutlineExclamationCircle />}
                                                 </div>
@@ -213,7 +227,7 @@ const Marchamo3Monazos = (id) => {
                                         </td>
                                         <td>
                                             <label htmlFor="cierrejValjA" className="label-with-icon">
-                                                <span className="label-text">JPS-SLE-0000</span>
+                                                <span className="label-text">{nomenclatura['ELECTRONICA']}</span>
                                                 <div className="required-icon">
                                                     {!touched.cierrejValjA && <AiOutlineExclamationCircle />}
                                                 </div>
@@ -230,7 +244,7 @@ const Marchamo3Monazos = (id) => {
                                         </td>
                                         <td>
                                             <label htmlFor="cierrejValjB" className="label-with-icon">
-                                                <span className="label-text">JPS-SLE-0000</span>
+                                                <span className="label-text">{nomenclatura['ELECTRONICA']}</span>
                                                 <div className="required-icon">
                                                     {!touched.cierrejValjB && <AiOutlineExclamationCircle />}
                                                 </div>
@@ -248,7 +262,20 @@ const Marchamo3Monazos = (id) => {
                                     </tr>
                                     <tr>
                                         <td><h4>Contingencia</h4></td>
-                                        <td colSpan={2}>JPS-SLE-000 <Field id='contingencia' name='contingencia' type='number' className='form-control' /></td>
+                                        <td colSpan={2}>
+                                            <label htmlFor="contingencia" className="label-with-icon">
+                                                <span className="label-text">{nomenclatura['ELECTRONICA']}</span>
+                                            </label>
+                                            <Field id='contingencia' name='contingencia' type='number' className='form-control' />
+                                            {
+                                                errors.contingencia && touched.contingencia &&
+                                                (
+                                                    <div className='error'>
+                                                        <ErrorMessage name='contingencia'></ErrorMessage>
+                                                    </div>
+                                                )
+                                            }
+                                        </td>
                                         <td colSpan={2}></td>
                                     </tr>
                                 </tbody>

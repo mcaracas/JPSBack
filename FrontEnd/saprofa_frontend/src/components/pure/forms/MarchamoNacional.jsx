@@ -9,12 +9,19 @@ import LoadingModal from "../../modals/LoadingModal";
 import FailModal from "../../modals/FailModal";
 import ConfirmationModal from "../../modals/ConfirmationModal";
 import { useNavigate } from 'react-router-dom';
+import { parametros } from '../../../utils/config/marchamos';
 
 const lottery = JSON.parse(sessionStorage.getItem('lottery'));
 const numSorteo = lottery?.numSorteo;
 const tipoLoteria = lottery?.tipoLoteria;
 const idSorteo = `${tipoLoteria}${numSorteo}`;
 const idDatoSorteo = lottery?.idInterno;
+
+// cantidad maxima de digitos para el numero de marchamo
+const CANT_MAXIMA_DIGITOS = 4;
+
+// Expresion regular para validar que el numero de marchamo sea de 5 digitos
+const regex = new RegExp(`^[0-9]{${CANT_MAXIMA_DIGITOS}}$`);
 
 /**
  * Validation schema for the form
@@ -23,20 +30,20 @@ const idDatoSorteo = lottery?.idInterno;
  */
 
 const marchamoSchema = Yup.object().shape({
-  aperturaS1: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  cierreS: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  aperturaS2: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  aperturaS3: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  aperturaS4: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  aperturaN: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  cierreN: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  aperturaP: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  cierreP: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  aperturaAcumFich: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  cierreAcumFich: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  aperturaAcumTula: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  cierreAcumTula: Yup.number().required('El campo es requerido').max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
-  noJuegan: Yup.number().max(9999, 'El número debe ser de 4 dígitos').min(1000, 'El número debe ser de 4 dígitos'),
+  aperturaS1: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  cierreS: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  aperturaS2: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  aperturaS3: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  aperturaS4: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  aperturaN: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  cierreN: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  aperturaP: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  cierreP: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  aperturaAcumFich: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  cierreAcumFich: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  aperturaAcumTula: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  cierreAcumTula: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`).required('El campo es requerido'),
+  noJuegan: Yup.string().matches(regex, `El número debe ser de ${CANT_MAXIMA_DIGITOS} dígitos`),
 
 });
 
@@ -49,95 +56,6 @@ let marchamoDefault = {
 }
 
 
-const buildMarchamoList = (values) => {
-
-  return [
-    {
-      ...marchamoDefault,
-      numeroMarchamo: `JPS-SLT-S-0000${values.aperturaS1}`,
-    }
-    ,
-    {
-      ...marchamoDefault,
-      numeroMarchamo: `JPS-SLT-S-0000${values.aperturaS2}`,
-    }
-    ,
-    {
-      ...marchamoDefault,
-      numeroMarchamo: `JPS-SLT-S-0000${values.aperturaS3}`,
-    }
-    ,
-    {
-      ...marchamoDefault,
-      numeroMarchamo: `JPS-SLT-S-0000${values.aperturaS4}`,
-    }
-    ,
-    {
-      ...marchamoDefault,
-      tipo: 'Cierre',
-      numeroMarchamo: `JPS-SLT-S-0000${values.cierreS}`,
-    }
-    ,
-    {
-      ...marchamoDefault,
-      tipoMarchamo: 'Numero',
-      numeroMarchamo: `JPS-SLT-N-0000${values.aperturaN}`,
-    }
-    ,
-    {
-      ...marchamoDefault,
-      tipo: 'Cierre',
-      tipoMarchamo: 'Numero',
-      numeroMarchamo: `JPS-SLT-N-0000${values.cierreN}`,
-    }
-    ,
-    {
-      ...marchamoDefault,
-      tipoMarchamo: 'Premio',
-      numeroMarchamo: `JPS-SLT-P-0000${values.aperturaP}`,
-    }
-    ,
-    {
-      ...marchamoDefault,
-      tipo: 'Cierre',
-      tipoMarchamo: 'Premio',
-      numeroMarchamo: `JPS-SLT-P-0000${values.cierreP}`,
-    }
-    ,
-    {
-      ...marchamoDefault,
-      tipoMarchamo: 'AcumuladoFichero',
-      numeroMarchamo: `JPS-SLT-OTROS 000${values.aperturaAcumFich}`,
-    }
-    ,
-    {
-      ...marchamoDefault,
-      tipoMarchamo: 'AcumuladoFichero',
-      tipo: 'Cierre',
-      numeroMarchamo: `JPS-SLT-OTROS 000${values.cierreAcumFich}`,
-    }
-    ,
-    {
-      ...marchamoDefault,
-      tipoMarchamo: 'AcumuladoTula',
-      numeroMarchamo: `JPS-SLT-OTROS 000${values.aperturaAcumTula}`,
-    }
-    ,
-    {
-      ...marchamoDefault,
-      tipoMarchamo: 'AcumuladoTula',
-      tipo: 'Cierre',
-      numeroMarchamo: `JPS-SLT-OTROS 000${values.cierreAcumTula}`,
-    },
-    {
-      ...marchamoDefault,
-      tipoMarchamo: 'NoJuegan',
-      tipo: 'Cierre',
-      numeroMarchamo: values.noJuegan ? `JPS-SLT-S 000${values.noJuegan}` : null,
-    },
-  ];
-}
-
 const MarchamoNacional = (id) => {
   const [datosEnviados, setDatosEnviados] = useState(false);
   const [titulo, setTitulo] = useState('');
@@ -148,15 +66,111 @@ const MarchamoNacional = (id) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState(() => { });
   const [checked, setChecked] = useState(false);
+  const [nomenclatura, setNomenclatura] = useState('');
   const navigate = useNavigate();
 
+  const buildMarchamoList = (values) => {
+
+    return [
+      {
+        ...marchamoDefault,
+        numeroMarchamo: `${nomenclatura['SERIE']}${values.aperturaS1}`,
+      }
+      ,
+      {
+        ...marchamoDefault,
+        numeroMarchamo: `${nomenclatura['SERIE']}${values.aperturaS2}`,
+      }
+      ,
+      {
+        ...marchamoDefault,
+        numeroMarchamo: `${nomenclatura['SERIE']}${values.aperturaS3}`,
+      }
+      ,
+      {
+        ...marchamoDefault,
+        numeroMarchamo: `${nomenclatura['SERIE']}${values.aperturaS4}`,
+      }
+      ,
+      {
+        ...marchamoDefault,
+        tipo: 'Cierre',
+        numeroMarchamo: `${nomenclatura['SERIE']}${values.cierreS}`,
+      }
+      ,
+      {
+        ...marchamoDefault,
+        tipoMarchamo: 'Numero',
+        numeroMarchamo: `${nomenclatura['NUMERO']}${values.aperturaN}`,
+      }
+      ,
+      {
+        ...marchamoDefault,
+        tipo: 'Cierre',
+        tipoMarchamo: 'Numero',
+        numeroMarchamo: `${nomenclatura['NUMERO']}${values.cierreN}`,
+      }
+      ,
+      {
+        ...marchamoDefault,
+        tipoMarchamo: 'Premio',
+        numeroMarchamo: `${nomenclatura['PREMIO']}${values.aperturaP}`,
+      }
+      ,
+      {
+        ...marchamoDefault,
+        tipo: 'Cierre',
+        tipoMarchamo: 'Premio',
+        numeroMarchamo: `${nomenclatura['PREMIO']}${values.cierreP}`,
+      }
+      ,
+      {
+        ...marchamoDefault,
+        tipoMarchamo: 'AcumuladoFichero',
+        numeroMarchamo: `${nomenclatura['OTROS']}${values.aperturaAcumFich}`,
+      }
+      ,
+      {
+        ...marchamoDefault,
+        tipoMarchamo: 'AcumuladoFichero',
+        tipo: 'Cierre',
+        numeroMarchamo: `${nomenclatura['OTROS']}${values.cierreAcumFich}`,
+      }
+      ,
+      {
+        ...marchamoDefault,
+        tipoMarchamo: 'AcumuladoTula',
+        numeroMarchamo: `${nomenclatura['OTROS']}${values.aperturaAcumTula}`,
+      }
+      ,
+      {
+        ...marchamoDefault,
+        tipoMarchamo: 'AcumuladoTula',
+        tipo: 'Cierre',
+        numeroMarchamo: `${nomenclatura['OTROS']}${values.cierreAcumTula}`,
+      },
+      {
+        ...marchamoDefault,
+        tipoMarchamo: 'NoJuegan',
+        tipo: 'Cierre',
+        numeroMarchamo: values.noJuegan ? `${nomenclatura['SERIE']}${values.noJuegan}` : null,
+      },
+    ];
+  }
+
+  async function obtenerParametros() {
+    const response = await parametros();
+		setNomenclatura(response);
+  };
+
   useEffect(() => {
-		const usuario = sessionStorage.getItem('name');
-        if(!usuario){
-			sessionStorage.clear();
-            navigate('/');
-        }
-	});
+    const usuario = sessionStorage.getItem('name');
+    if (!usuario) {
+      sessionStorage.clear();
+      navigate('/');
+    }
+    obtenerParametros();
+  }, [navigate]);
 
   const handleCheck = (e) => {
     const isChecked = e.target.checked;
@@ -251,7 +265,7 @@ const MarchamoNacional = (id) => {
                     <th rowSpan={4}><h4>Series</h4></th>
                     <td>
                       <label htmlFor="aperturaS1" className="label-with-icon">
-                        <span className="label-text">JPS-SLT-S-0000</span>
+                        <span className="label-text">{nomenclatura['SERIE']}</span>
                         <div className="required-icon">
                           {!touched.aperturaS1 && <AiOutlineExclamationCircle />}
                         </div>
@@ -266,7 +280,7 @@ const MarchamoNacional = (id) => {
                     <td rowSpan={4}></td>
                     <td rowSpan={2}>
                       <label htmlFor="cierresS" className="label-with-icon">
-                        <span className="label-text">JPS-SLT-S-0000</span>
+                        <span className="label-text">{nomenclatura['SERIE']}</span>
                         <div className="required-icon">
                           {!touched.cierresS && <AiOutlineExclamationCircle />}
                         </div>
@@ -285,7 +299,7 @@ const MarchamoNacional = (id) => {
                   <tr>
                     <td>
                       <label htmlFor="aperturaS2" className="label-with-icon">
-                        <span className="label-text">JPS-SLT-S-0000</span>
+                        <span className="label-text">{nomenclatura['SERIE']}</span>
                         <div className="required-icon">
                           {!touched.aperturaS2 && <AiOutlineExclamationCircle />}
                         </div>
@@ -304,7 +318,7 @@ const MarchamoNacional = (id) => {
                   <tr>
                     <td>
                       <label htmlFor="aperturaS3" className="label-with-icon">
-                        <span className="label-text">JPS-SLT-S-0000</span>
+                        <span className="label-text">{nomenclatura['SERIE']}</span>
                         <div className="required-icon">
                           {!touched.aperturaS3 && <AiOutlineExclamationCircle />}
                         </div>
@@ -320,7 +334,7 @@ const MarchamoNacional = (id) => {
                       }
                     </td>
                     <td rowSpan={2}>
-                      <span>JPS-SLT-S-0000</span>
+                      <span>{nomenclatura['SERIE']}</span>
                       <br />No juegan
                       <div className='row'>
                         <div className='col'>
@@ -342,7 +356,7 @@ const MarchamoNacional = (id) => {
                   <tr>
                     <td>
                       <label htmlFor="aperturaS4" className="label-with-icon">
-                        <span className="label-text">JPS-SLT-S-0000</span>
+                        <span className="label-text">{nomenclatura['SERIE']}</span>
                         <div className="required-icon">
                           {!touched.aperturaS4 && <AiOutlineExclamationCircle />}
                         </div>
@@ -362,7 +376,7 @@ const MarchamoNacional = (id) => {
                     <th><h4>Numeros</h4></th>
                     <td>
                       <label htmlFor="aperturaN" className="label-with-icon">
-                        <span className="label-text">JPS-SLT-N-0000</span>
+                        <span className="label-text">{nomenclatura['NUMERO']}</span>
                         <div className="required-icon">
                           {!touched.aperturaN && <AiOutlineExclamationCircle />}
                         </div>
@@ -380,7 +394,7 @@ const MarchamoNacional = (id) => {
                     <td></td>
                     <td>
                       <label htmlFor="cierreN" className="label-with-icon">
-                        <span className="label-text">JPS-SLT-N-0000</span>
+                        <span className="label-text">{nomenclatura['NUMERO']}</span>
                         <div className="required-icon">
                           {!touched.cierreN && <AiOutlineExclamationCircle />}
                         </div>
@@ -400,7 +414,7 @@ const MarchamoNacional = (id) => {
                     <th><h4>Premios</h4></th>
                     <td>
                       <label htmlFor="aperturaP" className="label-with-icon">
-                        <span className="label-text">JPS-SLT-P-0000</span>
+                        <span className="label-text">{nomenclatura['PREMIO']}</span>
                         <div className="required-icon">
                           {!touched.aperturaP && <AiOutlineExclamationCircle />}
                         </div>
@@ -418,7 +432,7 @@ const MarchamoNacional = (id) => {
                     <td></td>
                     <td>
                       <label htmlFor="cierreP" className="label-with-icon">
-                        <span className="label-text">JPS-SLT-P-0000</span>
+                        <span className="label-text">{nomenclatura['PREMIO']}</span>
                         <div className="required-icon">
                           {!touched.cierreP && <AiOutlineExclamationCircle />}
                         </div>
@@ -438,7 +452,7 @@ const MarchamoNacional = (id) => {
                     <th><h4>Acumulado</h4></th>
                     <td>
                       <label htmlFor="aperturaAcumFich" className="label-with-icon">
-                        <span className="label-text">JPS-OTROS-0000</span>
+                        <span className="label-text">{nomenclatura['OTROS']}</span>
                         <div className="required-icon">
                           {!touched.aperturaAcumFich && <AiOutlineExclamationCircle />}
                         </div>
@@ -453,7 +467,7 @@ const MarchamoNacional = (id) => {
                         )
                       }
                       <label htmlFor="aperturaAcumTula" className="label-with-icon">
-                        <span className="label-text">JPS-OTROS-0000</span>
+                        <span className="label-text">{nomenclatura['OTROS']}</span>
                         <div className="required-icon">
                           {!touched.aperturaAcumTula && <AiOutlineExclamationCircle />}
                         </div>
@@ -470,7 +484,7 @@ const MarchamoNacional = (id) => {
                     </td>
                     <td colSpan={2}>
                       <label htmlFor="cierreAcumFich" className="label-with-icon">
-                        <span className="label-text">JPS-OTROS-0000</span>
+                        <span className="label-text">{nomenclatura['OTROS']}</span>
                         <div className="required-icon">
                           {!touched.cierreAcumFich && <AiOutlineExclamationCircle />}
                         </div>
@@ -485,7 +499,7 @@ const MarchamoNacional = (id) => {
                         )
                       }
                       <label htmlFor="cierreAcumTula" className="label-with-icon">
-                        <span className="label-text">JPS-OTROS-0000</span>
+                        <span className="label-text">{nomenclatura['OTROS']}</span>
                         <div className="required-icon">
                           {!touched.cierreAcumTula && <AiOutlineExclamationCircle />}
                         </div>
@@ -493,7 +507,7 @@ const MarchamoNacional = (id) => {
                       <Field id='cierreAcumTula' name='cierreAcumTula' type='number' className='form-control' /> tula
                       {
                         errors.cierreAcumTula && touched.cierreAcumTula &&
-                          <div className='error'>{errors.cierreAcumTula}</div>
+                        <div className='error'>{errors.cierreAcumTula}</div>
                       }
                     </td>
                   </tr>
