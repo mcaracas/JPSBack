@@ -5,7 +5,7 @@ import FailModal from "../../modals/FailModal";
 import { getPremios } from '../../../services/axiosService';
 import { useNavigate } from 'react-router-dom';
 
-const Inventario = ({ fecha, sorteo }) => {
+const Inventario = ({ fecha, sorteo, planPremios }) => {
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
     const navigate = useNavigate();
@@ -44,7 +44,7 @@ const Inventario = ({ fecha, sorteo }) => {
         try {
             const response = await getPremios();
             console.log(response.data);
-            const filteredData = response.data.filter((item) => item.idPlan === 1);
+            const filteredData = response.data.filter((item) => item.idPlan === planPremios);
             console.log(filteredData);
             setPremios(filteredData);
         }

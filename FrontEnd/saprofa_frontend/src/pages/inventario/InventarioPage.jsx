@@ -10,14 +10,15 @@ const InventarioPage = () => {
     const lottery = JSON.parse(sessionStorage.getItem('lottery'));
     const tipoLoteria = lottery?.tipoLoteria;
     const numeroSorteo = lottery?.numSorteo;
+    const planPremios = lottery?.planPremios;
     const sorteo = `${tipoLoteria}${' Nº ' + numeroSorteo}`;
     const fechaSorteo = lottery?.fechaHora;
     return (
         <div>
             <EncabezadoFranjas title={"Inventario"} />
             <Container component={
-            <Inventario sorteo={sorteo} fecha={fecha(fechaSorteo)} />
-        } />
+                <Inventario sorteo={sorteo} fecha={fecha(fechaSorteo)} planPremios={planPremios} />
+            } />
         </div>
     );
 }
