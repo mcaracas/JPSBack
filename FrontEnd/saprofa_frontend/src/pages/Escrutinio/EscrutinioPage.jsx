@@ -8,11 +8,12 @@ const EscrutinioPage = () => {
 
     const lottery = JSON.parse(sessionStorage.getItem('lottery'));
     const tipoLoteria = lottery?.tipoLoteria;
+    const idSorteo = lottery?.idInterno;
 
     return (
         <div>
             <EncabezadoFranjas title={"Escrutinio"} />
-            <Container component={<Escrutinio tipoLoteria={tipoLoteria} />} />
+            <Container component={<Escrutinio tipoLoteria={tipoLoteria} idSorteo={idSorteo} />} />
         </div>
     );
 }

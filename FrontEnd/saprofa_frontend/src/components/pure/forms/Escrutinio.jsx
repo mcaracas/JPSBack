@@ -6,7 +6,7 @@ import { insertarEscrutinio } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
 import { useNavigate } from 'react-router-dom';
 
-const Escrutinio = ({ tipoLoteria }) => {
+const Escrutinio = ({ tipoLoteria, idSorteo }) => {
 
     const [datos, setDatos] = React.useState('');
     const [checked, setChecked] = React.useState(true);
@@ -72,7 +72,7 @@ const Escrutinio = ({ tipoLoteria }) => {
 
     const getDatos = async () => {
         try {
-            const response = await getEscrutinio(1);
+            const response = await getEscrutinio(idSorteo);
             setDatos(response.data.escrutinio);
         }
         catch (error) {
