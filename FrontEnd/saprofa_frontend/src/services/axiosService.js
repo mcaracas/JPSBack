@@ -200,3 +200,16 @@ export function getParametroBydId(id) {
 export function getParametros() {
     return APIRequest.get(`/Parametro`);
 }
+
+export function getGerenciaGeneral(){
+    return APIRequest.get('/Administracion/RepresentanteGG')
+}
+
+export function getGerenciaProduccion(){
+    return APIRequest.get('/Administracion/RepresentanteGPC')
+}
+
+export function getGerenciaOpreacion(){
+    return APIRequest.get('/Administracion/RepresentanteGO')
+}
+

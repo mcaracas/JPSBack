@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DatosParticipantes from '../../components/pure/datosParticipantes/DatosParticipantes';
 import EncabezadoFranjas from '../../components/pure/EncabezadoFranjas';
-import { getDatosParticipantes } from '../../services/axiosService';
+import { getDatosParticipantes, getGerenciaGeneral, getGerenciaOpreacion, getGerenciaProduccion } from '../../services/axiosService';
 import Container from '../../components/container/container';
 import FailModal from '../../components/modals/FailModal';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,7 @@ let tipoLoteria = '';
 
 const DatosParticipantesPage = () => {
     const [datosParticipantes, setDatosParticipantes] = useState(null);
+    const [participantes, setParticipantes] = useState(null);
     const [showFailModal, setShowFailModal] = useState(false);
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
@@ -20,11 +21,27 @@ const DatosParticipantesPage = () => {
         navigate('/ChooseLottery');
     }
 
-/**
- * 
- * @param {int} id Id del sorteo
- * @returns Un objeto de javascript con las etiquetas de los participantes y sus valores obtenidos del backend
- */
+    async function getParticipantes() {
+        const gerenciaGeneralReponse = await getGerenciaGeneral();
+        const gerenciaGeneral = gerenciaGeneralReponse.data;
+        const gerenciaOperacionResponse = await getGerenciaOpreacion();
+        const gerenciaOperaciones = gerenciaOperacionResponse.data;
+        const gerenciaProduccionResponse = await getGerenciaProduccion();
+        const gerenciaProduccion = gerenciaProduccionResponse.data;
+        const participantes = {
+            gerenciaGeneral,
+            gerenciaOperaciones,
+            gerenciaProduccion,
+        };
+        
+        return participantes;
+    }
+
+    /**
+     * 
+     * @param {int} id Id del sorteo
+     * @returns Un objeto de javascript con las etiquetas de los participantes y sus valores obtenidos del backend
+     */
     const obtenerDatosAdministracion = async (id) => {
         try {
             const response = await getDatosParticipantes(id);
@@ -59,6 +76,8 @@ const DatosParticipantesPage = () => {
             setDatosParticipantes(response);
         };
         obtenerDatos();
+        setParticipantes(getParticipantes());
+        console.log('participantes', participantes);
     }, []);
 
     return (
@@ -66,7 +85,15 @@ const DatosParticipantesPage = () => {
             <div>
                 <EncabezadoFranjas title={"Datos de los participantes"} />
                 <Container
-                    component={datosParticipantes && <DatosParticipantes idSorteo={idDatosPrevios} objetoDatosMapeados={datosParticipantes} obtenerDatosAdministracion={obtenerDatosAdministracion} tipoLoteria={tipoLoteria}/>}
+                    component={datosParticipantes &&
+                        <DatosParticipantes
+                            idSorteo={idDatosPrevios}
+                            objetoDatosMapeados={datosParticipantes}
+                            obtenerDatosAdministracion={obtenerDatosAdministracion}
+                            tipoLoteria={tipoLoteria}
+                            participantes={participantes}
+                        />
+                    }
                 />
             </div>
             <FailModal

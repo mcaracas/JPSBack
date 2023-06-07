@@ -207,9 +207,21 @@ const DatosParticipantes = ({ idSorteo, objetoDatosMapeados, obtenerDatosAdminis
               <Form>
                 <div className="row">
                   <div className="col-8">
-                    {
+                    {/* {
                       dropdownValues.map(dropdown => dropdown)
-                    }
+                    } */}
+                    {/* <select
+                      className="form-select form-select-sm"
+                      onChange={handleChange}
+                      value={selected}
+                    >
+                      <option value="">Seleccione</option>
+                      {participantes.map((participante) => (
+                        <option key={participante} value={participante}>
+                          {participante}
+                        </option>
+                      ))}
+                    </select> */}
                   </div>
                   <div className='col-2'>
                     <div className="col-12 col-md-6 d-flex flex-column justify-content-between">
