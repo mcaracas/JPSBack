@@ -87,7 +87,7 @@ public class ConexionSybase
         OleDbConnection conn = new OleDbConnection(connStr);
         conn.Open();
         OleDbCommand myCommand = new OleDbCommand(
-            "select * from ReporteVentas where idSorteo = " + predicate.ToString(),
+            "select * from ReporteVentas where idsorteo = " + predicate.ToString(),
             conn
         );
         OleDbDataReader myReader = myCommand.ExecuteReader();
