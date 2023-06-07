@@ -20,21 +20,21 @@ namespace API.Controllers
             var context = new proyecto_bdContext();
             var DatosSorteo = context.DatosSorteos.FirstOrDefault(x => x.IdInterno == idSorteo);
 
-            var DatosPreviosId = context.DatosPreviosAdministracions.FirstOrDefault(
-                x => x.IdDatoSorteo == DatosSorteo.IdInterno
-            ).Id;
+            var DatosPreviosId = context.DatosPreviosAdministracions
+                .FirstOrDefault(x => x.IdDatoSorteo == DatosSorteo.IdInterno)
+                .Id;
 
-            var GerenteGeneral = context.Representantes.FirstOrDefault(
-                x => x.IdDatosPrevios == DatosPreviosId
-            ).Gerencia;
+            var GerenteGeneral = context.Representantes
+                .FirstOrDefault(x => x.IdDatosPrevios == DatosPreviosId)
+                .Gerencia;
 
-            var GerenteOperaciones = context.Representantes.FirstOrDefault(
-                x => x.IdDatosPrevios == DatosPreviosId
-            ).GerenteOperaciones;
+            var GerenteOperaciones = context.Representantes
+                .FirstOrDefault(x => x.IdDatosPrevios == DatosPreviosId)
+                .GerenteOperaciones;
 
-            var GerenteProduccion = context.Representantes.FirstOrDefault(
-                x => x.IdDatosPrevios == DatosPreviosId
-            ).GerenteProduccion;
+            var GerenteProduccion = context.Representantes
+                .FirstOrDefault(x => x.IdDatosPrevios == DatosPreviosId)
+                .GerenteProduccion;
 
             var ProcedimientosPrevios = context.ListaChequeoDetalles
                 .Where(
@@ -43,18 +43,29 @@ namespace API.Controllers
                 .OrderBy(x => x.Orden)
                 .ToList();
             ProcedimientosPrevios[0].Descripcion = ProcedimientosPrevios[0].Descripcion.Replace(
-                "{GerenteGeneral}", GerenteGeneral
+                "{GerenteGeneral}",
+                GerenteGeneral
             );
 
             ProcedimientosPrevios[1].Descripcion = ProcedimientosPrevios[1].Descripcion.Replace(
-                "{GerenteOperaciones}", GerenteOperaciones
+                "{GerenteOperaciones}",
+                GerenteOperaciones
             );
 
             ProcedimientosPrevios[2].Descripcion = ProcedimientosPrevios[2].Descripcion.Replace(
-                "{GerenteProduccion}", GerenteProduccion
+                "{GerenteProduccion}",
+                GerenteProduccion
             );
 
+            ProcedimientosPrevios[3].Descripcion = ProcedimientosPrevios[3].Descripcion.Replace(
+                "{Otro}",
+                ""
+            );
 
+            ProcedimientosPrevios[3].Descripcion = ProcedimientosPrevios[3].Descripcion.Replace(
+                "{OtroDescripcion}",
+                "________________________"
+            );
 
             var ProcedimientosDurante = context.ListaChequeoDetalles
                 .Where(
@@ -63,7 +74,6 @@ namespace API.Controllers
                 .OrderBy(x => x.Orden)
                 .ToList();
 
-            
             var ProcedimientosPosteriores = context.ListaChequeoDetalles
                 .Where(
                     x =>
@@ -73,7 +83,6 @@ namespace API.Controllers
                 .OrderBy(x => x.Orden)
                 .ToList();
 
-        
             var ProcedimientosSolicitud = context.ListaChequeoDetalles
                 .Where(
                     x =>
