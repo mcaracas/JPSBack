@@ -4,14 +4,23 @@ import { actaFiscalizacion } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
 import { useNavigate } from 'react-router-dom';
 import Reportes from '../reportes/reportes';
+import { getEmailSorteo } from '../../../services/axiosService';
+import LoadingModal from '../../modals/LoadingModal';
+import FailModal from '../../modals/FailModal';
+import ConfirmationModal from '../../modals/ConfirmationModal';
 
 
-const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha }) => {
-
+const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha, idSorteo }) => {
+    //Modals
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
     const navigate = useNavigate();
+    const [showLoadingModal, setShowLoadingModal] = useState(false);
+    const [showFailModal, setShowFailModal] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [confirmationAction, setConfirmationAction] = useState(() => { });
+
 
     useEffect(() => {
         const usuario = sessionStorage.getItem('name');
@@ -37,11 +46,40 @@ const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha }) => {
         return error;
     };
 
+    //Modal functions
+    function handleCloseSuccessModal() {
+        setShowSuccessModal(false);
+        navigate('/ListaChequeo');
+    }
+
+    function handleCloseFailModal() {
+        setShowFailModal(false);
+    }
+
+    const handleConfirmation = async (confirmed) => {
+        if (!confirmed) {
+            setShowConfirmation(false);
+            return;
+        }
+        await confirmationAction();
+        setShowConfirmation(false);
+    }
+
+    const handleShowConfirmation = async (action) => {
+        setShowConfirmation(true);
+        setConfirmationAction(() => () => {
+            action();
+        });
+    }
+
     const handleSubmit = async (values) => {
         try {
+            setShowLoadingModal(true);
             await actaFiscalizacion(values);
+            await getEmailSorteo(idSorteo);
+            setShowLoadingModal(false);
             setTitulo('Operación exitosa');
-            setMensaje('conclusiones y recomendaciones guardado exitosamente');
+            setMensaje('Conclusiones y recomendaciones guardados exitosamente, se generó el acta de fiscalización y se envió al correo ');
             setShowSuccessModal(true);
         } catch (error) {
             setTitulo('Operación fallida');
@@ -52,7 +90,7 @@ const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha }) => {
 
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
-        navigate('/');      // Redirect to the next page
+        navigate('/ChooseLottery');
     }
 
     return (
@@ -70,7 +108,11 @@ const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha }) => {
 
                 <Formik
                     initialValues={initialValues}
-                    onSubmit={handleSubmit}
+                    onSubmit={
+                        async (values) => {
+                            await handleShowConfirmation(() => handleSubmit(values));
+                        }
+                    }
                 >
                     {({ isSubmitting, errors, touched, values }) => (
                         <Form>
@@ -145,11 +187,27 @@ const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha }) => {
             </div>
             <SuccessModal
                 show={showSuccessModal}
-                handleClose={handleCloseSuccessModal}
                 titulo={titulo}
                 mensaje={mensaje}
+                handleClose={handleCloseSuccessModal}
             />
-            <Reportes />
+            <LoadingModal
+                show={showLoadingModal}
+                titulo='Guardando conclusiones y recomendaciones'
+                mensaje='Por favor espere...'
+            />
+            <FailModal
+                show={showFailModal}
+                titulo={titulo}
+                mensaje={mensaje}
+                handleClose={handleCloseFailModal}
+            />
+            <ConfirmationModal
+                show={showConfirmation}
+                titulo='Confirmación'
+                mensaje='¿Está seguro que desea finalizar?'
+                handleConfirmation={handleConfirmation}
+            />
         </>
     );
 };

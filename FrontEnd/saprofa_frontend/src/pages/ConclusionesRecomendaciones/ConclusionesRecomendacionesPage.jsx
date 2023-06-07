@@ -11,6 +11,7 @@ const ConclusionesRecomendacionesPage = () => {
     const numeroSorteo = lottery?.numSorteo;
     const tipoLoteria = lottery?.tipoLoteria;
     const sorteo = `${tipoLoteria}${' Nº ' + numeroSorteo}`;
+    const idSorteo = lottery?.idInterno;
     const fechaSorteo = lottery?.fechaHora;
     //const fiscalizador = lottery?.fiscalizador;
     const fiscalizador = sessionStorage.getItem('name');
@@ -18,9 +19,8 @@ const ConclusionesRecomendacionesPage = () => {
         <div>
             <EncabezadoFranjas title={"Conclusiones y Recomendaciones"} />
             <Container
-                component={<ConclusionesRecomendaciones sorteo={sorteo} fiscalizador={fiscalizador} fecha={fecha(fechaSorteo)} />}
+                component={<ConclusionesRecomendaciones sorteo={sorteo} fiscalizador={fiscalizador} fecha={fecha(fechaSorteo)} idSorteo={idSorteo} />}
             />
-            <Reportes />
             <span className="reportes"></span>
         </div>
     );
