@@ -1,62 +1,90 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace API.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-#nullable disable
-
-public class PruebaController : ControllerBase
+namespace API.Controllers
 {
-    private readonly ILogger<PruebaController> _logger;
-
-    public PruebaController(ILogger<PruebaController> logger)
+    [ApiController]
+    [Route("[controller]")]
+    public class PruebaController : ControllerBase
     {
-        _logger = logger;
-    }
+        private readonly ILogger<PruebaController> _logger;
 
-    [HttpGet]
-    public IEnumerable<Prueba> Get()
-    {
-        var context = new proyecto_bdContext();
-        var Pruebas = context.Pruebas.ToList();
-        return Pruebas;
-    }
-
-    [HttpGet("Sorteo/{idSorteo}")]
-    public IEnumerable<Prueba> Get(int idSorteo)
-    {
-        var context = new proyecto_bdContext();
-        var pruebas = context.Pruebas.Where(x => x.IdDatoSorteo == idSorteo).ToList();
-        return pruebas;
-    }
-
-    [HttpPost]
-    public ActionResult Post([FromBody] Prueba Prueba)
-    {
-        var context = new proyecto_bdContext();
-        context.Pruebas.Add(Prueba);
-        context.SaveChanges();
-        return Ok();
-    }
-
-    [HttpPost("ListaPruebas")]
-    public ActionResult PostList([FromBody] List<Prueba> Pruebas)
-    {
-        foreach (var Prueba in Pruebas)
+        public PruebaController(ILogger<PruebaController> logger)
         {
-            var context = new proyecto_bdContext();
-            context.Pruebas.Add(Prueba);
-            context.SaveChanges();
+            _logger = logger;
         }
-        return Ok();
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                var pruebas = context.Pruebas.ToList();
+                return Ok(pruebas);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al obtener las pruebas: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet("Sorteo/{idSorteo}")]
+        public IActionResult GetBySorteoId(int idSorteo)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                var pruebas = context.Pruebas.Where(x => x.IdDatoSorteo == idSorteo).ToList();
+                if (pruebas == null)
+                {
+                    return NotFound($"Error datos con ID: {idSorteo}:");
+                }
+                return Ok(pruebas);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al obtener las pruebas para el sorteo con ID: {idSorteo}: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] Prueba prueba)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                context.Pruebas.Add(prueba);
+                context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al crear la prueba: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost("ListaPruebas")]
+        public IActionResult CreateList([FromBody] List<Prueba> pruebas)
+        {
+            try
+            {
+                var context = new proyecto_bdContext();
+                context.Pruebas.AddRange(pruebas);
+                context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al crear las pruebas: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
     }
-
-
-
-
-
-
 }
-
-

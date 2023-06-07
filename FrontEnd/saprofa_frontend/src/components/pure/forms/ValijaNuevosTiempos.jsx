@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 // TODO: check props to receive and information to send to Backend
 
@@ -23,6 +24,15 @@ const pruebasSchema = Yup.object().shape(
 );
 
 const ValijaNuevosTiempos = () => {
+    const navigate = useNavigate();
+    useEffect(() => {
+		const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
+	});
+    
     return (
         <div className='container'>
             <Formik 

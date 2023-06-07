@@ -42,5 +42,15 @@ namespace API.Utilidades
 
             return UTF8Encoding.UTF8.GetString(result);
         }
+
+        public static string ObtenerDirectorioSorteo(int idSorteo)
+        {
+            String directorio =  "Archive\\Sorteos\\" + idSorteo.ToString();
+            if (!System.IO.Directory.Exists(directorio))
+            {
+                System.IO.Directory.CreateDirectory(directorio);
+            }
+            return directorio;
+        }
     }
 }

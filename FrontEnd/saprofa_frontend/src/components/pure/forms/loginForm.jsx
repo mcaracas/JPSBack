@@ -12,16 +12,18 @@ import { Link, useNavigate } from 'react-router-dom';
 const loginSchema = Yup.object().shape({
     username: Yup.string().required('Debe ingresar el número de cédula o residencia'),
     password: Yup.string().min(8, 'La contraseña debe tener un mínimo de 8 caracteres')
-    .matches(/[0-9]/, 'La clave requiere como mínimo un número')
-    .matches(/[a-z]/, 'La clave requiere una letra minúscula')
-    .matches(/[A-Z]/, 'La clave requiere una letra mayúscula')
-    .matches(/[^\w]/, 'La clave requiere un caracter especial')
-    .required('Debe ingresar la contraseña, recuerde la contraseña contiene al menos una letra mayúscula, una minúscula, un número y un cáracter especial.'),
+        .matches(/[0-9]/, 'La clave requiere como mínimo un número')
+        .matches(/[a-z]/, 'La clave requiere una letra minúscula')
+        .matches(/[A-Z]/, 'La clave requiere una letra mayúscula')
+        .matches(/[^\w]/, 'La clave requiere un caracter especial')
+        .required('Debe ingresar la contraseña, recuerde la contraseña contiene al menos una letra mayúscula, una minúscula, un número y un cáracter especial.'),
 });
 
 
+
+
 const LoginForm = () => {
-    
+
     /**
      * Default values for the form
      * @type {{password: string, username: string}}
@@ -41,10 +43,11 @@ const LoginForm = () => {
                 onSubmit={async (values) => {
                     login(values) //Using axios to make the request
                         .then((response) => {   // If login is successful
+                            sessionStorage.setItem('name', response.data.nombre); // Save name in session storage
                             getHoraIngreso()    // Get the current date and time
                                 .then((response) => {
-                                    sessionStorage.setItem('HoraIngreso',response.data); // Save login time in session storage
-                                    navigate('/ChooseLottery');// Redirect to chooseLottery page
+                                    sessionStorage.setItem('HoraIngreso', response.data); // Save login time in session storage
+                                    navigate('/ChooseLottery');  // Redirect to LotteryCard page
                                 })
                         }).catch((error) => {   // If login fails
                             sessionStorage.removeItem('HoraIngreso'); // Remove login time from session storage
@@ -53,7 +56,7 @@ const LoginForm = () => {
                                 console.log('Error: ', error);
                             } else if (error.response.status === 400) { // Invalid credentials
                                 alert('Usuario o contraseña incorrectos');
-                            } else if(error.response.status === 500){   // Server error
+                            } else if (error.response.status === 500) {   // Server error
                                 console.log('Server error:', error);
                             }
                         }

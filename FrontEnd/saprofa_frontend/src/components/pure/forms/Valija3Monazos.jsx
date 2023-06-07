@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import '../../../styles/pruebas/pruebasForms.sass'
+import { useNavigate } from 'react-router-dom';
 
 // TODO: check props to receive and information to send to Backend
 
@@ -30,6 +31,16 @@ const pruebasSchema = Yup.object().shape(
 
 
 const Valija3Monazos = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+		const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
+	});
+    
     return (
         <div className='container'>
             <Formik
@@ -55,7 +66,7 @@ const Valija3Monazos = () => {
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <th>Valija <br/><Field id='valija' name='valija' type='text' className='form-control'/>
+                                                {/* <th>Valija <br/><Field id='valija' name='valija' type='text' className='form-control'/>
                                                         {
                                                             errors.valija && touched.valija && 
                                                             (
@@ -64,7 +75,18 @@ const Valija3Monazos = () => {
                                                                 </div>
                                                             )
                                                         }
-                                                </th>
+                                                </th> */}
+                                                {/* Make a bootstrap select centered */}
+                                                <div class="text-center">
+                                                    <div class="dropdown d-inline-block mx-auto">
+                                                        <label for="valija">Valija</label>
+                                                        <select class="form-control" id="select">
+                                                            <option value="A" selected>A</option>
+                                                            <option value="B">B</option>
+                                                            <option value="C">C</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <td>
                                                     <div className='row'>
                                                         <Field id='bolita1' name='bolita1' type='number' className='form-control col m-4'/>
@@ -93,76 +115,6 @@ const Valija3Monazos = () => {
                                                             )
                                                         }
                                                 </td>
-                                                {/* <td><Field id='bolita3' name='bolita3' type='number' className='form-control'/>
-                                                        {
-                                                            errors.bolita3 && touched.bolita3 && 
-                                                            (
-                                                                <div style={{color:'red'}}>
-                                                                    <ErrorMessage name='bolita3'></ErrorMessage>
-                                                                </div>
-                                                            )
-                                                        }
-                                                </td> */}
-                                                {/* <td><Field id='bolita4' name='bolita4' type='number' className='form-control'/>
-                                                        {
-                                                            errors.bolita4 && touched.bolita4 && 
-                                                            (
-                                                                <div style={{color:'red'}}>
-                                                                    <ErrorMessage name='bolita4'></ErrorMessage>
-                                                                </div>
-                                                            )
-                                                        }
-                                                </td>
-                                                <td><Field id='bolita5' name='bolita5' type='number' className='form-control'/>
-                                                        {
-                                                            errors.bolita5 && touched.bolita5 && 
-                                                            (
-                                                                <div style={{color:'red'}}>
-                                                                    <ErrorMessage name='bolita5'></ErrorMessage>
-                                                                </div>
-                                                            )
-                                                        }
-                                                </td>
-                                                <td><Field id='bolita6' name='bolita6' type='number' className='form-control'/>
-                                                        {
-                                                            errors.bolita6 && touched.bolita6 && 
-                                                            (
-                                                                <div style={{color:'red'}}>
-                                                                    <ErrorMessage name='bolita6'></ErrorMessage>
-                                                                </div>
-                                                            )
-                                                        }
-                                                </td>
-                                                <td><Field id='bolita7' name='bolita7' type='number' className='form-control'/>
-                                                        {
-                                                            errors.bolita7 && touched.bolita7 && 
-                                                            (
-                                                                <div style={{color:'red'}}>
-                                                                    <ErrorMessage name='bolita7'></ErrorMessage>
-                                                                </div>
-                                                            )
-                                                        }
-                                                </td>
-                                                <td><Field id='bolita8' name='bolita8' type='number' className='form-control'/>
-                                                        {
-                                                            errors.bolita8 && touched.bolita8 && 
-                                                            (
-                                                                <div style={{color:'red'}}>
-                                                                    <ErrorMessage name='bolita8'></ErrorMessage>
-                                                                </div>
-                                                            )
-                                                        }
-                                                </td>
-                                                <td><Field id='bolita9' name='bolita9' type='number' className='form-control'/>
-                                                        {
-                                                            errors.bolita9 && touched.bolita9 && 
-                                                            (
-                                                                <div style={{color:'red'}}>
-                                                                    <ErrorMessage name='bolita9'></ErrorMessage>
-                                                                </div>
-                                                            )
-                                                        }
-                                                </td> */}
                                             </tr>
                                         </tbody>
                                     </table>

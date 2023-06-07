@@ -1,7 +1,7 @@
-#nullable disable
-//RF08 Verificar resultados Lotería Física
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace API.Controllers
 {
@@ -17,23 +17,40 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public Resultado Get(int id)
+        public IActionResult Get(int id)
         {
-            ConexionSybase conexion = new ConexionSybase();
-            Resultado datos = conexion.GetResultadoSybase(id);
-            return datos;
+            try
+            {
+                ConexionSybase conexion = new ConexionSybase();
+                Resultado datos = conexion.GetResultadoSybase(id);
+                if (datos == null)
+                {
+                    return NotFound($"Error al encontrar datos con ID: {id}:");
+                }
+                return Ok(datos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while retrieving Resultado with id {id}.");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] List<Resultado> Resultados)
+        public IActionResult Post([FromBody] List<Resultado> Resultados)
         {
-        var context = new proyecto_bdContext();
-        context.Resultados.AddRange(Resultados);
-        context.SaveChanges();
-        return Ok();
+            try
+            {
+                var context = new proyecto_bdContext();
+                context.Resultados.AddRange(Resultados);
+                context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while saving Resultados.");
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
-
-    //se ocupa post
-    
 }

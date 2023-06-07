@@ -21,10 +21,18 @@ import ConfirmationCodeModal from './components/pure/forms/ConfirmationCodeModal
 import LoteriaFisicapage from './pages/Resultados/LoteriaFisicapage';
 import LoteriaElectronicaPage from './pages/Resultados/LoteriaElectronicaPage';
 import ConclusionesRecomendacionesPage from './pages/ConclusionesRecomendaciones/ConclusionesRecomendacionesPage';
-import CierreApuestas from './pages/CierreApuestas/CierreApuestas';
-import VerificaMontosAcumulados from './pages/VerificaMontosAcumulados/VerificaMontosAcumulados';
+import CierreApuestas from './pages/CierreApuestas/CierreApuestasPage';
+import VerificaMontosAcumulados from './pages/VerificaMontosAcumulados/VerificaMontosAcumuladosPage';
 import DatosParticipantesPage from './pages/DatosParticipantes/DatosParticipantesPage';
 import TomoFolioPage from './pages/TomoFolio/TomoFolioPage';
+import ListaChequeoPage from './pages/ListaChequeo/ListaChequeoPage';
+import SeriesEnJuegoPage from './pages/seriesEnJuego/seriesEnJuegoPage';
+import EscrutinioPage from './pages/Escrutinio/EscrutinioPage';
+import Reportes from './components/pure/reportes/reportes';
+import InventarioPage from './pages/inventario/InventarioPage';
+
+import CompararVentasPage from './pages/CompararVentas/CompararVentasPage';
+
 function App() {
   return (
     <Router>
@@ -42,7 +50,7 @@ function App() {
           <Route exact path="/NombreFiscalizadores" element={<NombreFiscalizadores />} /> {/* Name of the inspectors page */}
           <Route exact path="/Valija3Monazos" element={<Valija3Monazos />} /> {/* Name of the inspectors page */}
           <Route exact path="/ValijaNuevosTiempos" element={<ValijaNuevosTiempos />} /> {/* Name of the inspectors page */}
-          <Route exact path="/PruebasLotto" element={<PruebasLottoPage />} /> 
+          <Route exact path="/PruebasLotto" element={<PruebasLottoPage />} />   
           <Route exact path="/Pruebas3Monazos" element={<Pruebas3MonazosPage />} /> 
           <Route exact path="/PruebasNuevosTiempos" element={<PruebasNTPage />} /> 
           <Route exact path="/PlanPremios" element={<PlanPremiosPage />} />
@@ -55,6 +63,12 @@ function App() {
           <Route exact path="/VerificaMontosAcumulados" element={<VerificaMontosAcumulados />} />
           <Route exact path="/DatosParticipantesPage" element={<DatosParticipantesPage/>} />
           <Route exact path="/TomoFolio" element={<TomoFolioPage/>} />
+          <Route exact path="/ListaChequeo" element={<ListaChequeoPage/>} />
+          <Route exact path="/SeriesEnJuego" element={<SeriesEnJuegoPage/>} />
+          <Route exact path="/Escrutinio" element={<EscrutinioPage/>} />
+          <Route exact path="/CompararVentas" element={<CompararVentasPage/>} />
+          <Route exact path="/Reportes" element={<Reportes/>} />
+          <Route exact path="/Inventario" element={<InventarioPage/>} />
         </Routes>
       </div>
     </Router>

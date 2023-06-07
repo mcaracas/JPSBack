@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import LotteryCard from '../pure/LotteryCard';
+import { useNavigate } from 'react-router-dom';
 
 const LotteryCardList = ({lotteries}) => {
-
+    const navigate = useNavigate();
     const [lotteryCards, setLotteryCards] = useState([]);
     useEffect(() => {
+        const usuario = sessionStorage.getItem('name');
+        if(!usuario){
+			sessionStorage.clear();
+            navigate('/');
+        }
         console.log("lotteries:",lotteries);
         setLotteryCards(lotteries);
     }, []);

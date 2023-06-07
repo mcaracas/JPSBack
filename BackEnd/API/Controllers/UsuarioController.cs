@@ -23,15 +23,24 @@ public class UsuarioController : ControllerBase
         return Usuarios;
     }
 
-    /*
-        [HttpGet("{id}")]
-        public Usuario Get(int id)
+
+    [HttpGet("nombre/{username}")]
+    public string GetNombre(string username)
+    {
+        var context = new proyecto_bdContext();
+        var usuario = context.Usuarios.FirstOrDefault(x => x.Usuario1 == username);
+
+        if (usuario == null)
         {
-            var context = new proyecto_bdContext();
-            var usuario = context.Usuarios.FirstOrDefault(x => x.Id == id);
-            return usuario;
+            return "No se encontró el usuario";
         }
-    */
+        else
+        {
+            return usuario.Nombre;
+        }
+    }
+
+
 
     [HttpPost, Route("[action]", Name = "Register")]
     public ActionResult Register([FromBody] Usuario Usuario)
@@ -80,7 +89,7 @@ public class UsuarioController : ControllerBase
         else
         {
             ConfirmEmail generateMail = new ConfirmEmail();
-            var code = "L0-" + Guid.NewGuid().ToString();
+            var code = "L0-" + Guid.NewGuid().ToString().Substring(0, 8);
             generateMail.Page_Load("cabezasvizcaino@gmail.com", code, "Su código de recuperación es:");
             return code;
         }
@@ -98,7 +107,7 @@ public class UsuarioController : ControllerBase
         else
         {
             ConfirmEmail generateMail = new ConfirmEmail();
-            var code = "L0-" + Guid.NewGuid().ToString();
+            var code = "L0-" + Guid.NewGuid().ToString().Substring(0, 8);
             generateMail.Page_Load("cabezasvizcaino@gmail.com", code, "Su contraseña es:");
             usuarioUpdate.Clave = Utilidades.Utilidades.Encrypt(code.ToString());
             context.SaveChanges();

@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { getUltimoTomofolio, postTomoFolio } from '../../../services/axiosService';
 import SuccessModal from '../../modals/SuccessModal';
+import { useNavigate } from 'react-router-dom';
+import LoadingModal from '../../modals/LoadingModal';
+import FailModal from '../../modals/FailModal';
+import ConfirmationModal from '../../modals/ConfirmationModal';
 
 
 const Tomo = ({ idInterno }) => {
@@ -10,10 +14,18 @@ const Tomo = ({ idInterno }) => {
     const [tomo, setTomo] = useState(1);
     const [folio, setFolio] = useState(1);
     const [tomoActual, setTomoActual] = useState(1);
+    const [folioActual2, setFolioActual2] = useState(1);
     const [folioActual, setFolioActual] = useState(1);
+
+    //Modals
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [titulo, setTitulo] = useState('');
     const [mensaje, setMensaje] = useState('');
+    const navigate = useNavigate();
+    const [showLoadingModal, setShowLoadingModal] = useState(false);
+    const [showFailModal, setShowFailModal] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [confirmationAction, setConfirmationAction] = useState(() => { });
 
     const initialValues = {
         tomo: tomoActual,
@@ -33,19 +45,60 @@ const Tomo = ({ idInterno }) => {
         setTomoActual(tomoActual + 1);
     }
 
+
     const addFolioActual = () => {
-        if (folioActual < 254) {
-            setFolioActual(folioActual + 1);
+        //folioActual cant be greater than folioActual2
+        if (folioActual < folioActual2 - 1) {
+            if (folioActual < 254) {
+                setFolioActual(folioActual + 1);
+            } else {
+                setFolioActual(2);
+                addTomoActual();
+            }
         } else {
-            setFolioActual(2);
+            setFolioActual(folioActual + 1);
+            addFolioActual2();
+
+        }
+    }
+
+    const addFolioActual2 = () => {
+        if (folioActual2 < 254) {
+            setFolioActual2(folioActual2 + 1);
+        } else {
+            setFolioActual2(3);
             addTomoActual();
         }
     }
 
+    //Modal functions
     function handleCloseSuccessModal() {
         setShowSuccessModal(false);
-      }
- 
+        navigate('/ListaChequeo');
+    }
+
+    function handleCloseFailModal() {
+        setShowFailModal(false);
+    }
+
+    const handleConfirmation = async (confirmed) => {
+        if (!confirmed) {
+            setShowConfirmation(false);
+            return;
+        }
+        await confirmationAction();
+        setShowConfirmation(false);
+    }
+
+    const handleShowConfirmation = async (action) => {
+        setShowConfirmation(true);
+        setConfirmationAction(() => () => {
+            action();
+        });
+    }
+
+
+
     //Get Tomo and Folio from DB when component is mounted
     useEffect(() => {
         getTomoFolio();
@@ -53,10 +106,50 @@ const Tomo = ({ idInterno }) => {
 
     //Set Tomo and Folio Actual when Tomo and Folio are changed
     useEffect(() => {
+        const usuario = sessionStorage.getItem('name');
+        if (!usuario) {
+            sessionStorage.clear();
+            navigate('/');
+        }
         setTomoActual(tomo);
         setFolioActual(folio + 1);
+        setFolioActual2(folio + 2);
     }, [tomo, folio]);
 
+    const handleSubmit = async (values) => {
+        try {
+            const data = {
+                "tomo": tomoActual,
+                "folio": folioActual,
+                "idDatoSorteo": idInterno,
+                "estado": "Activo"
+            }
+            const data2 = {
+                "tomo": tomoActual,
+                "folio": folioActual2,
+                "idDatoSorteo": idInterno,
+                "estado": "Activo"
+            }
+            setShowLoadingModal(true);
+            const response = await postTomoFolio(data);
+            const response2 = await postTomoFolio(data2);
+            setShowLoadingModal(false);
+            if (response.status === 200 && response2.status === 200) {
+                setShowSuccessModal(true);
+                setTitulo('¡Operación Exitosa!');
+                setMensaje('Se guardaron los datos correctamente');
+            } else {
+                setShowFailModal(true);
+                setTitulo('¡Operación Fallida!');
+                setMensaje('No se pudieron guardar los datos');
+            }
+        } catch (error) {
+            setShowLoadingModal(false);
+            setShowFailModal(true);
+            setTitulo('¡Operación Fallida!');
+            setMensaje(`No se pudo guardar el tomo y folio. ${error.message}`);
+        }
+    }
 
     return (
         <>
@@ -65,28 +158,7 @@ const Tomo = ({ idInterno }) => {
                 <Formik
                     initialValues={initialValues}
                     onSubmit={async (values) => {
-                        const data = {
-                            "tomo": tomoActual,
-                            "folio": folioActual,
-                            "idDatoSorteo": idInterno,
-                            "estado": "Activo"
-                        }
-                        postTomoFolio(data)
-                            .then(response => {
-                                if (response.status === 200) {
-                                    setTitulo('Operación exitosa');
-                                    setMensaje('Datos de tomo y folio guardados exitosamente');
-                                    setShowSuccessModal(true);
-                                    //@TODO: Redirect to home page
-                                }
-                            }
-                            )
-                            .catch(error => {
-                                setTitulo('Operación fallida');
-                                setMensaje('No se pudo guardar los datos de tomo y folio');
-                                setShowSuccessModal(true);
-                            });
-
+                        await handleShowConfirmation(() => handleSubmit(values));
                     }}>
                     {({ errors, touched }) => (
                         <Form>
@@ -137,7 +209,7 @@ const Tomo = ({ idInterno }) => {
                                                 onClick={addTomoActual}>+</button>
                                             <br></br>
                                             <br></br>
-                                            <label htmlFor="folio">Folio: </label>
+                                            <label htmlFor="folio">Folio 1: </label>
                                             <Field
                                                 name="folioActual"
                                                 type="number"
@@ -149,6 +221,20 @@ const Tomo = ({ idInterno }) => {
                                                 type='button'
                                                 id='btnAgregar'
                                                 onClick={addFolioActual}>+</button>
+                                            <br></br>
+                                            <br></br>
+                                            <label htmlFor="folioActual2">Folio 2: </label>
+                                            <Field
+                                                name="folioActual2"
+                                                type="number"
+                                                id="folioActual2"
+                                                className="inputFolio"
+                                                value={folioActual2}
+                                                disabled />
+                                            <button
+                                                type='button'
+                                                id='btnAgregar'
+                                                onClick={addFolioActual2}>+</button>
                                         </td>
                                     </tr>
                                     <tr>
@@ -171,6 +257,23 @@ const Tomo = ({ idInterno }) => {
                 handleClose={handleCloseSuccessModal}
                 titulo={titulo}
                 mensaje={mensaje}
+            />
+            <LoadingModal
+                show={showLoadingModal}
+                titulo='Guardando tomo y folios'
+                mensaje='Por favor espere...'
+            />
+            <FailModal
+                show={showFailModal}
+                titulo={titulo}
+                mensaje={mensaje}
+                handleClose={handleCloseFailModal}
+            />
+            <ConfirmationModal
+                show={showConfirmation}
+                titulo='Confirmación'
+                mensaje='¿Está seguro que desea registrar el tomo y los folios?'
+                handleConfirmation={handleConfirmation}
             />
         </>
     );

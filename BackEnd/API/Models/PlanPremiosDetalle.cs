@@ -18,6 +18,7 @@ namespace API
         public int? FraccionEntero { get; set; }
         public string Descripcion { get; set; }
 
+        public int? CantidadPremios { get; set; }
         public virtual PlanPremio IdPlanNavigation { get; set; }
         public virtual ICollection<Resultado> Resultados { get; set; }
     }

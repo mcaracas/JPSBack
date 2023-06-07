@@ -1,0 +1,72 @@
+.list-group{
+    margin-top: -30px;
+    margin-left: -15px;
+    //Round corners on the right side only
+    border-radius: 0 15px 15px 0;
+}
+
+.list-group-item{
+    background-color: #c8283b;
+    color: #fff;
+    border: none;
+}
+
+.menu-opc{
+    padding: 8px;
+    border-radius: 15px;
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: left;
+    text-decoration: none;
+    display: block;
+}
+.menu-opc:hover{
+    color: #fff;
+    background-color: #ca5d6a;
+}
+
+.dropdown{
+    //make the dropdown menu a floating box down and to the right of the button
+    position: absolute;
+    top: 20%;
+    left: 99.5%;
+    float: left;
+    min-width: 10rem;
+    padding: .5rem 0;
+    margin: .125rem 0 0;
+    font-size: 1rem;
+    text-align: left;
+    list-style: none;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 0 15px 15px 15px;
+    background-color: #ca3c4c;
+
+}   
+
+.sorteo {
+    color: white;
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0;
+    margin-left: 10px; 
+    display: inline-block;
+  }
+  
+  .logoSorteo {
+    width: 70px;
+    height: 70px;
+    border-radius: 5%;
+    margin-left: 0px;
+  }
+
+  .cerrarSesion {
+    color: white;
+    font-size: 20px;
+    font-weight: 400;
+    display: inline-block;
+    background-color: #ca3c4c;
+    border: none;
+    font-weight: bold;
+  }
