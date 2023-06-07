@@ -74,7 +74,9 @@ namespace API.Controllers
             try
             {
                 var context = new proyecto_bdContext();
-                var TomoFolioUpdate = context.TomoFolios.FirstOrDefault(x => x.IdTomoFolio == TomoFolio.IdTomoFolio);
+                var TomoFolioUpdate = context.TomoFolios.FirstOrDefault(
+                    x => x.IdTomoFolio == TomoFolio.IdTomoFolio
+                );
                 if (TomoFolioUpdate == null)
                 {
                     return NotFound();
@@ -89,7 +91,10 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occurred while updating TomoFolio with id {TomoFolio.IdTomoFolio}.");
+                _logger.LogError(
+                    ex,
+                    $"An error occurred while updating TomoFolio with id {TomoFolio.IdTomoFolio}."
+                );
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -115,6 +120,27 @@ namespace API.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpGet("UltimoTomoFolio/{idSorteo}")]
+        public TomoFolio UltimoTomoFolio(int idSorteo)
+        {
+            var context = new proyecto_bdContext();
+            var DatosSorteo = context.DatosSorteos.FirstOrDefault(x => x.IdInterno == idSorteo);
+            if (DatosSorteo == null)
+                return null;
+            var TomoFolio = context.TomoFolios
+                .Where(
+                    x =>
+                        (
+                            x.IdDatoSorteoNavigation.TipoLoteria == DatosSorteo.TipoLoteria
+                            && x.Estado == "Activo"
+                        )
+                )
+                .OrderByDescending(x => x.Tomo)
+                .ThenByDescending(x => x.Folio)
+                .FirstOrDefault();
+            TomoFolio.IdDatoSorteoNavigation = null;
+            return TomoFolio;
+        }
     }
 }
-
