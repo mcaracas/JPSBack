@@ -22,24 +22,24 @@ export function register(values) {
     });
 }
 
-export function actaFiscalizacion(values) {
+export function actaFiscalizacion(values, idSorteo) {
     console.log(values.recomendaciones);
 
     if (values.procesosConformeEstablecido === false) {
-        values.procesosConformeEstablecido = "";
+        values.procesosConformeEstablecido = "NO [X]";
     } else {
-        values.procesosConformeEstablecido = "Si";
+        values.procesosConformeEstablecido = "SI [X]";
     }
 
     if (values.recomendaciones === false) {
-        values.recomendaciones = "";
+        values.recomendaciones = "SI [X]";
     } else {
-        values.recomendaciones = "Ninguna";
+        values.recomendaciones = "NO [X]";
     }
 
     return APIRequest.post('/ActaDeFiscalizacion', {
         contentType: 'application/json; charset=utf-8',
-        "idDatoSorteo": "1",                                //FALTA QUE ESTO LO SAQUE DE LA SESION
+        "idDatoSorteo": idSorteo,                                //FALTA QUE ESTO LO SAQUE DE LA SESION
         "protocolo": values.procesosConformeEstablecido,
         "otrasConclusiones": values.otrasObservaciones,
         "conclusionesDetalle": values.detalles,

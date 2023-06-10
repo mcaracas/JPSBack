@@ -14,16 +14,17 @@ namespace API.CreacionArchivos
 {
     public static class ActaLoteriaPopular
     {
-        public static void CrearActaLoteriaPopular(DatosSorteo sorteo,String path){
+        public static void CrearActaLoteriaPopular(DatosSorteo sorteo, String path)
+        {
             var context = new proyecto_bdContext();
 
             //Obteniendo Texto Inicial del acta de la base de datos y reemplazando los valores para ponerle los correspondiente al sorteo
             string textoInicialActa = context.Parametros.FirstOrDefault(x => x.CodigoParametro == "TextoInicialActa").ParametroValor;
             string tipoSorteoDetallado = context.TipoLoteria.FirstOrDefault(x => x.Codigo == sorteo.TipoLoteria).Descripcion;
-            textoInicialActa=textoInicialActa.Replace("{HORASORTEO}",sorteo.FechaHora.Value.ToString("h:mm tt"))
-                                            .Replace("{DIASORTEO}",sorteo.FechaHora.Value.ToString("dddd d 'de' MMMM 'del' yyyy", new CultureInfo("es-ES")))
-                                            .Replace("{TIPOSORTEO}",tipoSorteoDetallado)
-                                            .Replace("{NUMSORTEO}",sorteo.NumSorteo.ToString() +" y el Premio Acumulado");
+            textoInicialActa = textoInicialActa.Replace("{HORASORTEO}", sorteo.FechaHora.Value.ToString("h:mm tt"))
+                                            .Replace("{DIASORTEO}", sorteo.FechaHora.Value.ToString("dddd d 'de' MMMM 'del' yyyy", new CultureInfo("es-ES")))
+                                            .Replace("{TIPOSORTEO}", tipoSorteoDetallado)
+                                            .Replace("{NUMSORTEO}", sorteo.NumSorteo.ToString() + " y el Premio Acumulado");
 
             //USANDO OPENXML
 
@@ -37,7 +38,7 @@ namespace API.CreacionArchivos
                 Body body = new Body();
                 mainPart.Document.Append(body);
 
-                                //===========================
+                //===========================
                 // Agregar una sección con un encabezado
                 var sectionProps = new SectionProperties();
                 var headerReference = new HeaderReference()
@@ -89,21 +90,81 @@ namespace API.CreacionArchivos
                     // Agrega un párrafo al cuerpo
                     Paragraph paragraph = body.AppendChild(new Paragraph());
                     Run runPara = paragraph.AppendChild(new Run());
-                    runPara.AppendChild(new Text(parrafo+"\n"));
+                    runPara.AppendChild(new Text(parrafo + "\n"));
 
-                    UtilidadesActas.CambiarFuente(runPara,"Calibri");
-                    UtilidadesActas.CambiarTamano(runPara,"24");//Equivale a 12 en Word
+                    UtilidadesActas.CambiarFuente(runPara, "Calibri");
+                    UtilidadesActas.CambiarTamano(runPara, "24");//Equivale a 12 en Word
 
                     UtilidadesActas.JustificarParrafo(paragraph);
                 }
-                InsertarSeccionGanadores(body,sorteo,tipoSorteoDetallado);
+                InsertarSeccionGanadores(body, sorteo, tipoSorteoDetallado);
                 UtilidadesActas.AgregarSaltoPagina(body);
 
 
+                //(2ta pagina)
+                //Conclusiones+
+
+                var actaFiscalizacion = context.ActaDeFiscalizacions.FirstOrDefault(x => x.IdDatoSorteo == sorteo.IdInterno);
+
+                Paragraph paragraphConclusionesTitulo = body.AppendChild(new Paragraph());
+                Run runConclusionesTitulo = paragraphConclusionesTitulo.AppendChild(new Run());
+                runConclusionesTitulo.AppendChild(new Text("Conclusiones de la fiscalización"));
+                UtilidadesActas.Negrita(runConclusionesTitulo);
+
+
+                Paragraph paragraphConclusiones = body.AppendChild(new Paragraph());
+                Run runConclusiones = paragraphConclusiones.AppendChild(new Run());
+                String textConclusiones = "Los procesos se realizar conforme lo establecido: {PROTOCOLO}";
+                textConclusiones = textConclusiones.Replace("{PROTOCOLO}", actaFiscalizacion.Protocolo);
+
+                runConclusiones.AppendChild(new Text(textConclusiones));
+                runConclusiones.AppendChild(new Break());
+
+                String otras = "Otras: {OTRAS}";
+                otras = otras.Replace("{OTRAS}", actaFiscalizacion.OtrasConclusiones);
+                runConclusiones.AppendChild(new Text(otras));
+                runConclusiones.AppendChild(new Break());
+
+                String Detallar = "Detallar: {DETALLAR}";
+                Detallar = Detallar.Replace("{DETALLAR}", actaFiscalizacion.ConclusionesDetalle);
+                runConclusiones.AppendChild(new Text(Detallar));
+                runConclusiones.AppendChild(new Break());
+
+
+
+
+                Paragraph paragraphConclusionesRecomendacionesTitulo = body.AppendChild(new Paragraph());
+                Run runConclusionesRecomendacionesTitulo = paragraphConclusionesRecomendacionesTitulo.AppendChild(new Run());
+                runConclusionesRecomendacionesTitulo.AppendChild(new Text("Recomendaciones de la fiscalización"));
+                UtilidadesActas.Negrita(runConclusionesRecomendacionesTitulo);
+
+                Paragraph paragraphConclusionesRecomendacionesDetalles = body.AppendChild(new Paragraph());
+                Run runConclusionesRecomendacionesDetalles = paragraphConclusionesRecomendacionesDetalles.AppendChild(new Run());
+                String recomendacionesNinguna = "Recomendaciones: {Recomendaciones}";
+                recomendacionesNinguna = recomendacionesNinguna.Replace("{Recomendaciones}", actaFiscalizacion.Recomendacion);
+
+                String recomendacionesOtras = "Los resultados evidenciados en el sorteo serán analizados para ser eventualmente valorados en la formulación de un oficio de advertencia/asesoría o bien un informe de auditoría.";
+
+                String recomendacionesDetalle = "Detallar: {RECOMENDACIONESD}";
+                recomendacionesDetalle = recomendacionesDetalle.Replace("{RECOMENDACIONESD}", actaFiscalizacion.RecomendacionDetalle);
+
+                runConclusionesRecomendacionesDetalles.AppendChild(new Text(recomendacionesNinguna));
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Text(recomendacionesDetalle));
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Text(recomendacionesOtras));
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+
+
                 //(2da pagina)
-                //Agregando las observaciones 
+                //Observaciones 
                 String observaciones = "Observaciones:{OBSERVACIONES}";
-                observaciones = observaciones.Replace("{OBSERVACIONES}","___________________________________________"+
+                observaciones = observaciones.Replace("{OBSERVACIONES}", "___________________________________________" +
                 "___________________________________________________________________________________________________");
                 Paragraph paragraphObservaciones = body.AppendChild(new Paragraph());
                 Run runObservaciones = paragraphObservaciones.AppendChild(new Run());
@@ -114,7 +175,7 @@ namespace API.CreacionArchivos
                 Run runFirma = paragraphFirma.AppendChild(new Run());
                 runFirma.AppendChild(new Text("____________________________________"));
                 runFirma.AppendChild(new Break()); //Agregar un enter
-                runFirma.AppendChild(new Text("Fiscalizador de la Auditoria Interna"));
+                runFirma.AppendChild(new Text("Fiscalizador de la Auditoría Interna"));
                 runFirma.AppendChild(new Break());
                 runFirma.AppendChild(new Break());
 
@@ -123,7 +184,7 @@ namespace API.CreacionArchivos
                 Run runGerencia = paragraphFirmaGerencia.AppendChild(new Run());
                 runGerencia.AppendChild(new Text("          ________________________________________"));
                 runGerencia.AppendChild(new Break()); //Agregar un enter
-                runGerencia.AppendChild(new Text("Recibido: Gerencia de Produccion y Comercializacion"));
+                runGerencia.AppendChild(new Text("Recibido: Gerencia de Producción  y Comercialización"));
 
 
                 /*
@@ -389,28 +450,29 @@ namespace API.CreacionArchivos
 
 
 
-          
-                
-            }   
-        }    
+
+
+            }
+        }
 
 
         #region METODOS PARA LOTERIA POPULAR
-        private static void InsertarSeccionGanadores(Body body, DatosSorteo sorteo, string tipoSorteo){
+        private static void InsertarSeccionGanadores(Body body, DatosSorteo sorteo, string tipoSorteo)
+        {
             var context = new proyecto_bdContext();
             var numerosGanadores = context.Resultados.Where(n => n.IdDatoSorteo == sorteo.IdInterno).ToList();
-            
+
             //Agregando los parrafos antes de la tbla de los numeros ganadores
             Paragraph paragraphGanadores = body.AppendChild(new Paragraph());
             Run runGanadores = paragraphGanadores.AppendChild(new Run());
             runGanadores.AppendChild(new Text($"Los numeros gandores del sorteo de {tipoSorteo} N° {sorteo.NumSorteo.ToString()} fueron:"));
 
-            
+
 
             //Creando la tabla
             //Agregando Estilos y propiedades
             Table table = new Table();
-            TableProperties tableProperties = new TableProperties();            
+            TableProperties tableProperties = new TableProperties();
             table.AppendChild(tableProperties);
 
             // Establecer ancho de columna fijo
@@ -436,7 +498,7 @@ namespace API.CreacionArchivos
 
             // Construyendo la tabla   
 
-            
+
             //ROW 1
             TableRow tableDataRow = new TableRow();
             table.AppendChild(tableDataRow);
@@ -597,324 +659,326 @@ namespace API.CreacionArchivos
             Paragraph paragraphPremios = body.AppendChild(new Paragraph());
             Run runPremios = paragraphPremios.AppendChild(new Run());
             UtilidadesActas.JustificarParrafo(paragraphPremios);
-            runPremios.AppendChild(new Text(parrafoPremios));      
+            runPremios.AppendChild(new Text(parrafoPremios));
 
-        
-        }
-        private static void CrearTablaVerificacionLoteriaPopular(Body body, DatosSorteo sorteo){
-                var context = new proyecto_bdContext();
-                var numerosGanadores = context.Resultados.Where(x => x.IdDatoSorteo == sorteo.IdInterno).ToList();
-                var primerNumero = numerosGanadores.Where(x => x.tipoResultado == "Premio Mayor").FirstOrDefault();
-                var segundoNumero = numerosGanadores.Where(x => x.tipoResultado == "Segundo Premio").FirstOrDefault();
-                var tercerNumero = numerosGanadores.Where(x => x.tipoResultado == "Tercer Premio").FirstOrDefault();
-                
-                //Creando la tabla de Verificacion
-                //Agregando Estilos y propiedades
-                Table table = new Table();
-                TableProperties tableProperties = new TableProperties();            
-                table.AppendChild(tableProperties);
-
-                // Establecer ancho de columna fijo
-                TableGrid tg = new TableGrid(new GridColumn() { Width = "1500" }, new GridColumn() { Width = "1500" });
-                table.AppendChild(tg);
-
-                // Agregar estilo a la tabla
-                TableStyle tableStyle = new TableStyle() { Val = "TableGrid" };
-                table.AppendChild(tableStyle);
-
-                // Agregar borde a la tabla
-                TableBorders tableBorders = new TableBorders(
-                    new TopBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 },
-                    new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 },
-                    new LeftBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 },
-                    new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 },
-                    new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 },
-                    new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 }
-                );
-                table.AppendChild(tableBorders);
-
-
-
-                // Construyendo la tabla   
-
-                
-                //ROW 1
-                TableRow tableDataRow = new TableRow();
-                table.AppendChild(tableDataRow);
-                
-
-                TableCellProperties tableCellPropertiesHeader = new TableCellProperties();
-                tableCellPropertiesHeader.GridSpan = new GridSpan() { Val = 8 };
-                TableCell tableDataCell1 = new TableCell();
-                tableDataRow.AppendChild(tableDataCell1);
-                Paragraph loteriaData = new Paragraph(new Run(new Text("LOTERÍA POPULAR")));
-                UtilidadesActas.JustificarCentro(loteriaData);
-                tableDataCell1.AppendChild(loteriaData);
-                tableDataCell1.Append(tableCellPropertiesHeader);
-                tableDataCell1.Append(UtilidadesActas.CrearMargenCeldas());
-
-
-
-                //ROW 2
-                TableRow tableDataRow2 = new TableRow();
-                table.AppendChild(tableDataRow2);
-
-                TableCell tableDataCellEncabezado = new TableCell();
-                tableDataRow2.AppendChild(tableDataCellEncabezado);
-                Paragraph encabezadoData = new Paragraph(new Run(new Text("")));
-                UtilidadesActas.JustificarCentro(encabezadoData);
-                tableDataCellEncabezado.AppendChild(encabezadoData);
-                tableDataCellEncabezado.Append(UtilidadesActas.CrearMargenCeldas());
-
-
-                TableCell tableDataCellEncabezado2= new TableCell();
-                tableDataRow2.AppendChild(tableDataCellEncabezado2);
-                Paragraph encabezadoData2 = new Paragraph(new Run(new Text("Serie")));
-                UtilidadesActas.JustificarCentro(encabezadoData2);
-                tableDataCellEncabezado2.AppendChild(encabezadoData2);
-                tableDataCellEncabezado2.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCellEncabezado3 = new TableCell();
-                tableDataRow2.AppendChild(tableDataCellEncabezado3);
-                Paragraph encabezadoData3 = new Paragraph(new Run(new Text("Número")));
-                UtilidadesActas.JustificarCentro(encabezadoData3);
-                tableDataCellEncabezado3.AppendChild(encabezadoData3);
-                tableDataCellEncabezado3.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCellEncabezado4 = new TableCell();
-                tableDataRow2.AppendChild(tableDataCellEncabezado4);
-                Paragraph encabezadoData4 = new Paragraph(new Run(new Text("Premio Mayor")));
-                UtilidadesActas.JustificarCentro(encabezadoData4);
-                tableDataCellEncabezado4.AppendChild(encabezadoData4);
-                tableDataCellEncabezado4.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCellEncabezado5 = new TableCell();
-                tableDataRow2.AppendChild(tableDataCellEncabezado5);
-                Paragraph encabezadoData5 = new Paragraph(new Run(new Text("Premio del Numero")));
-                UtilidadesActas.JustificarCentro(encabezadoData5);
-                tableDataCellEncabezado5.AppendChild(encabezadoData5);
-                tableDataCellEncabezado5.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCellProperties tableCellProperties = new TableCellProperties();
-                TableCell tableDataCellEncabezado6 = new TableCell(tableCellProperties);                
-                tableDataRow2.AppendChild(tableDataCellEncabezado6);
-                Paragraph encabezadoData6 = new Paragraph(new Run(new Text("")));
-                UtilidadesActas.JustificarCentro(encabezadoData6);
-                tableDataCellEncabezado6.AppendChild(encabezadoData6);
-                tableDataCellEncabezado6.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCellEncabezado7 = new TableCell();
-                tableDataRow2.AppendChild(tableDataCellEncabezado7);
-                Paragraph encabezadoData7 = new Paragraph(new Run(new Text("Número Inverso")));
-                UtilidadesActas.JustificarCentro(encabezadoData7);
-                tableDataCellEncabezado7.AppendChild(encabezadoData7);
-                tableDataCellEncabezado7.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCellEncabezado8 = new TableCell();
-                tableDataRow2.AppendChild(tableDataCellEncabezado8);
-                Paragraph encabezadoData8 = new Paragraph(new Run(new Text("Premio")));
-                UtilidadesActas.JustificarCentro(encabezadoData8);
-                tableDataCellEncabezado8.AppendChild(encabezadoData8);
-                tableDataCellEncabezado8.Append(UtilidadesActas.CrearMargenCeldas());
-
-
-                //ROW 3
-
-                TableRow tableDataRow3 = new TableRow();
-                table.AppendChild(tableDataRow3);
-
-                TableCell tableDataCell31 = new TableCell();
-                tableDataRow3.AppendChild(tableDataCell31);
-                Paragraph loteriaData31 = new Paragraph(new Run(new Text("1")));
-                UtilidadesActas.JustificarCentro(loteriaData31);
-                tableDataCell31.AppendChild(loteriaData31);
-                tableDataCell31.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell32 = new TableCell();
-                tableDataRow3.AppendChild(tableDataCell32);
-                Paragraph loteriaData32 = new Paragraph(new Run(new Text(primerNumero.SeriePremio)));
-                UtilidadesActas.JustificarCentro(loteriaData32);
-                tableDataCell32.AppendChild(loteriaData32);
-                tableDataCell32.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell33 = new TableCell();
-                tableDataRow3.AppendChild(tableDataCell33);
-                Paragraph loteriaData33 = new Paragraph(new Run(new Text(primerNumero.NumFavorecido)));
-                UtilidadesActas.JustificarCentro(loteriaData33);
-                tableDataCell33.AppendChild(loteriaData33);
-                tableDataCell33.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell34 = new TableCell();
-                tableDataRow3.AppendChild(tableDataCell34);
-                Paragraph loteriaData34 = new Paragraph(new Run(new Text("¢80.000.000")));
-                UtilidadesActas.JustificarCentro(loteriaData34);
-                tableDataCell34.AppendChild(loteriaData34);
-                tableDataCell34.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell35 = new TableCell();
-                tableDataRow3.AppendChild(tableDataCell35);
-                Paragraph loteriaData35 = new Paragraph(new Run(new Text("¢130.000")));
-                UtilidadesActas.JustificarCentro(loteriaData35);
-                tableDataCell35.AppendChild(loteriaData35);
-                tableDataCell35.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell36 = new TableCell();
-                tableDataRow3.AppendChild(tableDataCell36);
-                Paragraph loteriaData36 = new Paragraph(new Run(new Text("")));
-                UtilidadesActas.JustificarCentro(loteriaData36);
-                tableDataCell36.AppendChild(loteriaData36);
-                tableDataCell36.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell37 = new TableCell();
-                tableDataRow3.AppendChild(tableDataCell37);
-                Paragraph loteriaData37 = new Paragraph(new Run(new Text(UtilidadesActas.numInverso(primerNumero.NumFavorecido))));
-                UtilidadesActas.JustificarCentro(loteriaData37);
-                tableDataCell37.AppendChild(loteriaData37);
-                tableDataCell37.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell38 = new TableCell();
-                tableDataRow3.AppendChild(tableDataCell38);
-                Paragraph loteriaData38 = new Paragraph(new Run(new Text("¢10.000")));
-                UtilidadesActas.JustificarCentro(loteriaData38);
-                tableDataCell38.AppendChild(loteriaData38);
-                tableDataCell38.Append(UtilidadesActas.CrearMargenCeldas());
-
-
-                //ROW 4
-
-                TableRow tableDataRow4 = new TableRow();
-                table.AppendChild(tableDataRow4);
-
-                TableCell tableDataCell41 = new TableCell();
-                tableDataRow4.AppendChild(tableDataCell41);
-                Paragraph loteriaData41 = new Paragraph(new Run(new Text("2")));
-                UtilidadesActas.JustificarCentro(loteriaData41);
-                tableDataCell41.AppendChild(loteriaData41);
-                tableDataCell41.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell42 = new TableCell();
-                tableDataRow4.AppendChild(tableDataCell42);
-                Paragraph loteriaData42 = new Paragraph(new Run(new Text(segundoNumero.SeriePremio)));
-                UtilidadesActas.JustificarCentro(loteriaData42);
-                tableDataCell42.AppendChild(loteriaData42);
-                tableDataCell42.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell43 = new TableCell();
-                tableDataRow4.AppendChild(tableDataCell43);
-                Paragraph loteriaData43 = new Paragraph(new Run(new Text(segundoNumero.NumFavorecido)));
-                UtilidadesActas.JustificarCentro(loteriaData43);
-                tableDataCell43.AppendChild(loteriaData43);
-                tableDataCell43.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell44 = new TableCell();
-                tableDataRow4.AppendChild(tableDataCell44);
-                Paragraph loteriaData44 = new Paragraph(new Run(new Text("¢25.000.000")));
-                UtilidadesActas.JustificarCentro(loteriaData44);
-                tableDataCell44.AppendChild(loteriaData44);
-                tableDataCell44.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell45 = new TableCell();
-                tableDataRow4.AppendChild(tableDataCell45);
-                Paragraph loteriaData45 = new Paragraph(new Run(new Text("¢30.000")));
-                UtilidadesActas.JustificarCentro(loteriaData45);
-                tableDataCell45.AppendChild(loteriaData45);
-                tableDataCell45.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell46 = new TableCell();
-                tableDataRow4.AppendChild(tableDataCell46);
-                Paragraph loteriaData46 = new Paragraph(new Run(new Text("")));
-                UtilidadesActas.JustificarCentro(loteriaData46);
-                tableDataCell46.AppendChild(loteriaData46);
-                tableDataCell46.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell47 = new TableCell();
-                tableDataRow4.AppendChild(tableDataCell47);
-                Paragraph loteriaData47 = new Paragraph(new Run(new Text(UtilidadesActas.numInverso(segundoNumero.NumFavorecido))));
-                UtilidadesActas.JustificarCentro(loteriaData47);
-                tableDataCell47.AppendChild(loteriaData47);
-                tableDataCell47.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell48 = new TableCell();
-                tableDataRow4.AppendChild(tableDataCell48);
-                Paragraph loteriaData48 = new Paragraph(new Run(new Text("¢8.000")));
-                UtilidadesActas.JustificarCentro(loteriaData48);
-                tableDataCell48.AppendChild(loteriaData48);
-                tableDataCell48.Append(UtilidadesActas.CrearMargenCeldas());
-
-
-                //ROW 5
-
-                TableRow tableDataRow5 = new TableRow();
-                table.AppendChild(tableDataRow5);
-
-                TableCell tableDataCell51 = new TableCell();
-                tableDataRow5.AppendChild(tableDataCell51);
-                Paragraph loteriaData51 = new Paragraph(new Run(new Text("3")));
-                UtilidadesActas.JustificarCentro(loteriaData51);
-                tableDataCell51.AppendChild(loteriaData51);
-                tableDataCell51.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell52 = new TableCell();
-                tableDataRow5.AppendChild(tableDataCell52);
-                Paragraph loteriaData52 = new Paragraph(new Run(new Text(tercerNumero.SeriePremio)));
-                UtilidadesActas.JustificarCentro(loteriaData52);
-                tableDataCell52.AppendChild(loteriaData52);
-                tableDataCell52.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell53 = new TableCell();
-                tableDataRow5.AppendChild(tableDataCell53);
-                Paragraph loteriaData53 = new Paragraph(new Run(new Text(tercerNumero.NumFavorecido)));
-                UtilidadesActas.JustificarCentro(loteriaData53);
-                tableDataCell53.AppendChild(loteriaData53);
-                tableDataCell53.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell54 = new TableCell();
-                tableDataRow5.AppendChild(tableDataCell54);
-                Paragraph loteriaData54 = new Paragraph(new Run(new Text("¢7.000.000")));
-                UtilidadesActas.JustificarCentro(loteriaData54);
-                tableDataCell54.AppendChild(loteriaData54);
-                tableDataCell54.Append(UtilidadesActas.CrearMargenCeldas());
-
-
-                TableCell tableDataCell55 = new TableCell();
-                tableDataRow5.AppendChild(tableDataCell55);
-                Paragraph loteriaData55 = new Paragraph(new Run(new Text("¢20.000")));
-                UtilidadesActas.JustificarCentro(loteriaData55);
-                tableDataCell55.AppendChild(loteriaData55);
-                tableDataCell55.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell56 = new TableCell();
-                tableDataRow5.AppendChild(tableDataCell56);
-                Paragraph loteriaData56 = new Paragraph(new Run(new Text("")));
-                UtilidadesActas.JustificarCentro(loteriaData56);
-                tableDataCell56.AppendChild(loteriaData56);
-                tableDataCell56.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell57 = new TableCell();
-                tableDataRow5.AppendChild(tableDataCell57);
-                Paragraph loteriaData57 = new Paragraph(new Run(new Text(UtilidadesActas.numInverso(tercerNumero.NumFavorecido))));
-                UtilidadesActas.JustificarCentro(loteriaData57);
-                tableDataCell57.AppendChild(loteriaData57);
-                tableDataCell57.Append(UtilidadesActas.CrearMargenCeldas());
-
-                TableCell tableDataCell58 = new TableCell();
-                tableDataRow5.AppendChild(tableDataCell58);
-                Paragraph loteriaData58 = new Paragraph(new Run(new Text("¢5.000")));
-                UtilidadesActas.JustificarCentro(loteriaData58);
-                tableDataCell58.AppendChild(loteriaData58);
-                tableDataCell58.Append(UtilidadesActas.CrearMargenCeldas());
-
-                body.AppendChild(table);
 
         }
-        private static void CrearTablaPremioAcumulado(Body body){
+        private static void CrearTablaVerificacionLoteriaPopular(Body body, DatosSorteo sorteo)
+        {
             var context = new proyecto_bdContext();
-            var premioAcumulado = context.Acumulados.Where(p => p.TipoLoteria== "Pop_Nac").FirstOrDefault();
+            var numerosGanadores = context.Resultados.Where(x => x.IdDatoSorteo == sorteo.IdInterno).ToList();
+            var primerNumero = numerosGanadores.Where(x => x.tipoResultado == "Premio Mayor").FirstOrDefault();
+            var segundoNumero = numerosGanadores.Where(x => x.tipoResultado == "Segundo Premio").FirstOrDefault();
+            var tercerNumero = numerosGanadores.Where(x => x.tipoResultado == "Tercer Premio").FirstOrDefault();
+
+            //Creando la tabla de Verificacion
+            //Agregando Estilos y propiedades
+            Table table = new Table();
+            TableProperties tableProperties = new TableProperties();
+            table.AppendChild(tableProperties);
+
+            // Establecer ancho de columna fijo
+            TableGrid tg = new TableGrid(new GridColumn() { Width = "1500" }, new GridColumn() { Width = "1500" });
+            table.AppendChild(tg);
+
+            // Agregar estilo a la tabla
+            TableStyle tableStyle = new TableStyle() { Val = "TableGrid" };
+            table.AppendChild(tableStyle);
+
+            // Agregar borde a la tabla
+            TableBorders tableBorders = new TableBorders(
+                new TopBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 },
+                new BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 },
+                new LeftBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 },
+                new RightBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 },
+                new InsideHorizontalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 },
+                new InsideVerticalBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 6 }
+            );
+            table.AppendChild(tableBorders);
+
+
+
+            // Construyendo la tabla   
+
+
+            //ROW 1
+            TableRow tableDataRow = new TableRow();
+            table.AppendChild(tableDataRow);
+
+
+            TableCellProperties tableCellPropertiesHeader = new TableCellProperties();
+            tableCellPropertiesHeader.GridSpan = new GridSpan() { Val = 8 };
+            TableCell tableDataCell1 = new TableCell();
+            tableDataRow.AppendChild(tableDataCell1);
+            Paragraph loteriaData = new Paragraph(new Run(new Text("LOTERÍA POPULAR")));
+            UtilidadesActas.JustificarCentro(loteriaData);
+            tableDataCell1.AppendChild(loteriaData);
+            tableDataCell1.Append(tableCellPropertiesHeader);
+            tableDataCell1.Append(UtilidadesActas.CrearMargenCeldas());
+
+
+
+            //ROW 2
+            TableRow tableDataRow2 = new TableRow();
+            table.AppendChild(tableDataRow2);
+
+            TableCell tableDataCellEncabezado = new TableCell();
+            tableDataRow2.AppendChild(tableDataCellEncabezado);
+            Paragraph encabezadoData = new Paragraph(new Run(new Text("")));
+            UtilidadesActas.JustificarCentro(encabezadoData);
+            tableDataCellEncabezado.AppendChild(encabezadoData);
+            tableDataCellEncabezado.Append(UtilidadesActas.CrearMargenCeldas());
+
+
+            TableCell tableDataCellEncabezado2 = new TableCell();
+            tableDataRow2.AppendChild(tableDataCellEncabezado2);
+            Paragraph encabezadoData2 = new Paragraph(new Run(new Text("Serie")));
+            UtilidadesActas.JustificarCentro(encabezadoData2);
+            tableDataCellEncabezado2.AppendChild(encabezadoData2);
+            tableDataCellEncabezado2.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCellEncabezado3 = new TableCell();
+            tableDataRow2.AppendChild(tableDataCellEncabezado3);
+            Paragraph encabezadoData3 = new Paragraph(new Run(new Text("Número")));
+            UtilidadesActas.JustificarCentro(encabezadoData3);
+            tableDataCellEncabezado3.AppendChild(encabezadoData3);
+            tableDataCellEncabezado3.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCellEncabezado4 = new TableCell();
+            tableDataRow2.AppendChild(tableDataCellEncabezado4);
+            Paragraph encabezadoData4 = new Paragraph(new Run(new Text("Premio Mayor")));
+            UtilidadesActas.JustificarCentro(encabezadoData4);
+            tableDataCellEncabezado4.AppendChild(encabezadoData4);
+            tableDataCellEncabezado4.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCellEncabezado5 = new TableCell();
+            tableDataRow2.AppendChild(tableDataCellEncabezado5);
+            Paragraph encabezadoData5 = new Paragraph(new Run(new Text("Premio del Numero")));
+            UtilidadesActas.JustificarCentro(encabezadoData5);
+            tableDataCellEncabezado5.AppendChild(encabezadoData5);
+            tableDataCellEncabezado5.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCellProperties tableCellProperties = new TableCellProperties();
+            TableCell tableDataCellEncabezado6 = new TableCell(tableCellProperties);
+            tableDataRow2.AppendChild(tableDataCellEncabezado6);
+            Paragraph encabezadoData6 = new Paragraph(new Run(new Text("")));
+            UtilidadesActas.JustificarCentro(encabezadoData6);
+            tableDataCellEncabezado6.AppendChild(encabezadoData6);
+            tableDataCellEncabezado6.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCellEncabezado7 = new TableCell();
+            tableDataRow2.AppendChild(tableDataCellEncabezado7);
+            Paragraph encabezadoData7 = new Paragraph(new Run(new Text("Número Inverso")));
+            UtilidadesActas.JustificarCentro(encabezadoData7);
+            tableDataCellEncabezado7.AppendChild(encabezadoData7);
+            tableDataCellEncabezado7.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCellEncabezado8 = new TableCell();
+            tableDataRow2.AppendChild(tableDataCellEncabezado8);
+            Paragraph encabezadoData8 = new Paragraph(new Run(new Text("Premio")));
+            UtilidadesActas.JustificarCentro(encabezadoData8);
+            tableDataCellEncabezado8.AppendChild(encabezadoData8);
+            tableDataCellEncabezado8.Append(UtilidadesActas.CrearMargenCeldas());
+
+
+            //ROW 3
+
+            TableRow tableDataRow3 = new TableRow();
+            table.AppendChild(tableDataRow3);
+
+            TableCell tableDataCell31 = new TableCell();
+            tableDataRow3.AppendChild(tableDataCell31);
+            Paragraph loteriaData31 = new Paragraph(new Run(new Text("1")));
+            UtilidadesActas.JustificarCentro(loteriaData31);
+            tableDataCell31.AppendChild(loteriaData31);
+            tableDataCell31.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell32 = new TableCell();
+            tableDataRow3.AppendChild(tableDataCell32);
+            Paragraph loteriaData32 = new Paragraph(new Run(new Text(primerNumero.SeriePremio)));
+            UtilidadesActas.JustificarCentro(loteriaData32);
+            tableDataCell32.AppendChild(loteriaData32);
+            tableDataCell32.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell33 = new TableCell();
+            tableDataRow3.AppendChild(tableDataCell33);
+            Paragraph loteriaData33 = new Paragraph(new Run(new Text(primerNumero.NumFavorecido)));
+            UtilidadesActas.JustificarCentro(loteriaData33);
+            tableDataCell33.AppendChild(loteriaData33);
+            tableDataCell33.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell34 = new TableCell();
+            tableDataRow3.AppendChild(tableDataCell34);
+            Paragraph loteriaData34 = new Paragraph(new Run(new Text("¢80.000.000")));
+            UtilidadesActas.JustificarCentro(loteriaData34);
+            tableDataCell34.AppendChild(loteriaData34);
+            tableDataCell34.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell35 = new TableCell();
+            tableDataRow3.AppendChild(tableDataCell35);
+            Paragraph loteriaData35 = new Paragraph(new Run(new Text("¢130.000")));
+            UtilidadesActas.JustificarCentro(loteriaData35);
+            tableDataCell35.AppendChild(loteriaData35);
+            tableDataCell35.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell36 = new TableCell();
+            tableDataRow3.AppendChild(tableDataCell36);
+            Paragraph loteriaData36 = new Paragraph(new Run(new Text("")));
+            UtilidadesActas.JustificarCentro(loteriaData36);
+            tableDataCell36.AppendChild(loteriaData36);
+            tableDataCell36.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell37 = new TableCell();
+            tableDataRow3.AppendChild(tableDataCell37);
+            Paragraph loteriaData37 = new Paragraph(new Run(new Text(UtilidadesActas.numInverso(primerNumero.NumFavorecido))));
+            UtilidadesActas.JustificarCentro(loteriaData37);
+            tableDataCell37.AppendChild(loteriaData37);
+            tableDataCell37.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell38 = new TableCell();
+            tableDataRow3.AppendChild(tableDataCell38);
+            Paragraph loteriaData38 = new Paragraph(new Run(new Text("¢10.000")));
+            UtilidadesActas.JustificarCentro(loteriaData38);
+            tableDataCell38.AppendChild(loteriaData38);
+            tableDataCell38.Append(UtilidadesActas.CrearMargenCeldas());
+
+
+            //ROW 4
+
+            TableRow tableDataRow4 = new TableRow();
+            table.AppendChild(tableDataRow4);
+
+            TableCell tableDataCell41 = new TableCell();
+            tableDataRow4.AppendChild(tableDataCell41);
+            Paragraph loteriaData41 = new Paragraph(new Run(new Text("2")));
+            UtilidadesActas.JustificarCentro(loteriaData41);
+            tableDataCell41.AppendChild(loteriaData41);
+            tableDataCell41.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell42 = new TableCell();
+            tableDataRow4.AppendChild(tableDataCell42);
+            Paragraph loteriaData42 = new Paragraph(new Run(new Text(segundoNumero.SeriePremio)));
+            UtilidadesActas.JustificarCentro(loteriaData42);
+            tableDataCell42.AppendChild(loteriaData42);
+            tableDataCell42.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell43 = new TableCell();
+            tableDataRow4.AppendChild(tableDataCell43);
+            Paragraph loteriaData43 = new Paragraph(new Run(new Text(segundoNumero.NumFavorecido)));
+            UtilidadesActas.JustificarCentro(loteriaData43);
+            tableDataCell43.AppendChild(loteriaData43);
+            tableDataCell43.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell44 = new TableCell();
+            tableDataRow4.AppendChild(tableDataCell44);
+            Paragraph loteriaData44 = new Paragraph(new Run(new Text("¢25.000.000")));
+            UtilidadesActas.JustificarCentro(loteriaData44);
+            tableDataCell44.AppendChild(loteriaData44);
+            tableDataCell44.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell45 = new TableCell();
+            tableDataRow4.AppendChild(tableDataCell45);
+            Paragraph loteriaData45 = new Paragraph(new Run(new Text("¢30.000")));
+            UtilidadesActas.JustificarCentro(loteriaData45);
+            tableDataCell45.AppendChild(loteriaData45);
+            tableDataCell45.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell46 = new TableCell();
+            tableDataRow4.AppendChild(tableDataCell46);
+            Paragraph loteriaData46 = new Paragraph(new Run(new Text("")));
+            UtilidadesActas.JustificarCentro(loteriaData46);
+            tableDataCell46.AppendChild(loteriaData46);
+            tableDataCell46.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell47 = new TableCell();
+            tableDataRow4.AppendChild(tableDataCell47);
+            Paragraph loteriaData47 = new Paragraph(new Run(new Text(UtilidadesActas.numInverso(segundoNumero.NumFavorecido))));
+            UtilidadesActas.JustificarCentro(loteriaData47);
+            tableDataCell47.AppendChild(loteriaData47);
+            tableDataCell47.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell48 = new TableCell();
+            tableDataRow4.AppendChild(tableDataCell48);
+            Paragraph loteriaData48 = new Paragraph(new Run(new Text("¢8.000")));
+            UtilidadesActas.JustificarCentro(loteriaData48);
+            tableDataCell48.AppendChild(loteriaData48);
+            tableDataCell48.Append(UtilidadesActas.CrearMargenCeldas());
+
+
+            //ROW 5
+
+            TableRow tableDataRow5 = new TableRow();
+            table.AppendChild(tableDataRow5);
+
+            TableCell tableDataCell51 = new TableCell();
+            tableDataRow5.AppendChild(tableDataCell51);
+            Paragraph loteriaData51 = new Paragraph(new Run(new Text("3")));
+            UtilidadesActas.JustificarCentro(loteriaData51);
+            tableDataCell51.AppendChild(loteriaData51);
+            tableDataCell51.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell52 = new TableCell();
+            tableDataRow5.AppendChild(tableDataCell52);
+            Paragraph loteriaData52 = new Paragraph(new Run(new Text(tercerNumero.SeriePremio)));
+            UtilidadesActas.JustificarCentro(loteriaData52);
+            tableDataCell52.AppendChild(loteriaData52);
+            tableDataCell52.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell53 = new TableCell();
+            tableDataRow5.AppendChild(tableDataCell53);
+            Paragraph loteriaData53 = new Paragraph(new Run(new Text(tercerNumero.NumFavorecido)));
+            UtilidadesActas.JustificarCentro(loteriaData53);
+            tableDataCell53.AppendChild(loteriaData53);
+            tableDataCell53.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell54 = new TableCell();
+            tableDataRow5.AppendChild(tableDataCell54);
+            Paragraph loteriaData54 = new Paragraph(new Run(new Text("¢7.000.000")));
+            UtilidadesActas.JustificarCentro(loteriaData54);
+            tableDataCell54.AppendChild(loteriaData54);
+            tableDataCell54.Append(UtilidadesActas.CrearMargenCeldas());
+
+
+            TableCell tableDataCell55 = new TableCell();
+            tableDataRow5.AppendChild(tableDataCell55);
+            Paragraph loteriaData55 = new Paragraph(new Run(new Text("¢20.000")));
+            UtilidadesActas.JustificarCentro(loteriaData55);
+            tableDataCell55.AppendChild(loteriaData55);
+            tableDataCell55.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell56 = new TableCell();
+            tableDataRow5.AppendChild(tableDataCell56);
+            Paragraph loteriaData56 = new Paragraph(new Run(new Text("")));
+            UtilidadesActas.JustificarCentro(loteriaData56);
+            tableDataCell56.AppendChild(loteriaData56);
+            tableDataCell56.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell57 = new TableCell();
+            tableDataRow5.AppendChild(tableDataCell57);
+            Paragraph loteriaData57 = new Paragraph(new Run(new Text(UtilidadesActas.numInverso(tercerNumero.NumFavorecido))));
+            UtilidadesActas.JustificarCentro(loteriaData57);
+            tableDataCell57.AppendChild(loteriaData57);
+            tableDataCell57.Append(UtilidadesActas.CrearMargenCeldas());
+
+            TableCell tableDataCell58 = new TableCell();
+            tableDataRow5.AppendChild(tableDataCell58);
+            Paragraph loteriaData58 = new Paragraph(new Run(new Text("¢5.000")));
+            UtilidadesActas.JustificarCentro(loteriaData58);
+            tableDataCell58.AppendChild(loteriaData58);
+            tableDataCell58.Append(UtilidadesActas.CrearMargenCeldas());
+
+            body.AppendChild(table);
+
+        }
+        private static void CrearTablaPremioAcumulado(Body body)
+        {
+            var context = new proyecto_bdContext();
+            var premioAcumulado = context.Acumulados.Where(p => p.TipoLoteria == "Pop_Nac").FirstOrDefault();
 
             //Creando la tabla de Premio Acumulado
             //Agregando Estilos y propiedades
             Table table = new Table();
-            TableProperties tableProperties = new TableProperties();            
+            TableProperties tableProperties = new TableProperties();
             table.AppendChild(tableProperties);
 
             // Establecer ancho de columna fijo
@@ -942,7 +1006,7 @@ namespace API.CreacionArchivos
             //ROW 1
             TableRow tableDataRow = new TableRow();
             table.AppendChild(tableDataRow);
-            
+
 
             TableCellProperties tableCellPropertiesHeader = new TableCellProperties();
             tableCellPropertiesHeader.GridSpan = new GridSpan() { Val = 5 };
@@ -952,7 +1016,7 @@ namespace API.CreacionArchivos
             UtilidadesActas.JustificarCentro(loteriaData);
             tableDataCell1.AppendChild(loteriaData);
             tableDataCell1.Append(tableCellPropertiesHeader);
-            tableDataCell1.Append(UtilidadesActas.CrearMargenCeldas());                
+            tableDataCell1.Append(UtilidadesActas.CrearMargenCeldas());
 
             //ROW 2
 
@@ -980,7 +1044,7 @@ namespace API.CreacionArchivos
 
             //ROW 3
             TableRow tableDataRow3 = new TableRow();
-            table.AppendChild(tableDataRow3);                
+            table.AppendChild(tableDataRow3);
 
             TableCellProperties tableCellPropertiesRow3 = new TableCellProperties();
             tableCellPropertiesRow3.GridSpan = new GridSpan() { Val = 5 };
@@ -990,7 +1054,7 @@ namespace API.CreacionArchivos
             UtilidadesActas.JustificarCentro(BolitaFavorecida);
             tableDataCell3.AppendChild(BolitaFavorecida);
             tableDataCell3.Append(tableCellPropertiesRow3);
-            tableDataCell3.Append(UtilidadesActas.CrearMargenCeldas());   
+            tableDataCell3.Append(UtilidadesActas.CrearMargenCeldas());
 
 
             //ROW 4
@@ -1060,7 +1124,8 @@ namespace API.CreacionArchivos
             tableDataCell51.Append(UtilidadesActas.CrearMargenCeldas());
 
             //Inserta las celdas dos veces.                
-            for(int i=0;i<2;i++){
+            for (int i = 0; i < 2; i++)
+            {
                 TableCell tableDataCell52 = new TableCell();
                 tableDataRow5.AppendChild(tableDataCell52);
                 //Inserto el texto con un enter debajo
@@ -1150,7 +1215,7 @@ namespace API.CreacionArchivos
                 new Text(textoCelda71IncrementoPremioAcumulado),
                 new Break(),
                 new Break(),
-                new Text(textoCelda71AcumuladoProximoSorteo)                    
+                new Text(textoCelda71AcumuladoProximoSorteo)
                 ));
             tableDataCell71.AppendChild(loteriaData71);
             tableDataCell71.Append(tableCellPropertiesRow7);
@@ -1159,11 +1224,12 @@ namespace API.CreacionArchivos
             body.AppendChild(table);
 
         }
-        private static void CrearTablaDetallePremios(Body body){
+        private static void CrearTablaDetallePremios(Body body)
+        {
             //Creando la tabla de Detalle de Premios
             //Agregando Estilos y propiedades
             Table table = new Table();
-            TableProperties tableProperties = new TableProperties();            
+            TableProperties tableProperties = new TableProperties();
             table.AppendChild(tableProperties);
 
             // Establecer ancho de columna fijo
@@ -1191,7 +1257,7 @@ namespace API.CreacionArchivos
             //ROW 1
             TableRow tableDataRow = new TableRow();
             table.AppendChild(tableDataRow);
-            
+
 
             TableCellProperties tableCellPropertiesHeader11 = new TableCellProperties();
             tableCellPropertiesHeader11.GridSpan = new GridSpan() { Val = 2 };
@@ -1293,7 +1359,7 @@ namespace API.CreacionArchivos
             UtilidadesActas.JustificarCentro(DataCell41);
             tableDataCell41.AppendChild(DataCell41);
             tableDataCell41.Append(UtilidadesActas.CrearMargenCeldas());
-            
+
             TableCell tableDataCell42 = new TableCell();
             tableDataRow4.AppendChild(tableDataCell42);
             Paragraph DataCell42 = new Paragraph(new Run(new Text("10")));
@@ -1309,7 +1375,7 @@ namespace API.CreacionArchivos
             UtilidadesActas.JustificarCentro(DataCell43);
             tableDataCell43.AppendChild(DataCell43);
             tableDataCell43.Append(UtilidadesActas.CrearMargenCeldas());
-            
+
             TableCell tableDataCell44 = new TableCell();
             tableDataRow4.AppendChild(tableDataCell44);
             String textoCelda44 = "{PROXIMOSORTEO2}";
@@ -1509,12 +1575,12 @@ namespace API.CreacionArchivos
             tableDataCell94.AppendChild(DataCell94);
             tableDataCell94.Append(UtilidadesActas.CrearMargenCeldas());
 
-            
+
             //ROW 10
 
             TableRow tableDataRow10 = new TableRow();
             table.AppendChild(tableDataRow10);
-            
+
             TableCell tableDataCell101 = new TableCell();
             tableDataRow10.AppendChild(tableDataCell101);
             Paragraph DataCell101 = new Paragraph(new Run(new Text("TOTAL DE BOLITAS")));
@@ -1552,11 +1618,12 @@ namespace API.CreacionArchivos
 
 
         }
-        private static void CrearTablaVerificacionTomo(Body body, DatosSorteo sorteo){
+        private static void CrearTablaVerificacionTomo(Body body, DatosSorteo sorteo)
+        {
             //Creando la tabla de Verificacion de tomos
             //Agregando Estilos y propiedades
             Table table = new Table();
-            TableProperties tableProperties = new TableProperties();            
+            TableProperties tableProperties = new TableProperties();
             table.AppendChild(tableProperties);
 
             // Establecer ancho de columna fijo
@@ -1578,7 +1645,7 @@ namespace API.CreacionArchivos
             );
             table.AppendChild(tableBorders);
 
-             
+
             // Construyendo la tabla                 
             //ROW 1
             TableRow tableDataRow = new TableRow();
@@ -1637,51 +1704,52 @@ namespace API.CreacionArchivos
 
             body.AppendChild(table);
 
-        }        
-        private static void CrearTablaMarchamosUtilizados(Body body, DatosSorteo sorteo){
+        }
+        private static void CrearTablaMarchamosUtilizados(Body body, DatosSorteo sorteo)
+        {
             //Obteniendo marchamos de la BD
             var context = new proyecto_bdContext();
-            var marchamosAperturaSerie = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno 
-                                                                && m.Tipo == "Apertura" 
-                                                                && m.TipoMarchamo=="Serie").ToList();
-            var marchamosCierreSerie = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno 
-                                                                && m.Tipo == "Cierre" 
-                                                                && m.TipoMarchamo=="Serie").ToList();
+            var marchamosAperturaSerie = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno
+                                                                && m.Tipo == "Apertura"
+                                                                && m.TipoMarchamo == "Serie").ToList();
+            var marchamosCierreSerie = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno
+                                                                && m.Tipo == "Cierre"
+                                                                && m.TipoMarchamo == "Serie").ToList();
 
-            var marchamosAperturaNumero = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno 
-                                                                && m.Tipo == "Apertura" 
-                                                                && m.TipoMarchamo=="Numero").ToList();
-            var marchamosCierreNumero = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno 
-                                                                && m.Tipo == "Cierre" 
-                                                                && m.TipoMarchamo=="Numero").ToList();
+            var marchamosAperturaNumero = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno
+                                                                && m.Tipo == "Apertura"
+                                                                && m.TipoMarchamo == "Numero").ToList();
+            var marchamosCierreNumero = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno
+                                                                && m.Tipo == "Cierre"
+                                                                && m.TipoMarchamo == "Numero").ToList();
 
-            var marchamosAperturaPremio = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno 
-                                                                && m.Tipo == "Apertura" 
-                                                                && m.TipoMarchamo=="Premio").ToList();
-            var marchamosCierrePremio = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno 
-                                                                && m.Tipo == "Cierre" 
-                                                                && m.TipoMarchamo=="Premio").ToList();
+            var marchamosAperturaPremio = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno
+                                                                && m.Tipo == "Apertura"
+                                                                && m.TipoMarchamo == "Premio").ToList();
+            var marchamosCierrePremio = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno
+                                                                && m.Tipo == "Cierre"
+                                                                && m.TipoMarchamo == "Premio").ToList();
 
-            var marchamosAperturaAcumuladoFichero = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno 
-                                                                && m.Tipo == "Apertura" 
-                                                                && m.TipoMarchamo=="AcumuladoFichero").ToList();
-            var marchamosCierreAcumuladoFichero = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno 
-                                                                && m.Tipo == "Cierre" 
-                                                                && m.TipoMarchamo=="AcumuladoFichero").ToList();
+            var marchamosAperturaAcumuladoFichero = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno
+                                                                && m.Tipo == "Apertura"
+                                                                && m.TipoMarchamo == "AcumuladoFichero").ToList();
+            var marchamosCierreAcumuladoFichero = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno
+                                                                && m.Tipo == "Cierre"
+                                                                && m.TipoMarchamo == "AcumuladoFichero").ToList();
 
-            var marchamosAperturaAcumuladoTula = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno 
-                                                                && m.Tipo == "Apertura" 
-                                                                && m.TipoMarchamo=="AcumuladoTula").ToList();
-            var marchamosCierreAcumuladoTula = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno 
-                                                                && m.Tipo == "Cierre" 
-                                                                && m.TipoMarchamo=="AcumuladoTula").ToList();
+            var marchamosAperturaAcumuladoTula = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno
+                                                                && m.Tipo == "Apertura"
+                                                                && m.TipoMarchamo == "AcumuladoTula").ToList();
+            var marchamosCierreAcumuladoTula = context.Marchamos.Where(m => m.IdSorteo == sorteo.IdInterno
+                                                                && m.Tipo == "Cierre"
+                                                                && m.TipoMarchamo == "AcumuladoTula").ToList();
 
-                                                                                                                                                                                                                                                                                                                                                                                                                
-                                        
+
+
             //Creando la tabla de Verificacion de tomos
             //Agregando Estilos y propiedades
             Table table = new Table();
-            TableProperties tableProperties = new TableProperties();            
+            TableProperties tableProperties = new TableProperties();
             table.AppendChild(tableProperties);
 
             // Establecer ancho de columna fijo
@@ -1703,7 +1771,7 @@ namespace API.CreacionArchivos
             );
             table.AppendChild(tableBorders);
 
-             
+
             // Construyendo la tabla                 
             //ROW 1
             TableRow tableDataRow = new TableRow();
@@ -1747,15 +1815,15 @@ namespace API.CreacionArchivos
             //ROW SERIES
             var arregloMarchamosAperturaSerie = marchamosAperturaSerie.ToArray();
             var arregloMarchamosCierreSerie = marchamosCierreSerie.ToArray();
-            
+
 
             //Iterar en las listas tomando el indice
-            
+
             foreach (var item in arregloMarchamosAperturaSerie.Select((value, i) => new { i, value }))
             {
                 TableRow tableDataRowMarchamo = new TableRow();
                 table.AppendChild(tableDataRowMarchamo);
-                if(item.i==0)
+                if (item.i == 0)
                 {
                     TableCell tableDataCellSeries = new TableCell();
                     tableDataRowMarchamo.AppendChild(tableDataCellSeries);
@@ -1916,13 +1984,13 @@ namespace API.CreacionArchivos
 
             //ROW Numeros
             var arregloMarchamosAperturaNumero = marchamosAperturaNumero.ToArray();
-            var arregloMarchamosCierreNumero= marchamosCierreNumero.ToArray();
+            var arregloMarchamosCierreNumero = marchamosCierreNumero.ToArray();
             TableRow tableDataRow7 = new TableRow();
             table.AppendChild(tableDataRow7);
 
-            foreach(var item in arregloMarchamosAperturaNumero.Select((value, i) => new { i, value }))
+            foreach (var item in arregloMarchamosAperturaNumero.Select((value, i) => new { i, value }))
             {
-                 TableCell tableDataCellSeries = new TableCell();
+                TableCell tableDataCellSeries = new TableCell();
                 tableDataRow7.AppendChild(tableDataCellSeries);
                 Paragraph DataCellSeries = new Paragraph(new Run(new Text("Numeros")));
                 UtilidadesActas.JustificarCentro(DataCellSeries);
@@ -1981,9 +2049,9 @@ namespace API.CreacionArchivos
             TableRow tableDataRow8 = new TableRow();
             table.AppendChild(tableDataRow8);
 
-            foreach(var item in arregloMarchamosAperturaAcumuladoFichero.Select((value, i) => new { i, value }))
+            foreach (var item in arregloMarchamosAperturaAcumuladoFichero.Select((value, i) => new { i, value }))
             {
-                if(item.i==0)
+                if (item.i == 0)
                 {
                     TableCell tableDataCellAcumulado = new TableCell();
                     tableDataRow8.AppendChild(tableDataCellAcumulado);
@@ -2017,9 +2085,9 @@ namespace API.CreacionArchivos
             TableRow tableDataRow9 = new TableRow();
             table.AppendChild(tableDataRow9);
 
-             foreach(var item in arregloMarchamosAperturaAcumuladoTula.Select((value, i) => new { i, value }))
-             {
-                if(item.i==0)
+            foreach (var item in arregloMarchamosAperturaAcumuladoTula.Select((value, i) => new { i, value }))
+            {
+                if (item.i == 0)
                 {
                     TableCell tableDataCellAcumulado = new TableCell();
                     tableDataRow9.AppendChild(tableDataCellAcumulado);
@@ -2046,7 +2114,7 @@ namespace API.CreacionArchivos
                     tableDataCellMarchamoCierre.AppendChild(DataCellMarchamoCierre);
                     tableDataCellMarchamoCierre.Append(UtilidadesActas.CrearMargenCeldas());
                 }
-             }
+            }
 
             /*
             TableCell tableDataCell81 = new TableCell();
@@ -2071,15 +2139,15 @@ namespace API.CreacionArchivos
                                                         new Text("MARCHAMOACUMULADOCIERRRE2} tula")));
             tableDataCell83.AppendChild(DataCell83);
             tableDataCell83.Append(UtilidadesActas.CrearMargenCeldas());
-            */          
+            */
 
             body.AppendChild(table);
 
         }
         #endregion
-        
 
-        
-        
+
+
+
     }
 }

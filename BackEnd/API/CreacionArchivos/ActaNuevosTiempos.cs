@@ -131,6 +131,69 @@ namespace API.CreacionArchivos
                 Run runResultados = paragraphResultados.AppendChild(new Run());
                 runResultados.AppendChild(new Text(resultados));
 
+
+                //(2ta pagina)
+                //Conclusiones+
+
+                var actaFiscalizacion = context.ActaDeFiscalizacions.FirstOrDefault(x => x.IdDatoSorteo == sorteo.IdInterno);
+
+                Paragraph paragraphConclusionesTitulo = body.AppendChild(new Paragraph());
+                Run runConclusionesTitulo = paragraphConclusionesTitulo.AppendChild(new Run());
+                runConclusionesTitulo.AppendChild(new Text("Conclusiones de la fiscalización"));
+                UtilidadesActas.Negrita(runConclusionesTitulo);
+
+
+                Paragraph paragraphConclusiones = body.AppendChild(new Paragraph());
+                Run runConclusiones = paragraphConclusiones.AppendChild(new Run());
+                String textConclusiones = "Los procesos se realizar conforme lo establecido: {PROTOCOLO}";
+                textConclusiones = textConclusiones.Replace("{PROTOCOLO}", actaFiscalizacion.Protocolo);
+
+                runConclusiones.AppendChild(new Text(textConclusiones));
+                runConclusiones.AppendChild(new Break());
+
+                String otras = "Otras: {OTRAS}";
+                otras = otras.Replace("{OTRAS}", actaFiscalizacion.OtrasConclusiones);
+                runConclusiones.AppendChild(new Text(otras));
+                runConclusiones.AppendChild(new Break());
+
+                String Detallar = "Detallar: {DETALLAR}";
+                Detallar = Detallar.Replace("{DETALLAR}", actaFiscalizacion.ConclusionesDetalle);
+                runConclusiones.AppendChild(new Text(Detallar));
+                runConclusiones.AppendChild(new Break());
+
+
+
+
+                Paragraph paragraphConclusionesRecomendacionesTitulo = body.AppendChild(new Paragraph());
+                Run runConclusionesRecomendacionesTitulo = paragraphConclusionesRecomendacionesTitulo.AppendChild(new Run());
+                runConclusionesRecomendacionesTitulo.AppendChild(new Text("Recomendaciones de la fiscalización"));
+                UtilidadesActas.Negrita(runConclusionesRecomendacionesTitulo);
+
+                Paragraph paragraphConclusionesRecomendacionesDetalles = body.AppendChild(new Paragraph());
+                Run runConclusionesRecomendacionesDetalles = paragraphConclusionesRecomendacionesDetalles.AppendChild(new Run());
+                String recomendacionesNinguna = "Recomendaciones: {Recomendaciones}";
+                recomendacionesNinguna = recomendacionesNinguna.Replace("{Recomendaciones}", actaFiscalizacion.Recomendacion);
+
+                String recomendacionesOtras = "Los resultados evidenciados en el sorteo serán analizados para ser eventualmente valorados en la formulación de un oficio de advertencia/asesoría o bien un informe de auditoría.";
+
+                String recomendacionesDetalle = "Detallar: {RECOMENDACIONESD}";
+                recomendacionesDetalle = recomendacionesDetalle.Replace("{RECOMENDACIONESD}", actaFiscalizacion.RecomendacionDetalle);
+
+                runConclusionesRecomendacionesDetalles.AppendChild(new Text(recomendacionesNinguna));
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Text(recomendacionesDetalle));
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Text(recomendacionesOtras));
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+                runConclusionesRecomendacionesDetalles.AppendChild(new Break());
+
+
+
+
                 //Agregando las observaciones
                 String observaciones = "Observaciones:{OBSERVACIONES}";
                 observaciones = observaciones.Replace(
@@ -147,7 +210,7 @@ namespace API.CreacionArchivos
                 Run runFirma = paragraphFirma.AppendChild(new Run());
                 runFirma.AppendChild(new Text("____________________________________"));
                 runFirma.AppendChild(new Break()); //Agregar un enter
-                runFirma.AppendChild(new Text("Fiscalizador de la Auditoria Interna"));
+                runFirma.AppendChild(new Text("Fiscalizador de la Auditoría Interna"));
                 runFirma.AppendChild(new Break());
                 runFirma.AppendChild(new Break());
 
@@ -158,7 +221,7 @@ namespace API.CreacionArchivos
                 );
                 runGerencia.AppendChild(new Break()); //Agregar un enter
                 runGerencia.AppendChild(
-                    new Text("Recibido: Gerencia de Produccion y Comercializacion")
+                    new Text("Recibido: Gerencia de Producción y Comercialización")
                 );
                 runGerencia.AppendChild(new Break());
 

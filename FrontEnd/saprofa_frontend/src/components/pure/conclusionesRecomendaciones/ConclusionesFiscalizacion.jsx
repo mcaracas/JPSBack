@@ -75,7 +75,7 @@ const ConclusionesFiscalizacion = ({ sorteo, fiscalizador, fecha, idSorteo }) =>
     const handleSubmit = async (values) => {
         try {
             setShowLoadingModal(true);
-            await actaFiscalizacion(values);
+            await actaFiscalizacion(values, idSorteo);
             await getEmailSorteo(idSorteo);
             setShowLoadingModal(false);
             setTitulo('Operación exitosa');
